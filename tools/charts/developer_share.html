@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "color": "#2563EB", "cornerRadiusEnd": 4, "height": 20}, "encoding": {"tooltip": [{"field": "full_name", "title": "Developer", "type": "nominal"}, {"field": "mw", "format": ",.0f", "title": "MW", "type": "quantitative"}, {"field": "share", "format": ".1f", "title": "Market Share", "type": "quantitative"}, {"field": "project_count", "format": ",", "title": "Projects", "type": "quantitative"}], "x": {"field": "mw", "title": "Capacity (MW)", "type": "quantitative"}, "y": {"field": "developer", "sort": {"field": "mw", "order": "ascending"}, "title": null, "type": "nominal"}}}, {"mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 10}, "encoding": {"color": {"value": "#6B7280"}, "text": {"field": "share", "format": ".1f", "type": "quantitative"}, "x": {"field": "mw", "type": "quantitative"}, "y": {"field": "developer", "sort": {"field": "mw", "order": "ascending"}, "type": "nominal"}}}], "data": {"name": "data-59349d1eb0387e163bf51e17f9620727"}, "height": {"step": 28}, "title": "Developer Market Share (Top 15)", "width": 550, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-59349d1eb0387e163bf51e17f9620727": [{"developer": "Hecate Energy Hazel LLC", "full_name": "Hecate Energy Hazel LLC", "mw": 1107.3000000000002, "share": 0.4249351794444506, "project_count": 2}, {"developer": "Tempus power management LLC", "full_name": "Tempus power management LLC", "mw": 1123.1, "share": 0.4309985550745619, "project_count": 11}, {"developer": "Horizon Energy Storage Greenfi...", "full_name": "Horizon Energy Storage Greenfield Project Holdings LLC", "mw": 1133.0, "share": 0.43479775879216337, "project_count": 6}, {"developer": "Rio Grande Solar LLC", "full_name": "Rio Grande Solar LLC", "mw": 1180.1599999999999, "share": 0.4528957837741919, "project_count": 2}, {"developer": "Nova Clean Energy LLC", "full_name": "Nova Clean Energy LLC", "mw": 1187.04, "share": 0.45553603847894925, "project_count": 6}, {"developer": "RWE Solar Development, LLC", "full_name": "RWE Solar Development, LLC", "mw": 1231.1299999999999, "share": 0.4724559265505701, "project_count": 7}, {"developer": "CHPE LLC", "full_name": "CHPE LLC", "mw": 1250.0, "share": 0.4796974390910893, "project_count": 2}, {"developer": "Panhandle Solar Group Operatin...", "full_name": "Panhandle Solar Group Operating Company LLC", "mw": 1375.8, "share": 0.5279741893612164, "project_count": 4}, {"developer": "ENGIE IR Holdings LLC", "full_name": "ENGIE IR Holdings LLC", "mw": 1462.88, "share": 0.5613918317580582, "project_count": 4}, {"developer": "Nabla Park LLC", "full_name": "Nabla Park LLC", "mw": 1500.0, "share": 0.5756369269093071, "project_count": 2}, {"developer": " S&S Renewables, LLC", "full_name": " S&S Renewables, LLC", "mw": 1536.56, "share": 0.5896671176078433, "project_count": 2}, {"developer": "Tempus Power management LLC", "full_name": "Tempus Power management LLC", "mw": 1692.04, "share": 0.6493338038717493, "project_count": 14}, {"developer": "CED Development Inc.", "full_name": "CED Development Inc.", "mw": 1775.0, "share": 0.6811703635093468, "project_count": 12}, {"developer": "Kickstart Infrastructure LLC", "full_name": "Kickstart Infrastructure LLC", "mw": 2030.96, "share": 0.779397048717151, "project_count": 6}, {"developer": "St. Lawrence Infrastructure, L...", "full_name": "St. Lawrence Infrastructure, LLC", "mw": 2795.0, "share": 1.0726034738076757, "project_count": 2}, {"developer": "Other", "full_name": "Other", "mw": 238200.94999999998, "share": 91.41150856325167, "project_count": 1351}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

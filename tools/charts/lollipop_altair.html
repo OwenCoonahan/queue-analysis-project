@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "rule", "strokeWidth": 2}, "encoding": {"color": {"condition": {"test": "datum.highlight", "value": "#DC2626"}, "value": "#2563EB"}, "x": {"field": "value", "scale": {"domain": [0, 100]}, "title": "Score", "type": "quantitative"}, "x2": {"value": 0}, "y": {"field": "label", "sort": {"field": "value", "order": "ascending"}, "title": null, "type": "nominal"}}}, {"mark": {"type": "circle", "size": 120}, "encoding": {"color": {"condition": {"test": "datum.highlight", "value": "#DC2626"}, "value": "#2563EB"}, "tooltip": [{"field": "label", "title": "Project", "type": "nominal"}, {"field": "value", "format": ".0f", "title": "Score", "type": "quantitative"}], "x": {"field": "value", "type": "quantitative"}, "y": {"field": "label", "sort": {"field": "value", "order": "ascending"}, "type": "nominal"}}}, {"mark": {"type": "text", "align": "left", "dx": 8, "fontSize": 11}, "encoding": {"color": {"value": "#374151"}, "text": {"field": "value", "format": ".0f", "type": "quantitative"}, "x": {"field": "value", "type": "quantitative"}, "y": {"field": "label", "sort": {"field": "value", "order": "ascending"}, "type": "nominal"}}}], "data": {"name": "data-f33e87b5b5bdae8604ddcf6d5461348d"}, "height": {"step": 35}, "title": "Top Projects by Score", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-f33e87b5b5bdae8604ddcf6d5461348d": [{"label": "Project Epsilon", "value": 42, "highlight": false}, {"label": "Project Delta", "value": 55, "highlight": false}, {"label": "Project Gamma", "value": 68, "highlight": false}, {"label": "Project Beta", "value": 75, "highlight": true}, {"label": "Project Alpha", "value": 82, "highlight": false}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

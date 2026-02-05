@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "color": "#2563EB", "cornerRadiusTopLeft": 4, "cornerRadiusTopRight": 4}, "encoding": {"tooltip": [{"field": "bucket", "title": "Duration", "type": "nominal"}, {"field": "count", "format": ",", "title": "Projects", "type": "quantitative"}], "x": {"field": "bucket", "sort": ["0-12 months", "12-24 months", "24-36 months", "36-48 months", "48-60 months", "60+ months"], "title": "Time in Queue", "type": "nominal"}, "y": {"field": "count", "title": "Number of Projects", "type": "quantitative"}}, "title": "Time in Queue Distribution"}, {"mark": {"type": "text", "dy": -10, "fontSize": 11, "fontWeight": "bold"}, "encoding": {"color": {"value": "#374151"}, "text": {"field": "count", "format": ",", "type": "quantitative"}, "x": {"field": "bucket", "sort": ["0-12 months", "12-24 months", "24-36 months", "36-48 months", "48-60 months", "60+ months"], "type": "nominal"}, "y": {"field": "count", "type": "quantitative"}}}], "data": {"name": "data-916d991a044e24324048134601dca405"}, "height": 300, "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-916d991a044e24324048134601dca405": [{"bucket": "0-12 months", "count": 27, "order": 0}, {"bucket": "12-24 months", "count": 12, "order": 1}, {"bucket": "24-36 months", "count": 5, "order": 2}, {"bucket": "36-48 months", "count": 5, "order": 3}, {"bucket": "48-60 months", "count": 153, "order": 4}, {"bucket": "60+ months", "count": 283, "order": 5}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

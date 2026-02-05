@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"data": {"name": "data-49601db76275fba6343f8121f9c1dfd2"}, "mark": {"type": "circle", "opacity": 0.6, "size": 80}, "encoding": {"color": {"field": "type", "scale": {"domain": ["Solar", "Storage", "Wind"], "range": ["#F59E0B", "#10B981", "#0EA5E9"]}, "title": "Project Type", "type": "nominal"}, "tooltip": [{"field": "capacity_mw", "format": ",.0f", "title": "Capacity", "type": "quantitative"}, {"field": "cost_per_kw", "format": "$,.0f", "title": "Cost $/kW", "type": "quantitative"}, {"field": "type", "title": "Type", "type": "nominal"}], "x": {"field": "capacity_mw", "scale": {"zero": true}, "title": "Capacity (MW)", "type": "quantitative"}, "y": {"field": "cost_per_kw", "scale": {"zero": true}, "title": "Interconnection Cost ($/kW)", "type": "quantitative"}}, "title": "Test"}, {"data": {"name": "data-5019343bb54fcf4a9661c264a225994f"}, "mark": {"type": "rule", "color": "#DC2626", "strokeWidth": 3}, "encoding": {"x": {"field": "capacity_mw", "type": "quantitative"}, "y": {"field": "cost_low", "type": "quantitative"}, "y2": {"field": "cost_high"}}}, {"data": {"name": "data-5019343bb54fcf4a9661c264a225994f"}, "mark": {"type": "point", "color": "#DC2626", "filled": true, "shape": "diamond", "size": 300, "stroke": "white", "strokeWidth": 2}, "encoding": {"tooltip": [{"field": "label", "title": "", "type": "nominal"}, {"field": "capacity_mw", "format": ",.0f", "title": "Capacity", "type": "quantitative"}, {"field": "cost_per_kw", "format": "$,.0f", "title": "Est. Cost", "type": "quantitative"}, {"field": "cost_low", "format": "$,.0f", "title": "Low", "type": "quantitative"}, {"field": "cost_high", "format": "$,.0f", "title": "High", "type": "quantitative"}], "x": {"field": "capacity_mw", "type": "quantitative"}, "y": {"field": "cost_per_kw", "type": "quantitative"}}}], "height": 400, "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-49601db76275fba6343f8121f9c1dfd2": [{"capacity_mw": 143.85361799537182, "cost_per_kw": 92.45032112888487, "type": "Solar"}, {"capacity_mw": 652.0242861835042, "cost_per_kw": 168.7849009172836, "type": "Storage"}, {"capacity_mw": 313.34913870908986, "cost_per_kw": 119.96806550405975, "type": "Solar"}, {"capacity_mw": 232.58851075519064, "cost_per_kw": 135.41531251033615, "type": "Wind"}, {"capacity_mw": 83.92497409246926, "cost_per_kw": 119.91466938853016, "type": "Storage"}, {"capacity_mw": 83.91925838292104, "cost_per_kw": 242.6139092254469, "type": "Wind"}, {"capacity_mw": 61.96775372173614, "cost_per_kw": 149.3251387631033, "type": "Solar"}, {"capacity_mw": 452.2461728959879, "cost_per_kw": 97.114453552205, "type": "Storage"}, {"capacity_mw": 233.8164307254529, "cost_per_kw": 191.12724560515946, "type": "Solar"}, {"capacity_mw": 296.25001234091803, "cost_per_kw": 88.95781750144889, "type": "Wind"}, {"capacity_mw": 54.15986159982772, "cost_per_kw": 160.44317975023776, "type": "Solar"}, {"capacity_mw": 750.7114950316624, "cost_per_kw": 52.01649380601122, "type": "Storage"}, {"capacity_mw": 407.285908670935, "cost_per_kw": 83.59069755507848, "type": "Storage"}, {"capacity_mw": 97.7375250497894, "cost_per_kw": 159.84306179345617, "type": "Wind"}, {"capacity_mw": 90.13579774993266, "cost_per_kw": 186.92332899977052, "type": "Solar"}, {"capacity_mw": 90.52228456645142, "cost_per_kw": 158.56841405949854, "type": "Storage"}, {"capacity_mw": 122.55074589209542, "cost_per_kw": 144.21758588058796, "type": "Wind"}, {"capacity_mw": 198.7855661721709, "cost_per_kw": 134.94481522053556, "type": "Storage"}, {"capacity_mw": 163.10741335606733, "cost_per_kw": 76.07390048162863, "type": "Storage"}, {"capacity_mw": 118.8445985107883, "cost_per_kw": 114.00778958026457, "type": "Solar"}, {"capacity_mw": 239.27417477995974, "cost_per_kw": 126.96806145201063, "type": "Storage"}, {"capacity_mw": 80.04690574546774, "cost_per_kw": 202.85611131094578, "type": "Solar"}, {"capacity_mw": 119.10310240048045, "cost_per_kw": 167.18091447842306, "type": "Storage"}, {"capacity_mw": 141.25544364416942, "cost_per_kw": 61.8479922318633, "type": "Wind"}, {"capacity_mw": 171.786937571955, "cost_per_kw": 166.20419846973974, "type": "Storage"}, {"capacity_mw": 357.5872022061824, "cost_per_kw": 130.74588597918418, "type": "Solar"}, {"capacity_mw": 94.54717242573805, "cost_per_kw": 116.15389998470206, "type": "Solar"}, {"capacity_mw": 194.40583100662553, "cost_per_kw": 180.5838144420434, "type": "Wind"}, {"capacity_mw": 229.5009442619521, "cost_per_kw": 201.54997612479755, "type": "Storage"}, {"capacity_mw": 59.51276995128171, "cost_per_kw": 196.56400595580993, "type": "Storage"}], "data-5019343bb54fcf4a9661c264a225994f": [{"capacity_mw": 500, "cost_per_kw": 150, "cost_low": 100, "cost_high": 220, "label": "This Project"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

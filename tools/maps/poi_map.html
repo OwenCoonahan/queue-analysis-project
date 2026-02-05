@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f9a1299f4111e9970353342168389167 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position: fixed; top: 10px; left: 50px; z-index: 1000;
+                background-color: white; padding: 10px 20px; border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-family: sans-serif;">
+        <h3 style="margin: 0; color: #1f2937;">Interconnection Queue Map</h3>
+        <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">
+            3 projects
+        </p>
+    </div>
+    
+    
+    <div style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+                background-color: white; padding: 15px; border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-family: sans-serif;">
+        <h4 style="margin: 0 0 10px 0; font-size: 12px; color: #1f2937;">Recommendation</h4>
+    
+        <div style="margin: 5px 0;">
+            <span style="display: inline-block; width: 12px; height: 12px;
+                        background: #22c55e; border-radius: 50%; margin-right: 8px;"></span>
+            <span style="font-size: 11px; color: #4b5563;">GO</span>
+        </div>
+        
+        <div style="margin: 5px 0;">
+            <span style="display: inline-block; width: 12px; height: 12px;
+                        background: #f59e0b; border-radius: 50%; margin-right: 8px;"></span>
+            <span style="font-size: 11px; color: #4b5563;">CONDITIONAL</span>
+        </div>
+        
+        <div style="margin: 5px 0;">
+            <span style="display: inline-block; width: 12px; height: 12px;
+                        background: #ef4444; border-radius: 50%; margin-right: 8px;"></span>
+            <span style="font-size: 11px; color: #4b5563;">NO-GO</span>
+        </div>
+        </div>
+    
+            <div class="folium-map" id="map_f9a1299f4111e9970353342168389167" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f9a1299f4111e9970353342168389167 = L.map(
+                "map_f9a1299f4111e9970353342168389167",
+                {
+                    center: [42.9, -75.5],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 7,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b65a1c3382e90c71b3c3319f1daf380c = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_b65a1c3382e90c71b3c3319f1daf380c.addTo(map_f9a1299f4111e9970353342168389167);
+        
+    
+            var circle_marker_6fa65b59cd80e90c6a148c5c3f28afe5 = L.circleMarker(
+                [42.2609, -73.8096],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_f9a1299f4111e9970353342168389167);
+        
+    
+        var popup_593ed8910fbdc3ccaf95d2fb86264f98 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d9ac7bbdfb728bbdb43babaa0c4dcbf5 = $(`<div id="html_d9ac7bbdfb728bbdb43babaa0c4dcbf5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: sans-serif; min-width: 200px;">         <h4 style="margin: 0 0 10px 0; color: #1f2937;">Storage Gamma</h4>         <table style="font-size: 12px; width: 100%;">             <tr><td style="color: #6b7280;">ID:</td><td><strong>1892</strong></td></tr>             <tr><td style="color: #6b7280;">Type:</td><td>Storage</td></tr>             <tr><td style="color: #6b7280;">Capacity:</td><td>100 MW</td></tr>             <tr><td style="color: #6b7280;">Developer:</td><td>Unknown</td></tr>             <tr><td style="color: #6b7280;">Score:</td><td><strong>55</strong></td></tr>             <tr><td style="color: #6b7280;">Recommendation:</td><td style="color: #ef4444; font-weight: bold;">NO-GO</td></tr>         </table>     </div>     </div>`)[0];
+                popup_593ed8910fbdc3ccaf95d2fb86264f98.setContent(html_d9ac7bbdfb728bbdb43babaa0c4dcbf5);
+            
+        
+
+        circle_marker_6fa65b59cd80e90c6a148c5c3f28afe5.bindPopup(popup_593ed8910fbdc3ccaf95d2fb86264f98)
+        ;
+
+        
+    
+    
+            circle_marker_6fa65b59cd80e90c6a148c5c3f28afe5.bindTooltip(
+                `<div>
+                     Storage Gamma (100 MW)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_716d92a824b80e2ccf4787d6404080ff = L.circleMarker(
+                [42.2543, -73.8943],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f59e0b", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.0, "stroke": true, "weight": 3}
+            ).addTo(map_f9a1299f4111e9970353342168389167);
+        
+    
+        var popup_aa8b2e7e2d83cbeb5b02e65b8f781cc0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_53eaebe7588ff3f12b27f56896f23819 = $(`<div id="html_53eaebe7588ff3f12b27f56896f23819" style="width: 100.0%; height: 100.0%;">     <div style="font-family: sans-serif; min-width: 200px;">         <h4 style="margin: 0 0 10px 0; color: #1f2937;">Wind Beta</h4>         <table style="font-size: 12px; width: 100%;">             <tr><td style="color: #6b7280;">ID:</td><td><strong>1523</strong></td></tr>             <tr><td style="color: #6b7280;">Type:</td><td>Wind</td></tr>             <tr><td style="color: #6b7280;">Capacity:</td><td>300 MW</td></tr>             <tr><td style="color: #6b7280;">Developer:</td><td>Unknown</td></tr>             <tr><td style="color: #6b7280;">Score:</td><td><strong>68</strong></td></tr>             <tr><td style="color: #6b7280;">Recommendation:</td><td style="color: #f59e0b; font-weight: bold;">CONDITIONAL</td></tr>         </table>     </div>     </div>`)[0];
+                popup_aa8b2e7e2d83cbeb5b02e65b8f781cc0.setContent(html_53eaebe7588ff3f12b27f56896f23819);
+            
+        
+
+        circle_marker_716d92a824b80e2ccf4787d6404080ff.bindPopup(popup_aa8b2e7e2d83cbeb5b02e65b8f781cc0)
+        ;
+
+        
+    
+    
+            circle_marker_716d92a824b80e2ccf4787d6404080ff.bindTooltip(
+                `<div>
+                     Wind Beta (300 MW)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_309a1b2258b0cfc101677934d5d2a3d6 = L.circleMarker(
+                [43.1726, -75.2896],
+                {"bubblingMouseEvents": true, "color": "#22c55e", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#22c55e", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.0, "stroke": true, "weight": 3}
+            ).addTo(map_f9a1299f4111e9970353342168389167);
+        
+    
+        var popup_ff02a4e1c774677f4b1680fd042381d0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_30cb4624adf8dddbf29a06e2185d7776 = $(`<div id="html_30cb4624adf8dddbf29a06e2185d7776" style="width: 100.0%; height: 100.0%;">     <div style="font-family: sans-serif; min-width: 200px;">         <h4 style="margin: 0 0 10px 0; color: #1f2937;">Solar Alpha</h4>         <table style="font-size: 12px; width: 100%;">             <tr><td style="color: #6b7280;">ID:</td><td><strong>1738</strong></td></tr>             <tr><td style="color: #6b7280;">Type:</td><td>Solar</td></tr>             <tr><td style="color: #6b7280;">Capacity:</td><td>500 MW</td></tr>             <tr><td style="color: #6b7280;">Developer:</td><td>Unknown</td></tr>             <tr><td style="color: #6b7280;">Score:</td><td><strong>72</strong></td></tr>             <tr><td style="color: #6b7280;">Recommendation:</td><td style="color: #22c55e; font-weight: bold;">GO</td></tr>         </table>     </div>     </div>`)[0];
+                popup_ff02a4e1c774677f4b1680fd042381d0.setContent(html_30cb4624adf8dddbf29a06e2185d7776);
+            
+        
+
+        circle_marker_309a1b2258b0cfc101677934d5d2a3d6.bindPopup(popup_ff02a4e1c774677f4b1680fd042381d0)
+        ;
+
+        
+    
+    
+            circle_marker_309a1b2258b0cfc101677934d5d2a3d6.bindTooltip(
+                `<div>
+                     Solar Alpha (500 MW)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "cornerRadiusEnd": 4, "height": 25}, "encoding": {"color": {"field": "color", "scale": null, "type": "nominal"}, "tooltip": [{"field": "technology", "title": "Technology", "type": "nominal"}, {"field": "probability", "format": ".0f", "title": "Probability", "type": "quantitative"}, {"field": "total_mw", "format": ",.0f", "title": "Nominal MW", "type": "quantitative"}, {"field": "expected_mw", "format": ",.0f", "title": "Expected MW", "type": "quantitative"}], "x": {"field": "probability", "scale": {"domain": [0, 50]}, "title": "Completion Probability (%)", "type": "quantitative"}, "y": {"field": "technology", "sort": {"field": "probability", "order": "ascending"}, "title": null, "type": "nominal"}}}, {"mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 11, "fontWeight": "bold"}, "encoding": {"color": {"value": "#374151"}, "text": {"field": "label", "type": "nominal"}, "x": {"field": "probability", "type": "quantitative"}, "y": {"field": "technology", "sort": {"field": "probability", "order": "ascending"}, "type": "nominal"}}}], "data": {"name": "data-894a0c20391be943c0f846b46f32232f"}, "height": {"step": 40}, "title": "Completion Probability by Technology", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-894a0c20391be943c0f846b46f32232f": [{"technology": "Other", "probability": 14.000000000000002, "total_mw": 569399.5981, "expected_mw": 79715.943734, "label": "14%", "color": "#DC2626"}, {"technology": "Solar", "probability": 14.000000000000002, "total_mw": 438000.10104700003, "expected_mw": 61320.01414658001, "label": "14%", "color": "#DC2626"}, {"technology": "Storage", "probability": 18.0, "total_mw": 223951.36093199998, "expected_mw": 40311.244967759994, "label": "18%", "color": "#DC2626"}, {"technology": "Hydro", "probability": 20.0, "total_mw": 466.29999999999995, "expected_mw": 93.25999999999999, "label": "20%", "color": "#D97706"}, {"technology": "Hybrid", "probability": 20.0, "total_mw": 37219.2, "expected_mw": 7443.84, "label": "20%", "color": "#D97706"}, {"technology": "Wind", "probability": 21.0, "total_mw": 341088.12399999995, "expected_mw": 71628.50604, "label": "21%", "color": "#D97706"}, {"technology": "Nuclear", "probability": 25.0, "total_mw": 2679.1, "expected_mw": 669.775, "label": "25%", "color": "#D97706"}, {"technology": "Gas", "probability": 32.0, "total_mw": 178914.26699664307, "expected_mw": 57252.56543892578, "label": "32%", "color": "#16A34A"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

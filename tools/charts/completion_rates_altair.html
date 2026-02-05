@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"data": {"name": "data-a88861cb29ba1ff04253b85c3b2f721f"}, "mark": {"type": "bar", "cornerRadiusEnd": 4, "height": 20}, "encoding": {"color": {"condition": {"test": "datum.highlight", "value": "#DC2626"}, "value": "#2563EB"}, "tooltip": [{"field": "category", "title": "Category", "type": "nominal"}, {"field": "rate", "format": ".1f", "title": "Completion Rate", "type": "quantitative"}], "x": {"field": "rate", "scale": {"domain": [0, 100]}, "title": "Completion Rate (%)", "type": "quantitative"}, "y": {"field": "category", "sort": {"field": "rate", "order": "ascending"}, "title": null, "type": "nominal"}}}, {"data": {"name": "data-4818287534fa2417676954d9b3f97750"}, "mark": {"type": "rule", "color": "#6B7280", "strokeDash": [4, 4], "strokeWidth": 2}, "encoding": {"x": {"field": "avg", "type": "quantitative"}}}, {"data": {"name": "data-a854d2e459bd539c24e7e26e5097ef0e"}, "mark": {"type": "text", "align": "left", "color": "#6B7280", "dx": 5, "dy": -10, "fontSize": 11}, "encoding": {"text": {"field": "label", "type": "nominal"}, "x": {"field": "avg", "type": "quantitative"}}}], "height": {"step": 35}, "title": "Test Completion Rates", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-a88861cb29ba1ff04253b85c3b2f721f": [{"category": "Single", "rate": 14, "highlight": false}, {"category": "Mid-tier", "rate": 21, "highlight": true}, {"category": "Experienced", "rate": 32, "highlight": false}], "data-4818287534fa2417676954d9b3f97750": [{"avg": 22.333333333333332}], "data-a854d2e459bd539c24e7e26e5097ef0e": [{"avg": 22.333333333333332, "label": "Avg: 22%"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

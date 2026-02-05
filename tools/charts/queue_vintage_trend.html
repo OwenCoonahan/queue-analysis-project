@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "line", "color": "#2563EB", "strokeWidth": 3}, "encoding": {"x": {"field": "year", "title": "Queue Entry Year", "type": "ordinal"}, "y": {"field": "gw", "title": "Capacity (GW)", "type": "quantitative"}}}, {"mark": {"type": "circle", "color": "#2563EB", "size": 80}, "encoding": {"tooltip": [{"field": "year", "title": "Year", "type": "ordinal"}, {"field": "gw", "format": ",.1f", "title": "GW", "type": "quantitative"}, {"field": "project_count", "format": ",", "title": "Projects", "type": "quantitative"}], "x": {"field": "year", "type": "ordinal"}, "y": {"field": "gw", "type": "quantitative"}}}], "data": {"name": "data-534e07bfd20f2b146117e1f495dcb8df"}, "height": 350, "title": "Queue Growth by Vintage Year", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-534e07bfd20f2b146117e1f495dcb8df": [{"year": 2010, "mw": 193.0, "gw": 0.193, "project_count": 3}, {"year": 2011, "mw": 674.5, "gw": 0.6745, "project_count": 5}, {"year": 2012, "mw": 20.0, "gw": 0.02, "project_count": 1}, {"year": 2013, "mw": 70.5, "gw": 0.0705, "project_count": 3}, {"year": 2014, "mw": 592.0, "gw": 0.592, "project_count": 9}, {"year": 2015, "mw": 3139.11, "gw": 3.13911, "project_count": 19}, {"year": 2016, "mw": 3111.862, "gw": 3.111862, "project_count": 27}, {"year": 2017, "mw": 6412.860000000001, "gw": 6.41286, "project_count": 24}, {"year": 2018, "mw": 7477.865, "gw": 7.4778649999999995, "project_count": 39}, {"year": 2019, "mw": 16746.807999999997, "gw": 16.746807999999998, "project_count": 71}, {"year": 2020, "mw": 13866.4417, "gw": 13.8664417, "project_count": 62}, {"year": 2021, "mw": 46447.91927900001, "gw": 46.44791927900001, "project_count": 154}, {"year": 2022, "mw": 370.2, "gw": 0.3702, "project_count": 5}, {"year": 2023, "mw": 1106.0, "gw": 1.106, "project_count": 4}, {"year": 2024, "mw": 1186.9, "gw": 1.1869, "project_count": 13}, {"year": 2025, "mw": 8397.0, "gw": 8.397, "project_count": 27}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

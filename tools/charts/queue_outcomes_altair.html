@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "arc", "innerRadius": 80, "outerRadius": 140, "stroke": "white", "strokeWidth": 2}, "encoding": {"color": {"field": "status", "scale": {"domain": ["Withdrawn", "Active", "Completed"], "range": ["#DC2626", "#2563EB", "#16A34A"]}, "title": "Status", "type": "nominal"}, "theta": {"field": "count", "stack": true, "type": "quantitative"}, "tooltip": [{"field": "status", "title": "Status", "type": "nominal"}, {"field": "count", "format": ",", "title": "Count", "type": "quantitative"}, {"field": "percentage", "format": ".1f", "title": "Percent", "type": "quantitative"}]}}, {"mark": {"type": "text", "fontSize": 12, "radius": 170}, "encoding": {"color": {"field": "status", "scale": {"domain": ["Withdrawn", "Active", "Completed"], "range": ["#DC2626", "#2563EB", "#16A34A"]}, "title": "Status", "type": "nominal"}, "text": {"field": "percentage", "format": ".0f", "type": "quantitative"}, "theta": {"field": "count", "stack": true, "type": "quantitative"}, "tooltip": [{"field": "status", "title": "Status", "type": "nominal"}, {"field": "count", "format": ",", "title": "Count", "type": "quantitative"}, {"field": "percentage", "format": ".1f", "title": "Percent", "type": "quantitative"}]}}], "data": {"name": "data-e9eb0661fb7f6bd11841d32288f0c4dd"}, "height": 350, "title": "Test", "width": 350, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-e9eb0661fb7f6bd11841d32288f0c4dd": [{"status": "Withdrawn", "count": 50, "percentage": 50.0, "color": "#DC2626", "highlight": false}, {"status": "Active", "count": 40, "percentage": 40.0, "color": "#2563EB", "highlight": true}, {"status": "Completed", "count": 10, "percentage": 10.0, "color": "#16A34A", "highlight": false}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

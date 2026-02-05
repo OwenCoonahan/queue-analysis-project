@@ -1,2 +1,34 @@
 .DS_Store
 .claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+nohup.out
+
+# Screenshots and temp images (keep charts/)
+screenshots/
+*.png
+!tools/charts/*.png
+
+# Output files
+output/
+
+# Local data cache
+.data/
+.cache/

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "color": "#2563EB", "opacity": 0.3}, "encoding": {"x": {"field": "region", "sort": {"field": "p50", "order": "ascending"}, "title": null, "type": "nominal"}, "y": {"field": "p25", "title": "Interconnection Cost ($/kW)", "type": "quantitative"}, "y2": {"field": "p75"}}}, {"mark": {"type": "tick", "color": "#2563EB", "size": 30, "thickness": 3}, "encoding": {"tooltip": [{"field": "region", "title": "Region", "type": "nominal"}, {"field": "p25", "format": "$,.0f", "title": "P25 (Low)", "type": "quantitative"}, {"field": "p50", "format": "$,.0f", "title": "P50 (Median)", "type": "quantitative"}, {"field": "p75", "format": "$,.0f", "title": "P75 (High)", "type": "quantitative"}], "x": {"field": "region", "sort": {"field": "p50", "order": "ascending"}, "type": "nominal"}, "y": {"field": "p50", "type": "quantitative"}}}, {"mark": {"type": "text", "dy": -15, "fontSize": 10, "fontWeight": "bold"}, "encoding": {"color": {"value": "#374151"}, "text": {"field": "p50", "format": "$,.0f", "type": "quantitative"}, "x": {"field": "region", "sort": {"field": "p50", "order": "ascending"}, "type": "nominal"}, "y": {"field": "p75", "type": "quantitative"}}}], "data": {"name": "data-7b0deaa612957cc879a7c9ca05a204de"}, "height": 350, "title": "Interconnection Cost Benchmarks by Region", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-7b0deaa612957cc879a7c9ca05a204de": [{"region": "PJM", "p25": 3, "p50": 6, "p75": 15}, {"region": "SPP", "p25": 15, "p50": 25, "p75": 50}, {"region": "ERCOT", "p25": 30, "p50": 50, "p75": 90}, {"region": "NYISO", "p25": 30, "p50": 52, "p75": 100}, {"region": "MISO", "p25": 50, "p50": 83, "p75": 150}, {"region": "CAISO", "p25": 60, "p50": 100, "p75": 180}, {"region": "ISO-NE", "p25": 140, "p50": 224, "p75": 350}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

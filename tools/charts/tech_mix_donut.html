@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"data": {"name": "data-5c53f0b2efc6278b6b0258c8856964f1"}, "mark": {"type": "arc", "innerRadius": 80, "outerRadius": 140, "stroke": "white", "strokeWidth": 2}, "encoding": {"color": {"field": "technology", "scale": {"domain": ["Other", "Solar", "Wind", "Storage", "Gas", "Hybrid", "Nuclear", "Hydro"], "range": ["#6B7280", "#F59E0B", "#0EA5E9", "#10B981", "#6B7280", "#8B5CF6", "#6B7280", "#6B7280"]}, "title": "Technology", "type": "nominal"}, "theta": {"field": "mw", "stack": true, "type": "quantitative"}, "tooltip": [{"field": "technology", "title": "Technology", "type": "nominal"}, {"field": "mw", "format": ",.0f", "title": "MW", "type": "quantitative"}, {"field": "percentage", "format": ".1f", "title": "Share", "type": "quantitative"}]}}, {"data": {"name": "data-4abc7b2f4c3fc3a1821296177af51f66"}, "mark": {"type": "text", "color": "#2563EB", "fontSize": 28, "fontWeight": "bold"}, "encoding": {"text": {"field": "text", "type": "nominal"}}}, {"data": {"name": "data-c95ef38df12a1f6d1508f602f7661da4"}, "mark": {"type": "text", "color": "#6B7280", "dy": 22, "fontSize": 12}, "encoding": {"text": {"field": "text", "type": "nominal"}}}], "height": 400, "title": "Pipeline by Technology", "width": 400, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-5c53f0b2efc6278b6b0258c8856964f1": [{"technology": "Other", "mw": 569399.5981, "percentage": 31.779531258177908, "label": "Other: 569 GW (32%)"}, {"technology": "Solar", "mw": 438000.10104700003, "percentage": 24.44581616979582, "label": "Solar: 438 GW (24%)"}, {"technology": "Wind", "mw": 341088.12399999995, "percentage": 19.036930715478952, "label": "Wind: 341 GW (19%)"}, {"technology": "Storage", "mw": 223951.36093199998, "percentage": 12.49925236828153, "label": "Storage: 224 GW (12%)"}, {"technology": "Gas", "mw": 178914.26699664307, "percentage": 9.98562619209163, "label": "Gas: 179 GW (10%)"}, {"technology": "Hybrid", "mw": 37219.2, "percentage": 2.077291121650293, "label": "Hybrid: 37 GW (2%)"}, {"technology": "Nuclear", "mw": 2679.1, "percentage": 0.1495268744092646, "label": "Nuclear: 3 GW (0%)"}, {"technology": "Hydro", "mw": 466.29999999999995, "percentage": 0.026025300114605677, "label": "Hydro: 0 GW (0%)"}], "data-4abc7b2f4c3fc3a1821296177af51f66": [{"text": "1792", "label": "GW Total"}], "data-c95ef38df12a1f6d1508f602f7661da4": [{"text": "GW Total"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

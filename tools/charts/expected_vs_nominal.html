@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "data": {"name": "data-9a6f66b4b9bfd322034125ca8e787b18"}, "mark": {"type": "bar", "cornerRadiusEnd": 3}, "encoding": {"color": {"field": "type", "scale": {"domain": ["Nominal", "Expected"], "range": ["#2563EB", "#16A34A"]}, "title": "", "type": "nominal"}, "tooltip": [{"field": "technology", "title": "Technology", "type": "nominal"}, {"field": "type", "title": "Type", "type": "nominal"}, {"field": "mw", "format": ",.0f", "title": "MW", "type": "quantitative"}], "x": {"field": "technology", "sort": ["Other", "Solar", "Wind", "Storage", "Gas", "Hybrid", "Nuclear", "Hydro"], "title": null, "type": "nominal"}, "xOffset": {"field": "type", "type": "nominal"}, "y": {"field": "mw", "title": "Capacity (MW)", "type": "quantitative"}}, "height": 350, "title": "Nominal vs Expected MW by Technology", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-9a6f66b4b9bfd322034125ca8e787b18": [{"technology": "Other", "type": "Nominal", "mw": 569399.5981}, {"technology": "Other", "type": "Expected", "mw": 79715.943734}, {"technology": "Storage", "type": "Nominal", "mw": 223951.36093199998}, {"technology": "Storage", "type": "Expected", "mw": 40311.244967759994}, {"technology": "Wind", "type": "Nominal", "mw": 341088.12399999995}, {"technology": "Wind", "type": "Expected", "mw": 71628.50604}, {"technology": "Solar", "type": "Nominal", "mw": 438000.10104700003}, {"technology": "Solar", "type": "Expected", "mw": 61320.01414658001}, {"technology": "Gas", "type": "Nominal", "mw": 178914.26699664307}, {"technology": "Gas", "type": "Expected", "mw": 57252.56543892578}, {"technology": "Hydro", "type": "Nominal", "mw": 466.29999999999995}, {"technology": "Hydro", "type": "Expected", "mw": 93.25999999999999}, {"technology": "Nuclear", "type": "Nominal", "mw": 2679.1}, {"technology": "Nuclear", "type": "Expected", "mw": 669.775}, {"technology": "Hybrid", "type": "Nominal", "mw": 37219.2}, {"technology": "Hybrid", "type": "Expected", "mw": 7443.84}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

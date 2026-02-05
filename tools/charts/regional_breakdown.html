@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "color": "#2563EB", "cornerRadiusEnd": 4, "height": 30}, "encoding": {"tooltip": [{"field": "region", "title": "Region", "type": "nominal"}, {"field": "gw", "format": ",.1f", "title": "GW", "type": "quantitative"}, {"field": "project_count", "format": ",", "title": "Projects", "type": "quantitative"}], "x": {"field": "gw", "title": "Capacity (GW)", "type": "quantitative"}, "y": {"field": "region", "sort": {"field": "mw", "order": "ascending"}, "title": null, "type": "nominal"}}}, {"mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 11, "fontWeight": "bold"}, "encoding": {"color": {"value": "#374151"}, "text": {"field": "gw", "format": ".0f", "type": "quantitative"}, "x": {"field": "gw", "type": "quantitative"}, "y": {"field": "region", "sort": {"field": "mw", "order": "ascending"}, "type": "nominal"}}}], "data": {"name": "data-707dcc7854a39bf82903a305ea72adfc"}, "height": {"step": 45}, "title": "Pipeline by Region", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-707dcc7854a39bf82903a305ea72adfc": [{"region": "NYISO", "mw": 24703.6, "gw": 24.703599999999998, "project_count": 179}, {"region": "CAISO", "mw": 88564.61097564307, "gw": 88.56461097564306, "project_count": 330}, {"region": "ISONE", "mw": 202335.83010000002, "gw": 202.3358301, "project_count": 1751}, {"region": "ERCOT", "mw": 235877.32, "gw": 235.87732, "project_count": 1258}, {"region": "SPP", "mw": 579386.54, "gw": 579.3865400000001, "project_count": 2816}, {"region": "MISO", "mw": 660850.1499999999, "gw": 660.8501499999999, "project_count": 3698}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

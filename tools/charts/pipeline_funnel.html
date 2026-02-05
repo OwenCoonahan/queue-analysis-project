@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@6.1.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"strokeWidth": 0}, "axis": {"labelFontSize": 12, "titleFontSize": 13, "titleFontWeight": "normal", "gridColor": "#E5E7EB", "domainColor": "#9CA3AF"}, "legend": {"labelFontSize": 11, "titleFontSize": 12}, "title": {"fontSize": 16, "fontWeight": "bold", "anchor": "start", "offset": 10}, "mark": {"opacity": 0.85}}, "layer": [{"mark": {"type": "bar", "cornerRadiusEnd": 4}, "encoding": {"color": {"field": "color", "scale": null, "type": "nominal"}, "tooltip": [{"field": "phase", "title": "Phase", "type": "nominal"}, {"field": "gw", "format": ",.1f", "title": "GW", "type": "quantitative"}, {"field": "project_count", "format": ",", "title": "Projects", "type": "quantitative"}, {"field": "probability", "format": ".0f", "title": "Completion Rate", "type": "quantitative"}], "x": {"field": "gw", "title": "Capacity (GW)", "type": "quantitative"}, "y": {"field": "phase", "sort": {"field": "order"}, "title": null, "type": "nominal"}}}, {"mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 10}, "encoding": {"color": {"value": "#6B7280"}, "text": {"field": "probability", "format": ".0f", "type": "quantitative"}, "x": {"field": "gw", "type": "quantitative"}, "y": {"field": "phase", "sort": {"field": "order"}, "type": "nominal"}}}], "data": {"name": "data-72fe86cf8f3a2b874590d5b9ef34bb5e"}, "height": {"step": 40}, "title": "Pipeline by Study Phase", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-72fe86cf8f3a2b874590d5b9ef34bb5e": [{"phase": "Pending", "mw": 2747.3, "gw": 2.7473, "project_count": 17, "probability": 10.0, "order": 0, "color": "#DC2626"}, {"phase": "Active", "mw": 406918.2149756431, "gw": 406.9182149756431, "project_count": 1774, "probability": 20.0, "order": 6, "color": "#DC2626"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

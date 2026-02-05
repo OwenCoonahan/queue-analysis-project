@@ -1,5 +1,7 @@
 .DS_Store
-.claude/
+
+# Claude Code - share settings.json, keep local overrides private
+.claude/settings.local.json
 
 # Python
 __pycache__/
@@ -32,3 +34,4 @@ output/
 # Local data cache
 .data/
 .cache/
+queue-data.zip

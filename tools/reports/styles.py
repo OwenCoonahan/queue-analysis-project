@@ -1,7 +1,7 @@
 """
-Premium CSS styles for PDF reports.
+Minimal CSS styles for PDF reports.
 
-Provides professional, PE-quality styling for deal and cluster reports.
+Clean, traditional financial report styling without AI-generated visual patterns.
 """
 
 
@@ -10,12 +10,12 @@ def get_base_css() -> str:
     return '''
     @page {
         size: letter;
-        margin: 0.5in 0.6in 0.7in 0.6in;
+        margin: 0.6in 0.7in 0.7in 0.7in;
         @bottom-center {
             content: counter(page);
-            font-size: 8px;
-            color: #94a3b8;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 9px;
+            color: #666;
+            font-family: "Times New Roman", Georgia, serif;
         }
     }
 
@@ -28,10 +28,10 @@ def get_base_css() -> str:
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        font-size: 9.5px;
+        font-family: "Times New Roman", Georgia, serif;
+        font-size: 10px;
         line-height: 1.5;
-        color: #1e293b;
+        color: #1a1a1a;
         background: white;
     }
 
@@ -43,63 +43,52 @@ def get_base_css() -> str:
 
 
 def get_deal_report_css() -> str:
-    """Premium CSS for deal (single project) reports."""
+    """Minimal CSS for deal reports - traditional financial style."""
     return get_base_css() + '''
 
     /* =============================================
-       PREMIUM HEADER
+       HEADER - Simple, professional
        ============================================= */
     .header {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1e40af 100%);
+        background: #1a1a1a;
         color: white;
-        padding: 32px 40px 28px 40px;
-        margin: -0.5in -0.6in 28px -0.6in;
-        width: calc(100% + 1.2in);
-        position: relative;
-    }
-
-    .header::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+        padding: 28px 32px 24px 32px;
+        margin: -0.6in -0.7in 24px -0.7in;
+        width: calc(100% + 1.4in);
     }
 
     .header-badge {
         display: inline-block;
-        background: rgba(255,255,255,0.12);
-        padding: 5px 14px;
-        border-radius: 4px;
         font-size: 9px;
-        font-weight: 600;
-        letter-spacing: 1.2px;
+        font-weight: 400;
+        letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 14px;
-        border: 1px solid rgba(255,255,255,0.15);
+        margin-bottom: 10px;
+        opacity: 0.7;
     }
 
     .header h1 {
-        font-size: 24px;
-        margin: 0 0 6px 0;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+        font-size: 22px;
+        margin: 0 0 4px 0;
+        font-weight: 400;
+        font-family: "Times New Roman", Georgia, serif;
     }
 
     .header-project {
-        font-size: 14px;
-        opacity: 0.95;
-        margin-bottom: 14px;
-        font-weight: 500;
+        font-size: 13px;
+        margin-bottom: 12px;
+        font-weight: 400;
     }
 
     .header-meta {
         display: flex;
-        gap: 30px;
-        font-size: 10px;
-        opacity: 0.85;
+        gap: 24px;
+        font-size: 9px;
+        opacity: 0.7;
+    }
+
+    .header-meta span {
+        font-family: -apple-system, sans-serif;
     }
 
     /* =============================================
@@ -107,38 +96,23 @@ def get_deal_report_css() -> str:
        ============================================= */
     .exec-grid {
         display: flex;
-        gap: 24px;
+        gap: 28px;
         margin-bottom: 20px;
     }
 
-    /* Score Card */
+    /* Score Card - Clean */
     .score-card {
-        min-width: 170px;
-        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 22px 28px;
+        min-width: 160px;
         text-align: center;
-        position: relative;
+        padding: 18px 24px;
+        border: 1px solid #ddd;
     }
 
-    .score-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        border-radius: 14px 14px 0 0;
-    }
-
-    .score-card.go::before { background: linear-gradient(90deg, #22c55e, #16a34a); }
-    .score-card.conditional::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
-    .score-card.nogo::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .score-card::before { display: none; }
 
     .score-gauge {
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
         margin: 0 auto 10px;
         position: relative;
     }
@@ -149,19 +123,19 @@ def get_deal_report_css() -> str:
 
     .gauge-bg {
         fill: none;
-        stroke: #e2e8f0;
-        stroke-width: 8;
+        stroke: #e5e5e5;
+        stroke-width: 6;
     }
 
     .gauge-fill {
         fill: none;
-        stroke-width: 8;
+        stroke-width: 6;
         stroke-linecap: round;
     }
 
-    .gauge-fill.go { stroke: #22c55e; }
-    .gauge-fill.conditional { stroke: #f59e0b; }
-    .gauge-fill.nogo { stroke: #ef4444; }
+    .gauge-fill.go { stroke: #2d7a2d; }
+    .gauge-fill.conditional { stroke: #b8860b; }
+    .gauge-fill.nogo { stroke: #a02020; }
 
     .score-center {
         position: absolute;
@@ -172,39 +146,47 @@ def get_deal_report_css() -> str:
     }
 
     .score-number {
-        font-size: 30px;
-        font-weight: 800;
-        color: #0f172a;
+        font-size: 28px;
+        font-weight: 400;
+        color: #1a1a1a;
         line-height: 1;
+        font-family: "Times New Roman", Georgia, serif;
     }
 
     .score-max {
         font-size: 10px;
-        color: #64748b;
+        color: #666;
     }
 
     .verdict-pill {
         display: inline-block;
-        padding: 7px 22px;
-        border-radius: 20px;
+        padding: 6px 18px;
         font-weight: 700;
-        font-size: 11px;
+        font-size: 10px;
         color: white;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 1px;
         margin: 10px 0 8px 0;
+        font-family: -apple-system, sans-serif;
     }
 
-    .verdict-pill.go { background: linear-gradient(135deg, #22c55e, #16a34a); }
-    .verdict-pill.conditional { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .verdict-pill.nogo { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .verdict-pill.go { background: #2d7a2d; }
+    .verdict-pill.conditional { background: #b8860b; }
+    .verdict-pill.nogo { background: #a02020; }
 
     .score-meta {
         font-size: 9px;
-        color: #64748b;
+        color: #666;
     }
 
-    /* KPI Grid */
+    .score-percentile {
+        font-size: 9px;
+        color: #666;
+        margin-top: 6px;
+        font-style: italic;
+    }
+
+    /* KPI Grid - Clean boxes */
     .kpi-grid {
         flex: 1;
         display: grid;
@@ -213,47 +195,48 @@ def get_deal_report_css() -> str:
     }
 
     .kpi-card {
-        padding: 14px 16px;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        border-left: 4px solid;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
     }
 
-    .kpi-card.cost { border-left-color: #3b82f6; }
-    .kpi-card.prob { border-left-color: #8b5cf6; }
-    .kpi-card.cod { border-left-color: #06b6d4; }
-    .kpi-card.comp { border-left-color: #10b981; }
+    .kpi-card.cost,
+    .kpi-card.prob,
+    .kpi-card.cod,
+    .kpi-card.comp {
+        border-left-width: 1px;
+        border-left-color: #ddd;
+    }
 
     .kpi-label {
         font-size: 8px;
-        color: #64748b;
+        color: #666;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
+        font-family: -apple-system, sans-serif;
     }
 
     .kpi-value {
-        font-size: 18px;
-        font-weight: 700;
-        color: #0f172a;
+        font-size: 16px;
+        font-weight: 400;
+        color: #1a1a1a;
         line-height: 1.1;
+        font-family: "Times New Roman", Georgia, serif;
     }
 
     .kpi-detail {
         font-size: 8px;
-        color: #94a3b8;
-        margin-top: 3px;
+        color: #888;
+        margin-top: 2px;
     }
 
-    /* Risk Alert */
+    /* Risk Alert - Subdued */
     .risk-alert {
         display: flex;
         gap: 24px;
-        padding: 14px 18px;
-        background: linear-gradient(135deg, #fffbeb, #fef3c7);
-        border-left: 4px solid #f59e0b;
-        border-radius: 0 10px 10px 0;
+        padding: 12px 16px;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
         margin-top: 16px;
     }
 
@@ -264,14 +247,15 @@ def get_deal_report_css() -> str:
     .risk-alert-label {
         font-size: 8px;
         font-weight: 700;
-        color: #92400e;
+        color: #666;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        font-family: -apple-system, sans-serif;
     }
 
     .risk-alert-value {
         font-size: 10px;
-        color: #78350f;
+        color: #333;
         margin-top: 2px;
         line-height: 1.4;
     }
@@ -280,29 +264,38 @@ def get_deal_report_css() -> str:
        SECTIONS
        ============================================= */
     .section {
-        margin-bottom: 26px;
+        margin-bottom: 24px;
         page-break-inside: avoid;
     }
 
     h2 {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
-        color: #0f172a;
-        border-bottom: 2px solid #0f172a;
-        padding-bottom: 7px;
-        margin: 0 0 16px 0;
-        letter-spacing: -0.2px;
+        color: #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+        padding-bottom: 6px;
+        margin: 0 0 14px 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: -apple-system, sans-serif;
     }
 
     h3 {
         font-size: 11px;
         font-weight: 600;
-        color: #334155;
+        color: #333;
         margin: 0 0 10px 0;
     }
 
+    h4 {
+        font-size: 10px;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 8px 0;
+    }
+
     /* =============================================
-       TABLES
+       TABLES - Traditional
        ============================================= */
     table {
         width: 100%;
@@ -311,60 +304,53 @@ def get_deal_report_css() -> str:
     }
 
     .data-table {
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        overflow: hidden;
+        border: 1px solid #ccc;
     }
 
     .data-table th, .data-table td {
-        padding: 9px 12px;
+        padding: 8px 10px;
         text-align: left;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid #ddd;
     }
 
     .data-table th {
-        background: #f8fafc;
+        background: #f5f5f5;
         font-weight: 600;
-        color: #475569;
+        color: #333;
         font-size: 9px;
+        font-family: -apple-system, sans-serif;
     }
 
     .data-table tbody tr:last-child td {
         border-bottom: none;
     }
 
-    .data-table tbody tr:nth-child(even) {
-        background: #fafbfc;
-    }
-
     .highlight-row {
-        background: #f0fdf4 !important;
+        background: #f0f0f0 !important;
     }
 
     .highlight-row td {
         font-weight: 600;
-        color: #166534;
     }
 
     /* Score Table */
     .score-table {
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        overflow: hidden;
+        border: 1px solid #ccc;
     }
 
     .score-table th, .score-table td {
-        padding: 9px 12px;
-        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 10px;
+        border-bottom: 1px solid #ddd;
     }
 
     .score-table th {
-        background: #0f172a;
+        background: #1a1a1a;
         color: white;
         font-weight: 600;
-        font-size: 9px;
+        font-size: 8px;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.5px;
+        font-family: -apple-system, sans-serif;
     }
 
     .score-table td:first-child {
@@ -382,74 +368,71 @@ def get_deal_report_css() -> str:
     }
 
     .total-row {
-        background: #f0f9ff !important;
+        background: #f0f0f0 !important;
     }
 
     .total-row td {
         font-weight: 700;
-        color: #0f172a;
-        border-top: 2px solid #0f172a;
+        border-top: 2px solid #1a1a1a;
     }
 
-    /* Indicators */
+    /* Indicators - Simple */
     .indicator {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border-radius: 50%;
         color: white;
         font-size: 9px;
         font-weight: 700;
     }
 
-    .indicator-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
-    .indicator-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .indicator-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .indicator-green { background: #2d7a2d; }
+    .indicator-yellow { background: #b8860b; }
+    .indicator-red { background: #a02020; }
 
-    /* Badges */
+    /* Badges - Minimal */
     .badge {
         display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
+        padding: 3px 10px;
         font-size: 8px;
-        font-weight: 700;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        border: 1px solid;
+        font-family: -apple-system, sans-serif;
     }
 
     .badge-low {
-        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-        color: #166534;
+        background: white;
+        color: #2d7a2d;
+        border-color: #2d7a2d;
     }
 
     .badge-medium {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        color: #92400e;
+        background: white;
+        color: #b8860b;
+        border-color: #b8860b;
     }
 
     .badge-high {
-        background: linear-gradient(135deg, #fee2e2, #fecaca);
-        color: #991b1b;
+        background: white;
+        color: #a02020;
+        border-color: #a02020;
     }
 
     .badge-elevated {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        color: #92400e;
+        background: white;
+        color: #b8860b;
+        border-color: #b8860b;
     }
 
     .badge-moderate {
-        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-        color: #1e40af;
-    }
-
-    /* Score percentile text */
-    .score-percentile {
-        font-size: 9px;
-        color: #64748b;
-        margin-top: 6px;
-        font-style: italic;
+        background: white;
+        color: #666;
+        border-color: #666;
     }
 
     /* =============================================
@@ -457,7 +440,7 @@ def get_deal_report_css() -> str:
        ============================================= */
     .two-col {
         display: flex;
-        gap: 24px;
+        gap: 20px;
     }
 
     .two-col > div,
@@ -471,9 +454,8 @@ def get_deal_report_css() -> str:
     .chart-container {
         text-align: center;
         padding: 12px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
+        background: #fafafa;
+        border: 1px solid #ddd;
     }
 
     .chart-container img {
@@ -483,12 +465,12 @@ def get_deal_report_css() -> str:
 
     .chart-placeholder {
         padding: 40px 20px;
-        color: #94a3b8;
+        color: #999;
         font-size: 10px;
     }
 
     /* =============================================
-       FLAGS
+       FLAGS - Simple lists
        ============================================= */
     .flags-grid {
         display: flex;
@@ -500,23 +482,21 @@ def get_deal_report_css() -> str:
     }
 
     .flags-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 10px;
-        padding-bottom: 8px;
-        font-size: 11px;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        font-size: 10px;
         font-weight: 700;
+        font-family: -apple-system, sans-serif;
     }
 
     .flags-header.red {
-        border-bottom: 2px solid #ef4444;
-        color: #dc2626;
+        border-bottom: 1px solid #a02020;
+        color: #a02020;
     }
 
     .flags-header.green {
-        border-bottom: 2px solid #22c55e;
-        color: #16a34a;
+        border-bottom: 1px solid #2d7a2d;
+        color: #2d7a2d;
     }
 
     .flag-list {
@@ -526,78 +506,73 @@ def get_deal_report_css() -> str:
     }
 
     .flag-list li {
-        padding: 8px 12px;
-        margin-bottom: 6px;
-        border-radius: 6px;
+        padding: 6px 0;
         font-size: 9.5px;
         line-height: 1.4;
+        border-bottom: 1px solid #eee;
+    }
+
+    .flag-list li:last-child {
+        border-bottom: none;
     }
 
     .flag-list li.red-flag {
-        background: #fef2f2;
-        border-left: 3px solid #ef4444;
-        color: #991b1b;
+        color: #6b1515;
     }
 
     .flag-list li.green-flag {
-        background: #f0fdf4;
-        border-left: 3px solid #22c55e;
-        color: #166534;
+        color: #1a5c1a;
     }
 
     .flag-list li.no-flag {
-        background: #f8fafc;
-        color: #94a3b8;
+        color: #999;
         font-style: italic;
-        border-left: 3px solid #e2e8f0;
     }
 
     /* =============================================
-       RECOMMENDATION
+       RECOMMENDATION - Clean box
        ============================================= */
     .recommendation-box {
-        padding: 24px 28px;
-        border-radius: 12px;
+        padding: 20px 24px;
         text-align: center;
+        border: 2px solid #1a1a1a;
     }
 
     .recommendation-box.go {
-        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-        border: 2px solid #22c55e;
+        border-color: #2d7a2d;
     }
 
     .recommendation-box.conditional {
-        background: linear-gradient(135deg, #fffbeb, #fef3c7);
-        border: 2px solid #f59e0b;
+        border-color: #b8860b;
     }
 
     .recommendation-box.nogo {
-        background: linear-gradient(135deg, #fef2f2, #fee2e2);
-        border: 2px solid #ef4444;
+        border-color: #a02020;
     }
 
     .recommendation-verdict {
-        font-size: 15px;
-        font-weight: 800;
+        font-size: 14px;
+        font-weight: 700;
         margin-bottom: 10px;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        font-family: -apple-system, sans-serif;
     }
 
-    .recommendation-box.go .recommendation-verdict { color: #166534; }
-    .recommendation-box.conditional .recommendation-verdict { color: #92400e; }
-    .recommendation-box.nogo .recommendation-verdict { color: #991b1b; }
+    .recommendation-box.go .recommendation-verdict { color: #2d7a2d; }
+    .recommendation-box.conditional .recommendation-verdict { color: #b8860b; }
+    .recommendation-box.nogo .recommendation-verdict { color: #a02020; }
 
     .recommendation-text {
         font-size: 10px;
-        color: #475569;
+        color: #333;
         line-height: 1.6;
-        max-width: 480px;
+        max-width: 500px;
         margin: 0 auto;
     }
 
     /* =============================================
-       CHECKLIST
+       CHECKLIST - Simple
        ============================================= */
     .checklist {
         list-style: none;
@@ -608,69 +583,65 @@ def get_deal_report_css() -> str:
     }
 
     .checklist li {
-        padding: 9px 12px 9px 30px;
-        margin-bottom: 6px;
-        background: #f8fafc;
-        border-radius: 6px;
+        padding: 8px 0 8px 20px;
+        margin-bottom: 4px;
         font-size: 9.5px;
         position: relative;
         break-inside: avoid;
+        border-bottom: 1px solid #eee;
     }
 
     .checklist li::before {
-        content: "";
+        content: "\\2610";
         position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 12px;
-        height: 12px;
-        border: 2px solid #cbd5e1;
-        border-radius: 3px;
+        left: 0;
+        font-size: 12px;
+        color: #888;
     }
 
     .checklist li.priority {
-        background: #fef2f2;
-        border-left: 3px solid #ef4444;
+        font-weight: 600;
+        color: #6b1515;
     }
 
     .checklist li.priority::before {
-        border-color: #ef4444;
+        content: "\\25A0";
+        color: #a02020;
     }
 
     /* =============================================
        NOTES & FOOTER
        ============================================= */
     .note {
-        padding: 10px 14px;
-        background: #f8fafc;
-        border-radius: 6px;
+        padding: 10px 12px;
+        background: #f9f9f9;
         font-size: 9px;
-        color: #64748b;
-        margin-top: 12px;
-        border-left: 3px solid #3b82f6;
+        color: #555;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .note strong {
+        color: #333;
     }
 
     .footer {
-        margin-top: 35px;
-        padding-top: 18px;
-        border-top: 1px solid #e2e8f0;
+        margin-top: 30px;
+        padding-top: 16px;
+        border-top: 1px solid #ccc;
     }
 
     .footer-disclaimer {
         font-size: 8px;
-        color: #94a3b8;
-        line-height: 1.6;
-        margin-bottom: 12px;
-        padding: 10px 14px;
-        background: #f8fafc;
-        border-radius: 6px;
+        color: #888;
+        line-height: 1.5;
+        margin-bottom: 10px;
     }
 
     .footer-generated {
         text-align: center;
         font-size: 8px;
-        color: #64748b;
+        color: #888;
     }
 
     .page-break {
@@ -682,27 +653,49 @@ def get_deal_report_css() -> str:
     }
 
     /* =============================================
-       THESIS BOX
+       THESIS BOX - Simple
        ============================================= */
     .thesis-box {
-        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-        border: 1px solid #0ea5e9;
-        border-radius: 10px;
-        padding: 16px 20px;
-        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        padding: 14px 18px;
+        margin-bottom: 18px;
     }
 
     .thesis-title {
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
-        color: #0369a1;
-        margin-bottom: 8px;
+        color: #1a1a1a;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: -apple-system, sans-serif;
     }
 
     .thesis-content {
         font-size: 10px;
-        color: #0c4a6e;
+        color: #333;
         line-height: 1.5;
+    }
+
+    .thesis-content strong {
+        font-weight: 600;
+    }
+
+    /* =============================================
+       MARKET CARD
+       ============================================= */
+    .market-card {
+        border: 1px solid #ddd;
+        padding: 12px 14px;
+    }
+
+    .market-card h4 {
+        margin: 0 0 8px 0;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-family: -apple-system, sans-serif;
     }
     '''
 
@@ -710,44 +703,44 @@ def get_deal_report_css() -> str:
 def get_cluster_report_css() -> str:
     """CSS for cluster (portfolio) reports."""
     return get_base_css() + '''
-    /* Cluster styles - keeping existing implementation */
+    /* Cluster styles - minimal */
     .cover-page {
         height: 9.5in;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
-        margin: -0.5in -0.6in;
-        padding: 0.6in;
+        background: #1a1a1a;
+        margin: -0.6in -0.7in;
+        padding: 0.7in;
         page-break-after: always;
     }
 
     .cover-content { text-align: center; color: white; }
-    .cover-content h1 { font-size: 34px; font-weight: 700; margin: 0 0 12px 0; }
-    .cover-subtitle { font-size: 17px; opacity: 0.9; margin-bottom: 45px; }
-    .cover-stats { display: flex; justify-content: center; gap: 50px; margin-bottom: 55px; }
+    .cover-content h1 { font-size: 30px; font-weight: 400; margin: 0 0 10px 0; font-family: "Times New Roman", Georgia, serif; }
+    .cover-subtitle { font-size: 15px; opacity: 0.8; margin-bottom: 40px; }
+    .cover-stats { display: flex; justify-content: center; gap: 50px; margin-bottom: 50px; }
     .cover-stat { text-align: center; }
-    .cover-stat-value { display: block; font-size: 34px; font-weight: 700; }
-    .cover-stat-label { display: block; font-size: 12px; opacity: 0.8; margin-top: 5px; }
-    .cover-footer { font-size: 13px; opacity: 0.9; }
+    .cover-stat-value { display: block; font-size: 30px; font-weight: 400; font-family: "Times New Roman", Georgia, serif; }
+    .cover-stat-label { display: block; font-size: 11px; opacity: 0.7; margin-top: 5px; }
+    .cover-footer { font-size: 12px; opacity: 0.8; }
 
     .slide { page-break-before: always; min-height: 8.5in; }
     .slide:first-of-type { page-break-before: auto; }
-    .slide-title { font-size: 19px; color: #0f172a; border-bottom: 3px solid #1e3a5f; padding-bottom: 10px; margin: 0 0 22px 0; }
+    .slide-title { font-size: 16px; color: #1a1a1a; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px; margin: 0 0 20px 0; }
     '''
 
 
 COLORS = {
-    'primary': '#0f172a',
-    'secondary': '#1e3a5f',
-    'accent': '#3b82f6',
-    'success': '#22c55e',
-    'warning': '#f59e0b',
-    'danger': '#ef4444',
+    'primary': '#1a1a1a',
+    'secondary': '#333',
+    'accent': '#1a1a1a',
+    'success': '#2d7a2d',
+    'warning': '#b8860b',
+    'danger': '#a02020',
 }
 
 RECOMMENDATION_COLORS = {
-    'GO': '#22c55e',
-    'CONDITIONAL': '#f59e0b',
-    'NO-GO': '#ef4444',
+    'GO': '#2d7a2d',
+    'CONDITIONAL': '#b8860b',
+    'NO-GO': '#a02020',
 }

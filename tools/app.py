@@ -27,12 +27,15 @@ try:
 except ImportError:
     INTELLIGENCE_AVAILABLE = False
 
-# Try to import Playwright for PDF generation
+# Try to import WeasyPrint for PDF generation (consolidated library)
 try:
-    from playwright.sync_api import sync_playwright
-    PLAYWRIGHT_AVAILABLE = True
+    from weasyprint import HTML, CSS
+    WEASYPRINT_AVAILABLE = True
 except ImportError:
-    PLAYWRIGHT_AVAILABLE = False
+    WEASYPRINT_AVAILABLE = False
+
+# Legacy Playwright support (deprecated - prefer WeasyPrint)
+WEASYPRINT_AVAILABLE = False  # Disabled in favor of WeasyPrint
 
 # =============================================================================
 # BENCHMARK DATA (from LBL Berkeley Lab)
@@ -1455,22 +1458,26 @@ def generate_intelligence_html(intelligence):
 
 
 def generate_pdf(html_content):
-    """Generate PDF from HTML using Playwright."""
-    if not PLAYWRIGHT_AVAILABLE:
+    """Generate PDF from HTML using WeasyPrint."""
+    if not WEASYPRINT_AVAILABLE:
         return None
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page()
-        page.set_content(html_content)
-        pdf_bytes = page.pdf(
-            format='Letter',
-            margin={'top': '0.25in', 'right': '0.25in', 'bottom': '0.25in', 'left': '0.25in'},
-            print_background=True
-        )
-        browser.close()
-
-    return pdf_bytes
+    try:
+        # CSS for PDF rendering
+        css = CSS(string='''
+            @page {
+                size: letter;
+                margin: 0.25in;
+            }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+        ''')
+        pdf_bytes = HTML(string=html_content).write_pdf(stylesheets=[css])
+        return pdf_bytes
+    except Exception as e:
+        print(f"PDF generation error: {e}")
+        return None
 
 
 # =============================================================================
@@ -2420,7 +2427,7 @@ def main():
                                 with st.spinner("Generating report..."):
                                     html = generate_report_html(project, analysis, client_name, prepared_by or "Queue Analysis", notes)
 
-                                    if PLAYWRIGHT_AVAILABLE:
+                                    if WEASYPRINT_AVAILABLE:
                                         pdf_bytes = generate_pdf(html)
                                         if pdf_bytes:
                                             st.session_state.report_data = pdf_bytes

@@ -90,10 +90,24 @@ def generate_deal_report(
     from scoring import FeasibilityScorer
     from real_data import RealDataEstimator
 
-    # Score the project
+    # Find the project row directly (handle queue_id vs id column issue)
     print(f"[1/4] Scoring project {project_id}...")
+
+    # Look for project by queue_id column
+    project_row = None
+    for col in ['queue_id', 'Queue_ID', 'queue', 'id', 'ID']:
+        if col in df.columns:
+            matches = df[df[col].astype(str) == str(project_id)]
+            if not matches.empty:
+                project_row = matches.iloc[0]
+                break
+
+    if project_row is None:
+        raise ValueError(f"Project not found: {project_id}")
+
+    # Score the project by passing row directly
     scorer = FeasibilityScorer(df)
-    score_result = scorer.score_project(project_id=project_id)
+    score_result = scorer.score_project(row=project_row)
 
     if 'error' in score_result:
         raise ValueError(f"Could not score project: {score_result['error']}")
@@ -199,6 +213,21 @@ def generate_deal_report(
 
 def _load_queue_data() -> pd.DataFrame:
     """Load queue data from available sources."""
+    import sqlite3
+
+    # Try loading from SQLite database (most comprehensive)
+    try:
+        db_path = Path(__file__).parent.parent / '.data' / 'queue.db'
+        if db_path.exists():
+            conn = sqlite3.connect(str(db_path))
+            df = pd.read_sql('SELECT * FROM projects', conn)
+            conn.close()
+            if not df.empty:
+                return df
+    except Exception:
+        pass
+
+    # Fallback to market_intel
     try:
         from market_intel import MarketData
         market = MarketData()
@@ -206,6 +235,7 @@ def _load_queue_data() -> pd.DataFrame:
     except Exception:
         pass
 
+    # Fallback to unified_data
     try:
         from unified_data import UnifiedQueue
         uq = UnifiedQueue()

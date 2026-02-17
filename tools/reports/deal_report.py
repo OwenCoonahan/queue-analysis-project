@@ -533,8 +533,8 @@ def _build_html(
     red_flags = score_result.get('red_flags', [])
     green_flags = score_result.get('green_flags', [])
 
-    rec_color = RECOMMENDATION_COLORS.get(rec, '#6b7280')
-    rec_class = f"rec-{rec.lower().replace('-', '')}"
+    # Recommendation class for styling
+    rec_class = rec.lower().replace('-', '')
 
     # Format estimates
     cost_range = estimator.format_cost_range(cost_data)
@@ -549,27 +549,35 @@ def _build_html(
         dt = now + relativedelta(months=int(months))
         return f"Q{(dt.month - 1) // 3 + 1} {dt.year}"
 
-    # Traffic light helper
-    def traffic_light(score_val, max_val):
+    # Generate SVG gauge
+    def svg_gauge(score_val, max_val=100):
+        pct = min(score_val / max_val, 1.0) if max_val > 0 else 0
+        radius = 40
+        circumference = 2 * 3.14159 * radius
+        stroke_len = pct * circumference
+
+        color_class = rec_class
+        return f'''<svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="{radius}" class="gauge-bg"/>
+            <circle cx="50" cy="50" r="{radius}" class="gauge-fill {color_class}"
+                stroke-dasharray="{stroke_len} {circumference}"
+                stroke-dashoffset="0"/>
+        </svg>'''
+
+    # Indicator helper (circle badges)
+    def indicator(score_val, max_val):
         pct = score_val / max_val if max_val > 0 else 0
         if pct >= 0.7:
-            return '<span class="traffic traffic-green"></span>'
+            return '<span class="indicator indicator-green">&#10003;</span>'
         elif pct >= 0.4:
-            return '<span class="traffic traffic-yellow"></span>'
+            return '<span class="indicator indicator-yellow">!</span>'
         else:
-            return '<span class="traffic traffic-red"></span>'
+            return '<span class="indicator indicator-red">&#10007;</span>'
 
-    # Risk level helper
-    def risk_level(score_val, max_val):
-        pct = score_val / max_val if max_val > 0 else 0
-        if pct >= 0.7:
-            return ('LOW', 'badge-low')
-        elif pct >= 0.4:
-            return ('MEDIUM', 'badge-medium')
-        else:
-            return ('HIGH', 'badge-high')
+    # Investment thesis
+    thesis = _generate_thesis(rec, score, basic, cost_data, timeline_data, completion_data, cross_rto)
 
-    # Build HTML sections
+    # Build HTML
     html = f'''<!DOCTYPE html>
 <html>
 <head>
@@ -577,51 +585,78 @@ def _build_html(
     <title>Interconnection Feasibility Assessment - {basic['name']}</title>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Premium Header -->
     <div class="header">
-        <h1>Interconnection Feasibility Assessment</h1>
+        <div class="header-badge">FEASIBILITY ASSESSMENT</div>
+        <h1>{basic['name']}</h1>
+        <div class="header-project">{basic['capacity_mw']:,.0f} MW {basic['type']} | {basic['state']} | {region}</div>
         <div class="header-meta">
-            <strong>{basic['name']}</strong> | Queue ID: {project_id} | {region}<br>
-            Prepared for: {client_name} | {datetime.now().strftime('%B %d, %Y')}
+            <span>Queue ID: {project_id}</span>
+            <span>Developer: {basic['developer']}</span>
+            <span>Prepared for: {client_name}</span>
+            <span>{datetime.now().strftime('%B %d, %Y')}</span>
         </div>
     </div>
 
     <!-- Executive Summary -->
     <div class="section">
         <h2>Executive Summary</h2>
-        <div class="exec-summary">
-            <div class="score-card">
-                <div class="score-value" style="color: {rec_color};">{score:.0f}</div>
-                <div class="score-label">/ 100</div>
-                <div class="recommendation-badge {rec_class}">{rec}</div>
-                <div class="grade-badge">Grade: {grade} | Confidence: {confidence}</div>
+
+        <!-- Investment Thesis -->
+        <div class="thesis-box">
+            <div class="thesis-title">Investment Thesis</div>
+            <div class="thesis-content">{thesis}</div>
+        </div>
+
+        <div class="exec-grid">
+            <!-- Score Card with Gauge -->
+            <div class="score-card {rec_class}">
+                <div class="score-gauge">
+                    {svg_gauge(score)}
+                    <div class="score-center">
+                        <div class="score-number">{score:.0f}</div>
+                        <div class="score-max">/ 100</div>
+                    </div>
+                </div>
+                <div class="verdict-pill {rec_class}">{rec}</div>
+                <div class="score-meta">Grade {grade} | {confidence} Confidence</div>
             </div>
+
+            <!-- KPI Grid -->
             <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-value">{cost_range}</div>
+                <div class="kpi-card cost">
                     <div class="kpi-label">Estimated IC Cost</div>
-                    <div class="kpi-detail">P25-P75 range</div>
+                    <div class="kpi-value">{cost_range}</div>
+                    <div class="kpi-detail">P25-P75 range | {cost_data['n_comparables']} comparables</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">{completion_rate}</div>
+                <div class="kpi-card prob">
                     <div class="kpi-label">Completion Probability</div>
-                    <div class="kpi-detail">Historical rate</div>
+                    <div class="kpi-value">{completion_rate}</div>
+                    <div class="kpi-detail">Based on {region} historical data</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">{quarter(timeline_data['remaining_p50'])}</div>
+                <div class="kpi-card cod">
                     <div class="kpi-label">Target COD (P50)</div>
-                    <div class="kpi-detail">{timeline_data['remaining_p50']:.0f} months</div>
+                    <div class="kpi-value">{quarter(timeline_data['remaining_p50'])}</div>
+                    <div class="kpi-detail">{timeline_data['remaining_p50']:.0f} months remaining</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">{cost_data['n_comparables']}</div>
-                    <div class="kpi-label">Comparable Projects</div>
-                    <div class="kpi-detail">{region} historical</div>
+                <div class="kpi-card comp">
+                    <div class="kpi-label">Time in Queue</div>
+                    <div class="kpi-value">{basic['months_in_queue']:.0f} mo</div>
+                    <div class="kpi-detail">Since {basic['queue_date']}</div>
                 </div>
             </div>
         </div>
-        <div class="key-risk">
-            <strong>Key Risk:</strong> {red_flags[0] if red_flags else 'No critical risks identified'}<br>
-            <strong>Developer:</strong> {cross_rto.get('assessment', 'Unknown track record')}
+
+        <!-- Risk Alert -->
+        <div class="risk-alert">
+            <div class="risk-alert-item">
+                <div class="risk-alert-label">Key Risk</div>
+                <div class="risk-alert-value">{red_flags[0] if red_flags else 'No critical risks identified'}</div>
+            </div>
+            <div class="risk-alert-item">
+                <div class="risk-alert-label">Developer Profile</div>
+                <div class="risk-alert-value">{cross_rto.get('assessment', 'Unknown track record')}</div>
+            </div>
         </div>
     </div>
 
@@ -631,9 +666,9 @@ def _build_html(
         <table class="data-table">
             <tr><th style="width:20%;">Queue ID</th><td style="width:30%;">{project_id}</td><th style="width:20%;">Capacity</th><td style="width:30%;">{basic['capacity_mw']:,.0f} MW</td></tr>
             <tr><th>Project Name</th><td colspan="3">{basic['name']}</td></tr>
-            <tr><th>Developer</th><td>{basic['developer']}</td><th>State</th><td>{basic['state']}</td></tr>
+            <tr><th>Developer</th><td>{basic['developer']}</td><th>State/County</th><td>{basic['state']}{f", {basic['county']}" if basic.get('county') else ''}</td></tr>
             <tr><th>Project Type</th><td>{basic['type']}</td><th>Queue Date</th><td>{basic['queue_date']}</td></tr>
-            <tr><th>POI</th><td>{basic['poi']}</td><th>Time in Queue</th><td>{basic['months_in_queue']:.0f} months</td></tr>
+            <tr><th>POI / Substation</th><td>{basic['poi']}</td><th>Current Status</th><td>{basic.get('status', 'Active')}</td></tr>
         </table>
     </div>
 
@@ -656,31 +691,31 @@ def _build_html(
                             <td>Queue Position</td>
                             <td>{breakdown['queue_position']:.1f}</td>
                             <td>25</td>
-                            <td>{traffic_light(breakdown['queue_position'], 25)}</td>
+                            <td>{indicator(breakdown['queue_position'], 25)}</td>
                         </tr>
                         <tr>
                             <td>Study Progress</td>
                             <td>{breakdown['study_progress']:.1f}</td>
                             <td>25</td>
-                            <td>{traffic_light(breakdown['study_progress'], 25)}</td>
+                            <td>{indicator(breakdown['study_progress'], 25)}</td>
                         </tr>
                         <tr>
                             <td>Developer Track Record</td>
                             <td>{breakdown['developer_track_record']:.1f}</td>
                             <td>20</td>
-                            <td>{traffic_light(breakdown['developer_track_record'], 20)}</td>
+                            <td>{indicator(breakdown['developer_track_record'], 20)}</td>
                         </tr>
                         <tr>
                             <td>POI Congestion</td>
                             <td>{breakdown['poi_congestion']:.1f}</td>
                             <td>15</td>
-                            <td>{traffic_light(breakdown['poi_congestion'], 15)}</td>
+                            <td>{indicator(breakdown['poi_congestion'], 15)}</td>
                         </tr>
                         <tr>
                             <td>Project Characteristics</td>
                             <td>{breakdown['project_characteristics']:.1f}</td>
                             <td>15</td>
-                            <td>{traffic_light(breakdown['project_characteristics'], 15)}</td>
+                            <td>{indicator(breakdown['project_characteristics'], 15)}</td>
                         </tr>
                         <tr class="total-row">
                             <td><strong>Total</strong></td>
@@ -692,7 +727,7 @@ def _build_html(
                 </table>
             </div>
             <div class="chart-container">
-                {f'<img src="{chart_images["risk_bars"]}" alt="Risk Profile">' if chart_images.get('risk_bars') else '<div class="chart-placeholder">Chart not available</div>'}
+                {f'<img src="{chart_images["risk_bars"]}" alt="Risk Profile">' if chart_images.get('risk_bars') else '<div class="chart-placeholder">Risk visualization not available</div>'}
             </div>
         </div>
     </div>
@@ -709,73 +744,73 @@ def _build_html(
                     <tbody>
                         <tr>
                             <td>P25 (Low)</td>
-                            <td>${cost_data['total_millions']['p25']:.0f}M</td>
+                            <td>${cost_data['total_millions']['p25']:.1f}M</td>
                             <td>${cost_data['per_kw']['p25']:.0f}/kW</td>
                         </tr>
                         <tr class="highlight-row">
                             <td><strong>P50 (Median)</strong></td>
-                            <td><strong>${cost_data['total_millions']['p50']:.0f}M</strong></td>
+                            <td><strong>${cost_data['total_millions']['p50']:.1f}M</strong></td>
                             <td><strong>${cost_data['per_kw']['p50']:.0f}/kW</strong></td>
                         </tr>
                         <tr>
                             <td>P75 (High)</td>
-                            <td>${cost_data['total_millions']['p75']:.0f}M</td>
+                            <td>${cost_data['total_millions']['p75']:.1f}M</td>
                             <td>${cost_data['per_kw']['p75']:.0f}/kW</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="note">
-                    <strong>Confidence:</strong> {cost_data['confidence']}<br>
-                    <strong>Based on:</strong> {cost_data['n_comparables']} comparable {region} projects
+                    <strong>Estimate Confidence:</strong> {cost_data['confidence']}<br>
+                    <strong>Comparable Projects:</strong> {cost_data['n_comparables']} similar {region} projects analyzed
                 </div>
             </div>
             <div class="chart-container">
-                {f'<img src="{chart_images["cost_scatter"]}" alt="Cost Comparison">' if chart_images.get('cost_scatter') else '<div class="chart-placeholder">Chart not available</div>'}
+                {f'<img src="{chart_images["cost_scatter"]}" alt="Cost Comparison">' if chart_images.get('cost_scatter') else '<div class="chart-placeholder">Cost comparison chart not available</div>'}
             </div>
         </div>
     </div>
 
     <!-- Timeline Analysis -->
     <div class="section">
-        <h2>Timeline Analysis</h2>
-        <table class="data-table" style="width: 70%;">
+        <h2>Timeline to Commercial Operation</h2>
+        <table class="data-table" style="width: 75%;">
             <thead>
-                <tr><th>Percentile</th><th>Remaining</th><th>Target COD</th></tr>
+                <tr><th>Scenario</th><th>Remaining Time</th><th>Target COD</th></tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>P25 (Fast)</td>
+                    <td>Optimistic (P25)</td>
                     <td>{timeline_data['remaining_p25']:.0f} months</td>
                     <td>{quarter(timeline_data['remaining_p25'])}</td>
                 </tr>
                 <tr class="highlight-row">
-                    <td><strong>P50 (Typical)</strong></td>
+                    <td><strong>Base Case (P50)</strong></td>
                     <td><strong>{timeline_data['remaining_p50']:.0f} months</strong></td>
                     <td><strong>{quarter(timeline_data['remaining_p50'])}</strong></td>
                 </tr>
                 <tr>
-                    <td>P75 (Slow)</td>
+                    <td>Conservative (P75)</td>
                     <td>{timeline_data['remaining_p75']:.0f} months</td>
                     <td>{quarter(timeline_data['remaining_p75'])}</td>
                 </tr>
             </tbody>
         </table>
         <div class="note">
-            <strong>Completion Rate:</strong> {completion_rate} |
-            <strong>Region rate:</strong> {completion_data['region_rate']*100:.1f}% |
-            <strong>Type rate:</strong> {completion_data['type_rate']*100:.1f}%
+            <strong>Historical Completion Rate:</strong> {completion_rate} |
+            <strong>Region:</strong> {completion_data['region_rate']*100:.1f}% |
+            <strong>Technology:</strong> {completion_data['type_rate']*100:.1f}%
         </div>
     </div>
 
     <!-- Developer Analysis -->
-    <div class="section">
+    <div class="section no-break">
         <h2>Developer Analysis</h2>
-        <table class="data-table" style="width: 60%;">
-            <tr><th>Developer</th><td>{basic['developer']}</td></tr>
-            <tr><th>Total Projects</th><td>{cross_rto.get('total_projects', 0)}</td></tr>
-            <tr><th>Total Capacity</th><td>{cross_rto.get('total_capacity_mw', 0)/1000:.1f} GW</td></tr>
-            <tr><th>ISOs Present</th><td>{', '.join(cross_rto.get('isos', [])) or 'N/A'}</td></tr>
-            <tr><th>Assessment</th><td>{cross_rto.get('assessment', 'Unknown')}</td></tr>
+        <table class="data-table" style="width: 65%;">
+            <tr><th style="width: 35%;">Developer</th><td>{basic['developer']}</td></tr>
+            <tr><th>Active Projects (All ISOs)</th><td>{cross_rto.get('total_projects', 0)}</td></tr>
+            <tr><th>Total Portfolio Capacity</th><td>{cross_rto.get('total_capacity_mw', 0)/1000:.2f} GW</td></tr>
+            <tr><th>ISOs with Presence</th><td>{', '.join(cross_rto.get('isos', [])) or 'N/A'}</td></tr>
+            <tr><th>Developer Assessment</th><td><strong>{cross_rto.get('assessment', 'Unknown')}</strong></td></tr>
         </table>
     </div>
 
@@ -784,21 +819,22 @@ def _build_html(
         <h2>Risk Assessment</h2>
         <table class="data-table" style="margin-bottom: 20px;">
             <thead>
-                <tr><th>Category</th><th>Risk Level</th><th>Driver</th></tr>
+                <tr><th style="width:25%;">Risk Category</th><th style="width:20%;">Level</th><th>Key Driver</th></tr>
             </thead>
             <tbody>
                 {_build_risk_matrix_rows(breakdown, cost_data, cross_rto, basic)}
             </tbody>
         </table>
-        <div class="two-col">
-            <div>
-                <h3 style="color: #dc2626;">Red Flags</h3>
+
+        <div class="flags-grid">
+            <div class="flags-col">
+                <div class="flags-header red">Red Flags</div>
                 <ul class="flag-list">
-                    {''.join(f'<li class="red-flag">{flag}</li>' for flag in red_flags) or '<li class="no-flag">No red flags identified</li>'}
+                    {''.join(f'<li class="red-flag">{flag}</li>' for flag in red_flags) or '<li class="no-flag">No critical red flags identified</li>'}
                 </ul>
             </div>
-            <div>
-                <h3 style="color: #16a34a;">Green Flags</h3>
+            <div class="flags-col">
+                <div class="flags-header green">Green Flags</div>
                 <ul class="flag-list">
                     {''.join(f'<li class="green-flag">{flag}</li>' for flag in green_flags) or '<li class="no-flag">No notable strengths identified</li>'}
                 </ul>
@@ -810,46 +846,76 @@ def _build_html(
 
     <!-- Recommendation -->
     <div class="section">
-        <h2>Recommendation</h2>
-        <div class="recommendation-box" style="border-color: {rec_color};">
-            <div class="recommendation-badge {rec_class}" style="font-size: 16px;">{rec}</div>
-            <p class="rec-text">
-                {_get_recommendation_text(rec, score, cross_rto)}
-            </p>
+        <h2>Investment Recommendation</h2>
+        <div class="recommendation-box {rec_class}">
+            <div class="recommendation-verdict">{rec}</div>
+            <div class="recommendation-text">
+                {_get_recommendation_text(rec, score, cross_rto, basic, cost_data)}
+            </div>
         </div>
     </div>
 
     <!-- Due Diligence Checklist -->
-    <div class="section">
+    <div class="section no-break">
         <h2>Due Diligence Checklist</h2>
         <ul class="checklist">
-            <li>Obtain and review interconnection study documents</li>
-            <li>Validate cost estimate against actual study documents</li>
-            <li>Confirm current study phase with {region}</li>
-            <li>Research developer ownership and financial backing</li>
-            <li>Review transmission constraints at POI</li>
-            <li>Verify developer financial capability for interconnection costs</li>
-            <li>Assess regulatory and permitting status</li>
-            {''.join(f'<li class="investigate">Investigate: {flag}</li>' for flag in red_flags[:3])}
+            <li>Obtain and review interconnection study documents (SIS/Facilities Study)</li>
+            <li>Validate IC cost estimate against actual study documents</li>
+            <li>Confirm current study phase status with {region}</li>
+            <li>Research developer ownership structure and financial backing</li>
+            <li>Review transmission constraints and upgrade requirements at POI</li>
+            <li>Verify developer financial capability for IC cost exposure</li>
+            <li>Assess regulatory timeline and permitting status</li>
+            {''.join(f'<li class="priority">PRIORITY: Investigate {flag}</li>' for flag in red_flags[:3])}
         </ul>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <div class="disclaimer">
-            <strong>Disclaimer:</strong> This assessment combines automated data extraction, scoring models, and benchmark-based estimates.
-            All findings should be validated through manual review of source documents.
+        <div class="footer-disclaimer">
+            <strong>Disclaimer:</strong> This assessment combines automated data extraction, proprietary scoring models, and benchmark-based estimates derived from historical interconnection data.
+            All findings should be validated through independent review of primary source documents including ISO interconnection agreements and study reports.
+            This report does not constitute investment advice.
         </div>
-        <div class="generated">
-            Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} |
-            Score: {score:.0f}/100 |
-            Recommendation: {rec}
+        <div class="footer-generated">
+            Generated {datetime.now().strftime('%Y-%m-%d %H:%M')} | Feasibility Score: {score:.0f}/100 | Recommendation: {rec}
         </div>
     </div>
 </body>
 </html>'''
 
     return html
+
+
+def _generate_thesis(rec: str, score: float, basic: Dict, cost_data: Dict, timeline_data: Dict, completion_data: Dict, cross_rto: Dict) -> str:
+    """Generate investment thesis summary."""
+    capacity = basic.get('capacity_mw', 0)
+    project_type = basic.get('type', 'renewable')
+    developer_projects = cross_rto.get('total_projects', 0)
+
+    if rec == 'GO':
+        return (
+            f"This {capacity:,.0f} MW {project_type} project presents a compelling acquisition opportunity with a feasibility score of {score:.0f}/100. "
+            f"Key strengths include {'an established developer with ' + str(developer_projects) + ' active projects' if developer_projects >= 5 else 'favorable queue positioning'} "
+            f"and an estimated IC cost of {cost_data['per_kw']['p50']:.0f}/kW (P50). "
+            f"Historical completion rates for comparable projects suggest a {completion_data['combined_rate']*100:.0f}% probability of reaching COD. "
+            f"Standard due diligence is recommended."
+        )
+    elif rec == 'CONDITIONAL':
+        return (
+            f"This {capacity:,.0f} MW {project_type} project merits consideration with enhanced due diligence. "
+            f"At {score:.0f}/100, the project shows potential but presents identified risks requiring mitigation. "
+            f"IC cost estimates range from ${cost_data['total_millions']['p25']:.0f}M to ${cost_data['total_millions']['p75']:.0f}M, "
+            f"suggesting material execution risk. Developer track record analysis and verification of study documents should be prioritized "
+            f"before proceeding."
+        )
+    else:
+        return (
+            f"This {capacity:,.0f} MW {project_type} project scores {score:.0f}/100, indicating significant execution risk. "
+            f"Multiple risk factors are present that may impact project viability. "
+            f"If proceeding, substantial risk mitigation through contractual protections and enhanced due diligence would be required. "
+            f"Consider only if strategic value justifies elevated risk profile."
+        )
 
 
 def _build_risk_matrix_rows(breakdown: Dict, cost_data: Dict, cross_rto: Dict, basic: Dict) -> str:
@@ -949,14 +1015,40 @@ def _build_market_data_section(market_data: Dict, region: str, project_type: str
     return '\n'.join(sections)
 
 
-def _get_recommendation_text(rec: str, score: float, cross_rto: Dict) -> str:
-    """Get recommendation explanation text."""
+def _get_recommendation_text(rec: str, score: float, cross_rto: Dict, basic: Dict = None, cost_data: Dict = None) -> str:
+    """Get recommendation explanation text with PE-focused language."""
+    basic = basic or {}
+    cost_data = cost_data or {}
+
+    capacity = basic.get('capacity_mw', 0)
+    cost_p50 = cost_data.get('total_millions', {}).get('p50', 0)
+    developer_projects = cross_rto.get('total_projects', 0)
+
     if rec == 'GO':
-        return f"Proceed with standard due diligence. This project scores {score:.0f}/100 with strong fundamentals across scoring categories."
+        return (
+            f"<strong>Proceed with standard acquisition due diligence.</strong> "
+            f"This project scores {score:.0f}/100 demonstrating strong fundamentals across all evaluation criteria. "
+            f"Estimated capital requirement of ${cost_p50:.0f}M for interconnection is within market norms. "
+            f"{'Developer track record supports execution confidence. ' if developer_projects >= 5 else ''}"
+            f"Recommend proceeding to detailed technical and commercial review."
+        )
     elif rec == 'CONDITIONAL':
-        return f"Enhanced due diligence required. This project scores {score:.0f}/100. Address flagged items before proceeding. Verify developer financial capacity and obtain actual study documents."
+        return (
+            f"<strong>Enhanced due diligence required before proceeding.</strong> "
+            f"Project scores {score:.0f}/100 with identified risk factors requiring investigation. "
+            f"Key diligence items: (1) obtain and validate interconnection study documents, "
+            f"(2) verify developer financial capacity for ${cost_p50:.0f}M IC exposure, "
+            f"(3) assess contractual mechanisms to mitigate flagged risks. "
+            f"May warrant adjusted valuation or enhanced deal protections."
+        )
     else:
-        return f"Pass or require significant risk mitigation. This project scores {score:.0f}/100 with multiple risk factors present. Consider only if risk factors can be contractually mitigated."
+        return (
+            f"<strong>Pass or require substantial risk mitigation.</strong> "
+            f"Project scores {score:.0f}/100 with multiple material risk factors. "
+            f"Execution risk appears elevated based on current information. "
+            f"If strategic rationale exists, consider only with significant contractual protections, "
+            f"adjusted pricing reflecting risk, or milestone-based earn-out structure."
+        )
 
 
 # CLI interface

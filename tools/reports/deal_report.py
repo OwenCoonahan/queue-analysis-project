@@ -18,6 +18,7 @@ CLI:
 
 import argparse
 import base64
+import html
 import math
 import sys
 from datetime import datetime
@@ -112,27 +113,63 @@ def generate_deal_report(
     if 'error' in score_result:
         raise ValueError(f"Could not score project: {score_result['error']}")
 
-    # Extract project info
+    # Extract project info from both scorer and original row
     proj = score_result['project']
     breakdown = score_result['breakdown']
 
+    # Helper to get value from row with column name flexibility
+    def get_row_value(row, keys, default=None):
+        for key in keys:
+            if key in row.index and pd.notna(row[key]):
+                return row[key]
+        return default
+
     # Auto-detect region if not provided
     if region is None:
-        region = proj.get('region', proj.get('iso', 'Unknown'))
+        region = get_row_value(project_row, ['region', 'iso', 'Region', 'ISO'], 'Unknown')
 
-    # Build basic info dict
+    # Parse queue date
+    queue_date_raw = get_row_value(project_row, ['queue_date_std', 'queue_date', 'Queue Date'])
+    if queue_date_raw:
+        try:
+            # Handle Excel serial number
+            if isinstance(queue_date_raw, (int, float)) and queue_date_raw > 30000:
+                from datetime import datetime, timedelta
+                queue_date = (datetime(1899, 12, 30) + timedelta(days=int(queue_date_raw))).strftime('%Y-%m-%d')
+            else:
+                queue_date = str(queue_date_raw)
+        except:
+            queue_date = str(queue_date_raw)
+    else:
+        queue_date = 'Unknown'
+
+    # Calculate months in queue
+    months_in_queue = 0
+    try:
+        from datetime import datetime
+        if queue_date and queue_date != 'Unknown':
+            qd = pd.to_datetime(queue_date)
+            months_in_queue = max(0, (datetime.now() - qd).days // 30)
+    except:
+        pass
+
+    # Build basic info dict - prefer original row data over scorer's limited dict
+    # Use html.escape() for string values to prevent encoding issues in PDF
+    def safe_str(val):
+        return html.escape(str(val)) if val else 'Unknown'
+
     basic = {
-        'name': proj.get('name', 'Unknown'),
-        'developer': proj.get('developer', 'Unknown'),
-        'type': proj.get('type', 'Unknown'),
-        'capacity_mw': proj.get('capacity_mw', 0),
-        'state': proj.get('state', 'Unknown'),
-        'county': proj.get('county', ''),
-        'poi': proj.get('poi', 'Unknown'),
-        'queue_date': proj.get('queue_date', 'Unknown'),
-        'months_in_queue': proj.get('months_in_queue', 0),
-        'status': proj.get('status', 'Active'),
-        'study_phase': proj.get('study_phase', 'Unknown'),
+        'name': safe_str(proj.get('name', get_row_value(project_row, ['name', 'project_name', 'Name'], 'Unknown'))),
+        'developer': safe_str(proj.get('developer', get_row_value(project_row, ['developer', 'Developer'], 'Unknown'))),
+        'type': safe_str(proj.get('type', get_row_value(project_row, ['type', 'type_std', 'Type'], 'Unknown'))),
+        'capacity_mw': proj.get('capacity_mw', get_row_value(project_row, ['capacity_mw', 'Capacity_MW'], 0)) or 0,
+        'state': safe_str(proj.get('state', get_row_value(project_row, ['state', 'State'], 'Unknown'))),
+        'county': safe_str(get_row_value(project_row, ['county', 'County'], '')),
+        'poi': safe_str(proj.get('poi', get_row_value(project_row, ['poi', 'POI'], 'Unknown'))),
+        'queue_date': queue_date,
+        'months_in_queue': months_in_queue,
+        'status': safe_str(get_row_value(project_row, ['status', 'status_std', 'Status'], 'Active')),
+        'study_phase': safe_str(get_row_value(project_row, ['study_phase', 'phase'], 'Unknown')),
     }
 
     # Get cost/timeline estimates
@@ -591,20 +628,13 @@ def _build_html(
     <!-- Project Overview -->
     <div class="section">
         <h2>Project Overview</h2>
-        <div class="two-col">
-            <table class="data-table">
-                <tr><th>Queue ID</th><td>{project_id}</td></tr>
-                <tr><th>Project Name</th><td>{basic['name']}</td></tr>
-                <tr><th>Developer</th><td>{basic['developer']}</td></tr>
-                <tr><th>Project Type</th><td>{basic['type']}</td></tr>
-            </table>
-            <table class="data-table">
-                <tr><th>Capacity</th><td>{basic['capacity_mw']:,.0f} MW</td></tr>
-                <tr><th>State</th><td>{basic['state']}</td></tr>
-                <tr><th>Queue Date</th><td>{basic['queue_date']}</td></tr>
-                <tr><th>Time in Queue</th><td>{basic['months_in_queue']:.0f} months</td></tr>
-            </table>
-        </div>
+        <table class="data-table">
+            <tr><th style="width:20%;">Queue ID</th><td style="width:30%;">{project_id}</td><th style="width:20%;">Capacity</th><td style="width:30%;">{basic['capacity_mw']:,.0f} MW</td></tr>
+            <tr><th>Project Name</th><td colspan="3">{basic['name']}</td></tr>
+            <tr><th>Developer</th><td>{basic['developer']}</td><th>State</th><td>{basic['state']}</td></tr>
+            <tr><th>Project Type</th><td>{basic['type']}</td><th>Queue Date</th><td>{basic['queue_date']}</td></tr>
+            <tr><th>POI</th><td>{basic['poi']}</td><th>Time in Queue</th><td>{basic['months_in_queue']:.0f} months</td></tr>
+        </table>
     </div>
 
     <!-- Score Breakdown -->

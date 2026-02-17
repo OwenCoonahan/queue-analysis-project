@@ -129,14 +129,18 @@ tools/
 | `DATA_SOURCES.md` | Detailed source documentation |
 | `ANALYTICS.md` | Analytics function documentation |
 
-### Live Documentation (GitHub Pages)
+### Live Documentation (Vercel)
+
+**Live Site**: https://docs-self-tau-68.vercel.app
 
 | URL | File | Purpose |
 |-----|------|---------|
-| `/index.html` | `docs/index.html` | Queue Explorer - public stats dashboard |
+| `/` | `docs/index.html` | Queue Explorer - public stats dashboard |
 | `/data-architecture.html` | `docs/data-architecture.html` | Data Architecture diagram (endpoints, schemas, matching) |
 
 **Source file**: `tools/data_ingestion_diagram.html` (development version)
+
+**Deploy updates**: `cd docs && vercel --prod`
 
 ---
 
@@ -259,18 +263,135 @@ python3 refresh_data.py --source pjm
 
 **IMPORTANT**: All analytics logic lives in `analytics.py`. Do NOT create scattered analysis functions elsewhere.
 
-### QueueAnalytics Class
+### QueueAnalytics Class - Complete Reference
+
 ```python
 from analytics import QueueAnalytics
 qa = QueueAnalytics()
-
-qa.get_completion_probability(region, technology, capacity_mw)
-qa.get_developer_track_record(developer_name, region)
-qa.get_poi_congestion_score(poi_name, region)
-qa.get_cost_percentile(region, technology, capacity_mw, estimated_cost)
-qa.get_timeline_benchmarks(region, technology)
-qa.get_ira_eligibility(state, county)
 ```
+
+### Tier 1: Feasibility Analysis
+
+| Function | Purpose | Key Output |
+|----------|---------|------------|
+| `get_completion_probability(region, tech, mw)` | Historical completion rates | `combined_rate`, `confidence` |
+| `get_developer_track_record(developer, region)` | Developer history + EIA verification | `completed`, `withdrawn`, `completion_rate` |
+| `get_poi_congestion_score(poi, region, project_id)` | Queue depth at POI | `risk_level`, `projects_ahead` |
+| `get_cost_percentile(region, tech, mw, cost)` | Cost ranking vs historicals | `project_percentile`, `histogram` |
+| `get_timeline_benchmarks(region, tech)` | Time to COD estimates | `p25/p50/p75_months` |
+| `get_ira_eligibility(state, county)` | IRA bonus eligibility | `eligible`, `bonus_adder` |
+
+### Tier 2: Revenue & Market Analysis
+
+| Function | Purpose | Key Output |
+|----------|---------|------------|
+| `get_revenue_estimate(region, tech, mw, zone)` | Annual energy revenue | `annual_revenue_millions`, `avg_lmp` |
+| `get_capacity_value(region, tech, mw, year)` | Capacity market value | `annual_value_millions`, `elcc_percent` |
+| `get_transmission_risk(region, zone, poi)` | Congestion risk scoring | `risk_rating`, `avg_congestion_cost` |
+| `get_ppa_benchmarks(region, tech, year)` | PPA price ranges | `price_low/mid/high`, `trend` |
+| `get_full_revenue_stack(region, tech, mw)` | Combined revenue estimate | `total_revenue_millions`, `revenue_per_kw` |
+
+### Convenience Method
+
+```python
+# Get ALL analytics for a project in one call
+analysis = qa.get_project_analysis(
+    project_id='J1234',
+    region='PJM',
+    technology='Solar',
+    capacity_mw=200,
+    developer='NextEra',
+    poi='Smithburg 345kV',
+    state='PA',
+    county='Cambria',
+    include_tier2=True  # Include revenue/capacity/transmission
+)
+```
+
+### Sample Outputs
+
+**Completion Probability (PJM Solar 200MW):**
+```python
+{
+    'region_rate': 0.192,        # 19.2% PJM completion rate
+    'technology_rate': 0.109,    # 10.9% Solar completion rate
+    'combined_rate': 0.144,      # 14.4% weighted average
+    'confidence': 'high',        # Based on 4,501 samples
+    'sample_size': 4501
+}
+```
+
+**Revenue Stack (PJM Solar 200MW):**
+```python
+{
+    'energy_revenue_millions': 18.4,     # $18.4M/year energy
+    'capacity_revenue_millions': 6.9,    # $6.9M/year capacity
+    'ancillary_revenue_millions': 0.55,  # $0.55M/year ancillary
+    'total_revenue_millions': 25.85,     # $25.85M/year total
+    'revenue_per_kw': 129,               # $129/kW-year
+    'energy_pct': 71.2,                  # 71% from energy
+    'capacity_pct': 26.7,                # 27% from capacity
+}
+```
+
+**Developer Track Record:**
+```python
+{
+    'total_projects': 82,
+    'completed': 13,
+    'withdrawn': 31,
+    'completion_rate': 0.295,    # 29.5%
+    'completed_mw': 2101,
+    'eia_verified_plants': 8,    # Cross-referenced with EIA 860
+    'assessment': 'Good track record: 13 completed, 31 withdrawn'
+}
+```
+
+### Data Sources
+
+| Analytics | Primary Source | Records | Quality |
+|-----------|---------------|---------|---------|
+| Completion rates | LBL Queued Up | 36,441 | Production |
+| Developer history | LBL + EIA 860 | 50,000+ | Production |
+| Cost benchmarks | LBL IC Costs | 690-1800/region | Production |
+| LMP prices | Benchmarks | 35 zones | Benchmark |
+| Capacity prices | Benchmarks | 63 records | Benchmark |
+| Transmission | Benchmarks | 64 zones | Benchmark |
+| PPA prices | Benchmarks | 105 records | Benchmark |
+
+### CLI Usage
+
+```bash
+# Test analytics from command line
+python3 analytics.py --completion PJM Solar 200
+python3 analytics.py --developer "NextEra" --region PJM
+python3 analytics.py --poi "Dayton" PJM
+python3 analytics.py --stats --region PJM
+```
+
+### PDF Report Generation
+
+```python
+from reports import generate_deal_report
+
+# Generate comprehensive deal report
+pdf_path = generate_deal_report(
+    project_id='J1234',
+    client_name='Acme Capital',
+    output_path='deal_report.pdf'
+)
+```
+
+Report includes:
+- Executive summary with score gauge
+- Completion probability analysis
+- Developer track record with actual projects
+- Cost percentile ranking with histogram
+- Timeline benchmarks
+- Revenue stack (energy + capacity + ancillary)
+- Transmission risk assessment
+- IRA eligibility status
+- Comparable project outcomes
 
 ---
 

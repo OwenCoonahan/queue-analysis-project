@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Architecture - Queue Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Geist', -apple-system, sans-serif;
+            background: #fafafa;
+            color: #171717;
+            line-height: 1.5;
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+        .subtitle { color: #737373; font-size: 14px; margin-bottom: 24px; }
+
+        .tabs { display: flex; gap: 0; border-bottom: 1px solid #e5e5e5; margin-bottom: 32px; }
+        .tab {
+            padding: 12px 24px; border: none; background: none;
+            font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500;
+            color: #737373; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .tab:hover { color: #171717; }
+        .tab.active { color: #171717; border-bottom-color: #171717; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .section-header {
+            font-size: 12px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #737373; margin-bottom: 16px; margin-top: 32px;
+        }
+        .section-header:first-child { margin-top: 0; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+        .card {
+            background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .card-header {
+            padding: 20px; border-bottom: 1px solid #f0f0f0;
+        }
+        .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+        .card-title { font-size: 18px; font-weight: 600; }
+        .card-subtitle { font-size: 13px; color: #737373; }
+        .card-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .card-toggle {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 16px; background: #f9fafb; border: none; width: 100%;
+            font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 500;
+            color: #525252; cursor: pointer; transition: background 0.15s;
+        }
+        .card-toggle:hover { background: #f0f0f0; }
+        .card-toggle-icon { transition: transform 0.2s; font-size: 10px; }
+        .card.open .card-toggle-icon { transform: rotate(180deg); }
+        .card-content { display: none; padding: 20px; border-top: 1px solid #f0f0f0; background: #fafafa; }
+        .card.open .card-content { display: block; }
+
+        /* Keep accordion for schema tab */
+        .accordion-grid { display: flex; flex-direction: column; gap: 8px; }
+        .accordion-item { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+        .accordion-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; cursor: pointer; user-select: none;
+        }
+        .accordion-header:hover { background: #fafafa; }
+        .accordion-left { display: flex; align-items: center; gap: 12px; }
+        .accordion-title { font-size: 15px; font-weight: 600; }
+        .accordion-subtitle { font-size: 13px; color: #737373; }
+        .accordion-right { display: flex; align-items: center; gap: 12px; }
+        .accordion-chevron { color: #a3a3a3; transition: transform 0.2s; font-size: 12px; }
+        .accordion-item.open .accordion-chevron { transform: rotate(180deg); }
+        .accordion-content { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #f0f0f0; }
+        .accordion-item.open .accordion-content { display: block; }
+
+        .badge {
+            font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500;
+            padding: 4px 8px; border-radius: 4px; text-transform: uppercase;
+        }
+        .badge-live { background: #dcfce7; color: #166534; }
+        .badge-api { background: #dbeafe; color: #1e40af; }
+        .badge-manual { background: #fef3c7; color: #92400e; }
+        .badge-annual { background: #f3e8ff; color: #7c3aed; }
+        .badge-federal { background: #fee2e2; color: #991b1b; }
+
+        .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+        .detail-box { background: #f9fafb; border-radius: 6px; padding: 12px; }
+        .detail-label {
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #a3a3a3; margin-bottom: 4px;
+        }
+        .detail-value { font-size: 13px; color: #525252; }
+        .detail-value a { color: #2563eb; text-decoration: none; }
+        .detail-value a:hover { text-decoration: underline; }
+        .detail-value.mono { font-family: 'Geist Mono', monospace; font-size: 12px; }
+
+        .detail-why {
+            background: #fffbeb; border: 1px solid #fef3c7; padding: 12px;
+            border-radius: 6px; margin-top: 16px; font-size: 13px; color: #92400e;
+        }
+        .detail-why strong { color: #78350f; }
+
+        .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tag {
+            font-family: 'Geist Mono', monospace; font-size: 11px;
+            padding: 4px 8px; background: #f5f5f5; border-radius: 4px; color: #525252;
+        }
+
+        .mapping-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+        .mapping-table th {
+            text-align: left; padding: 8px; background: #f5f5f5;
+            font-weight: 500; color: #525252; border-bottom: 1px solid #e5e5e5;
+        }
+        .mapping-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
+        .mapping-table td:first-child { font-family: 'Geist Mono', monospace; color: #525252; }
+        .mapping-table td:last-child { color: #737373; }
+
+        .schema-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .schema-table td { padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+        .schema-table td:first-child { font-family: 'Geist Mono', monospace; font-size: 12px; color: #525252; width: 40%; }
+        .schema-table td:last-child { color: #737373; }
+        .schema-table tr:last-child td { border-bottom: none; }
+
+        .stats-row { display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+        .stat-box { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 16px 20px; min-width: 140px; }
+        .stat-value { font-size: 24px; font-weight: 600; color: #171717; }
+        .stat-label { font-size: 12px; color: #737373; margin-top: 4px; }
+
+        .legend { display: flex; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #737373; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .legend-dot.live { background: #22c55e; }
+        .legend-dot.api { background: #3b82f6; }
+        .legend-dot.manual { background: #f59e0b; }
+        .legend-dot.annual { background: #8b5cf6; }
+
+        /* Visual Overview */
+        .visual-container { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 40px; overflow-x: auto; }
+        .flow-diagram { display: flex; flex-direction: column; gap: 48px; min-width: 1100px; }
+        .flow-row { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .flow-node {
+            background: #fff; border: 1px solid #e5e5e5; border-radius: 8px;
+            padding: 12px 16px; text-align: center; min-width: 100px; cursor: pointer; transition: all 0.15s;
+        }
+        .flow-node:hover { border-color: #a3a3a3; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .flow-node.source { border-color: #22c55e; }
+        .flow-node.source:hover { border-color: #16a34a; background: #f0fdf4; }
+        .flow-node.process { border-color: #3b82f6; background: #eff6ff; }
+        .flow-node.process:hover { border-color: #2563eb; background: #dbeafe; }
+        .flow-node.storage { border-color: #171717; background: #171717; color: #fff; }
+        .flow-node.storage:hover { background: #262626; }
+        .flow-node.enrichment { border-color: #f59e0b; }
+        .flow-node.enrichment:hover { border-color: #d97706; background: #fffbeb; }
+        .flow-node-label { font-size: 12px; font-weight: 500; }
+        .flow-node-sub { font-size: 10px; color: #737373; margin-top: 2px; }
+        .flow-node.storage .flow-node-sub { color: #a3a3a3; }
+        .flow-connector { font-size: 18px; color: #d4d4d4; }
+        .flow-arrow-down { display: flex; justify-content: center; font-size: 24px; color: #d4d4d4; }
+        .flow-section-label {
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #a3a3a3; margin-bottom: 12px; text-align: center;
+        }
+        .flow-section { display: flex; flex-direction: column; align-items: center; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff; border-radius: 12px; max-width: 640px; width: 90%;
+            max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; background: #fff;
+        }
+        .modal-title { font-size: 18px; font-weight: 600; }
+        .modal-close {
+            background: none; border: none; font-size: 20px; color: #737373;
+            cursor: pointer; padding: 4px 8px; border-radius: 4px;
+        }
+        .modal-close:hover { background: #f5f5f5; color: #171717; }
+        .modal-body { padding: 24px; }
+        .modal-section { margin-bottom: 20px; }
+        .modal-section:last-child { margin-bottom: 0; }
+        .modal-label {
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #a3a3a3; margin-bottom: 6px;
+        }
+        .modal-value { font-size: 14px; color: #171717; line-height: 1.6; }
+        .modal-value a { color: #2563eb; text-decoration: none; }
+        .modal-value a:hover { text-decoration: underline; }
+        .modal-code { font-family: 'Geist Mono', monospace; font-size: 12px; background: #f5f5f5; padding: 8px 12px; border-radius: 6px; overflow-x: auto; }
+        .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    </style>
+</head>
+<body>
+    <nav style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <a href="index.html" style="color: #525252; text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 16px;">←</span> Queue Explorer
+        </a>
+        <div style="display: flex; gap: 20px;">
+            <a href="index.html" style="color: #737373; text-decoration: none; font-size: 13px;">Explorer</a>
+            <a href="data-architecture.html" style="color: #171717; text-decoration: none; font-size: 13px; font-weight: 500;">Data Architecture</a>
+        </div>
+    </nav>
+    <h1>Data Architecture</h1>
+    <p class="subtitle">Queue Analysis Platform - Complete Data Source & Connection Map</p>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('details')">Details</button>
+        <button class="tab" onclick="showTab('visual')">Visual Overview</button>
+        <button class="tab" onclick="showTab('schema')">Database Schema</button>
+    </div>
+
+    <!-- Details Tab -->
+    <div id="details" class="tab-content active">
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-value">7</div><div class="stat-label">ISO Sources</div></div>
+            <div class="stat-box"><div class="stat-value">~40K</div><div class="stat-label">Projects Tracked</div></div>
+            <div class="stat-box"><div class="stat-value">72 MB</div><div class="stat-label">Primary Database</div></div>
+            <div class="stat-box"><div class="stat-value">Daily</div><div class="stat-label">Refresh Cycle</div></div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot live"></div> Live / Automated</div>
+            <div class="legend-item"><div class="legend-dot api"></div> API / Library</div>
+            <div class="legend-item"><div class="legend-dot manual"></div> Manual Download</div>
+            <div class="legend-item"><div class="legend-dot annual"></div> Annual / Historical</div>
+        </div>
+
+        <div class="section-header">ISO Queue Sources</div>
+        <div class="card-grid">
+            <!-- NYISO -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">NYISO</span>
+                        <span class="badge badge-live">Live</span>
+                    </div>
+                    <div class="card-subtitle">~800 projects · New York ISO</div>
+                    <div class="card-meta">
+                        <span class="tag">.xlsx direct</span>
+                        <span class="tag">7.9% completion</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Endpoint</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://www.nyiso.com/documents/20142/1407078/NYISO-Interconnection-Queue.xlsx" target="_blank">nyiso.com/.../NYISO-Interconnection-Queue.xlsx</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/nyiso_queue_direct.xlsx → projects</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">direct_fetcher.py:69-99</div>
+                    </div>
+                    <div class="detail-label">Column Mapping</div>
+                    <table class="mapping-table">
+                        <tr><td>Queue Position</td><td>queue_id</td></tr>
+                        <tr><td>Developer</td><td>developer</td></tr>
+                        <tr><td>SP (MW)</td><td>capacity_mw</td></tr>
+                        <tr><td>Type/Fuel</td><td>type</td></tr>
+                        <tr><td>County, State</td><td>county, state</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ERCOT -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">ERCOT</span>
+                        <span class="badge badge-live">Live</span>
+                    </div>
+                    <div class="card-subtitle">~2,500 projects · Texas</div>
+                    <div class="card-meta">
+                        <span class="tag">MIS Portal</span>
+                        <span class="tag">33.9% completion</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Index Endpoint</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://www.ercot.com/misapp/servlets/IceDocListJsonWS?reportTypeId=15933" target="_blank">ercot.com/misapp/.../IceDocListJsonWS</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/ercot_queue_direct.parquet → projects</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">direct_fetcher.py:325-417</div>
+                    </div>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px;">
+                        Multi-sheet Excel, headers row 14. Queue dates backfilled from LBL.
+                    </div>
+                    <div class="detail-label" style="margin-top: 12px;">Column Mapping</div>
+                    <table class="mapping-table">
+                        <tr><td>INR</td><td>queue_id</td></tr>
+                        <tr><td>Interconnecting Entity</td><td>developer</td></tr>
+                        <tr><td>Capacity (MW)</td><td>capacity_mw</td></tr>
+                        <tr><td>Fuel</td><td>type</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MISO -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">MISO</span>
+                        <span class="badge badge-api">API</span>
+                    </div>
+                    <div class="card-subtitle">~3,000 projects · Midwest</div>
+                    <div class="card-meta">
+                        <span class="tag">JSON API</span>
+                        <span class="tag">96.8% dev coverage</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">API Endpoint</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://www.misoenergy.org/api/giqueue/getprojects" target="_blank">misoenergy.org/api/giqueue/getprojects</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/miso_queue_direct.parquet → projects</div>
+                    </div>
+                    <div class="detail-label">Column Mapping</div>
+                    <table class="mapping-table">
+                        <tr><td>projectNumber</td><td>queue_id</td></tr>
+                        <tr><td>transmissionOwner</td><td>developer</td></tr>
+                        <tr><td>summerNetMW</td><td>capacity_mw</td></tr>
+                        <tr><td>fuelType</td><td>type</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PJM -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">PJM</span>
+                        <span class="badge badge-manual">Manual</span>
+                    </div>
+                    <div class="card-subtitle">~3,500 projects · Mid-Atlantic</div>
+                    <div class="card-meta">
+                        <span class="tag">API + Manual</span>
+                        <span class="tag">19.7% completion</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">API Endpoint</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://api.pjm.com/api/v1/gen_queues" target="_blank">api.pjm.com/api/v1/gen_queues</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Auth</div>
+                        <div class="detail-value mono" style="font-size: 11px;">PJM_API_KEY from <a href="https://dataminer2.pjm.com/" target="_blank">dataminer2.pjm.com</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/pjm_queue_direct.parquet → projects</div>
+                    </div>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px;">
+                        API paginated (1000/req). Manual files needed for developer data.
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAISO -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">CAISO</span>
+                        <span class="badge badge-live">Live</span>
+                    </div>
+                    <div class="card-subtitle">~2,000 projects · California</div>
+                    <div class="card-meta">
+                        <span class="tag">.xlsx direct</span>
+                        <span class="tag" style="background: #fee2e2; color: #991b1b;">No dev names</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Endpoint</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="http://www.caiso.com/PublishedDocuments/PublicQueueReport.xlsx" target="_blank">caiso.com/.../PublicQueueReport.xlsx</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/caiso_queue_direct.xlsx → projects</div>
+                    </div>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px; background: #fee2e2; border-color: #fecaca; color: #991b1b;">
+                        <strong>No developer names</strong> in public file. Must enrich via EIA 860.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPP -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">SPP</span>
+                        <span class="badge badge-api">API</span>
+                    </div>
+                    <div class="card-subtitle">~1,200 projects · Central US</div>
+                    <div class="card-meta">
+                        <span class="tag">gridstatus</span>
+                        <span class="tag">80%+ dev coverage</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Data Source</div>
+                        <div class="detail-value mono" style="font-size: 11px;">gridstatus.SPP().get_interconnection_queue()</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Underlying URL</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://opsportal.spp.org/Studies/GIInterconnectionQueue" target="_blank">opsportal.spp.org</a></div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/spp_queue_direct.parquet → projects</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ISO-NE -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">ISO-NE</span>
+                        <span class="badge badge-api">API</span>
+                    </div>
+                    <div class="card-subtitle">~600 projects · New England</div>
+                    <div class="card-meta">
+                        <span class="tag">gridstatus</span>
+                        <span class="tag">24.8% completion</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Data Source</div>
+                        <div class="detail-value mono" style="font-size: 11px;">gridstatus.ISONE().get_interconnection_queue()</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Underlying URL</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://irtt.iso-ne.com/reports/external" target="_blank">irtt.iso-ne.com</a></div>
+                    </div>
+                    <div class="detail-box">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/isone_queue_direct.parquet → projects</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LBL -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">LBL Queued Up</span>
+                        <span class="badge badge-annual">Annual</span>
+                    </div>
+                    <div class="card-subtitle">36K+ historical projects (2014-2024)</div>
+                    <div class="card-meta">
+                        <span class="tag">Benchmarks</span>
+                        <span class="tag">Backfill source</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Source URL</div>
+                        <div class="detail-value mono" style="font-size: 11px;"><a href="https://emp.lbl.gov/queues" target="_blank">emp.lbl.gov/queues</a></div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Cache → Table</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/lbl_queued_up.xlsx → projects (source=lbl)</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">unified_data.py:115-206</div>
+                    </div>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px;">
+                        <strong>Uses:</strong> Completion rates, queue date backfilling (ERCOT), timeline predictions, cost estimates.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">Enrichment Sources</div>
+        <div class="card-grid">
+            <!-- EIA 860 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">EIA Form 860</span>
+                        <span class="badge badge-federal">Federal</span>
+                    </div>
+                    <div class="card-subtitle">~12K operating plants via PUDL</div>
+                    <div class="card-meta">
+                        <span class="tag">Ownership</span>
+                        <span class="tag">Plant Details</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Database</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/pudl/pudl.sqlite</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">eia_pudl_loader.py</div>
+                    </div>
+                    <div class="detail-label">Tables Used</div>
+                    <table class="mapping-table">
+                        <tr><td>core_eia860__scd_ownership</td><td>Ownership</td></tr>
+                        <tr><td>core_eia__entity_plants</td><td>Plant location</td></tr>
+                        <tr><td>core_eia860__scd_generators</td><td>Capacity & fuel</td></tr>
+                    </table>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px; margin-top: 12px;">
+                        <strong>Matching:</strong> State + County + Fuel + Capacity<br>
+                        Tier 1 (±10%): 0.88-0.90 | Tier 2 (±20%): 0.83-0.85<br>
+                        Tier 3 (state only): 0.73-0.75 | Tier 4: 0.68-0.70
+                    </div>
+                    <div class="tags-row" style="margin-top: 12px;">
+                        <span class="tag">eia_owner</span>
+                        <span class="tag">eia_confidence</span>
+                        <span class="tag">eia_plant_id</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FERC Form 1 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">FERC Form 1</span>
+                        <span class="badge badge-federal">Federal</span>
+                    </div>
+                    <div class="card-subtitle">Schedule 326 - PPAs</div>
+                    <div class="card-meta">
+                        <span class="tag">Power Purchases</span>
+                        <span class="tag">Contract Data</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Database</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.cache/pudl/ferc1_xbrl.sqlite</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">ferc_seller_extractor.py</div>
+                    </div>
+                    <div class="detail-label">Key Fields</div>
+                    <table class="mapping-table">
+                        <tr><td>seller_name</td><td>Developer match</td></tr>
+                        <tr><td>filing_name</td><td>Buyer utility</td></tr>
+                        <tr><td>mwh_purchased</td><td>Contract volume</td></tr>
+                        <tr><td>energy_charges</td><td>Contract value ($)</td></tr>
+                    </table>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px; margin-top: 12px;">
+                        <strong>Purpose:</strong> Identifies developers with active PPAs. Indicates mature projects with bankable offtake.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Developer Matcher -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-top">
+                        <span class="card-title">Developer Registry</span>
+                        <span class="badge badge-api">Internal</span>
+                    </div>
+                    <div class="card-subtitle">Fuzzy matching & parent lookup</div>
+                    <div class="card-meta">
+                        <span class="tag">RapidFuzz</span>
+                        <span class="tag">Parent Companies</span>
+                    </div>
+                </div>
+                <button class="card-toggle" onclick="toggleCard(this)">
+                    <span>View Details</span>
+                    <span class="card-toggle-icon">▼</span>
+                </button>
+                <div class="card-content">
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Database</div>
+                        <div class="detail-value mono" style="font-size: 11px;">.data/queue_v2.db</div>
+                    </div>
+                    <div class="detail-box" style="margin-bottom: 12px;">
+                        <div class="detail-label">Parser</div>
+                        <div class="detail-value mono" style="font-size: 11px;">developer_matcher.py</div>
+                    </div>
+                    <div class="detail-label">Tables</div>
+                    <table class="mapping-table">
+                        <tr><td>dim_parent_companies</td><td>NextEra, Invenergy...</td></tr>
+                        <tr><td>dim_filing_entities</td><td>Project SPVs/LLCs</td></tr>
+                        <tr><td>dim_entity_aliases</td><td>Alt names</td></tr>
+                    </table>
+                    <div class="detail-why" style="font-size: 11px; padding: 8px; margin-top: 12px;">
+                        <strong>Thresholds:</strong> ≥95% auto | 85-95% confirm | 75-85% review | &lt;75% no match<br>
+                        <strong>Scoring:</strong> ratio(40%) + token_set(30%) + token_sort(20%) + partial(10%)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schema Tab -->
+    <div id="schema" class="tab-content">
+        <div class="section-header">Primary Database: queue.db (72 MB)</div>
+        <div class="accordion-grid">
+            <div class="accordion-item open">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-left">
+                        <span class="accordion-title">projects</span>
+                        <span class="accordion-subtitle">~40K rows - all active queue entries</span>
+                    </div>
+                    <div class="accordion-right">
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto;">
+CREATE TABLE projects (<br>
+&nbsp;&nbsp;id INTEGER PRIMARY KEY,<br>
+&nbsp;&nbsp;queue_id TEXT NOT NULL,<br>
+&nbsp;&nbsp;region TEXT NOT NULL,  -- NYISO, ERCOT, MISO, PJM, CAISO, SPP, ISO-NE<br>
+&nbsp;&nbsp;name TEXT,<br>
+&nbsp;&nbsp;developer TEXT,<br>
+&nbsp;&nbsp;capacity_mw REAL,<br>
+&nbsp;&nbsp;type TEXT,  -- Solar, Wind, Storage, Gas, etc.<br>
+&nbsp;&nbsp;status TEXT,<br>
+&nbsp;&nbsp;state TEXT,<br>
+&nbsp;&nbsp;county TEXT,<br>
+&nbsp;&nbsp;poi TEXT,  -- Point of Interconnection<br>
+&nbsp;&nbsp;queue_date TEXT,<br>
+&nbsp;&nbsp;cod TEXT,  -- Commercial Operation Date<br>
+&nbsp;&nbsp;source TEXT,  -- nyiso, ercot, miso_api, pjm_direct, lbl<br>
+&nbsp;&nbsp;raw_data TEXT,  -- JSON blob<br>
+&nbsp;&nbsp;row_hash TEXT,  -- For change detection<br>
+&nbsp;&nbsp;UNIQUE(queue_id, region, source)<br>
+);
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-left">
+                        <span class="accordion-title">snapshots, changes, refresh_log</span>
+                        <span class="accordion-subtitle">Change tracking & audit tables</span>
+                    </div>
+                    <div class="accordion-right"><span class="accordion-chevron">▼</span></div>
+                </div>
+                <div class="accordion-content">
+                    <table class="schema-table">
+                        <tr><td>snapshots</td><td>Point-in-time project states for diff detection</td></tr>
+                        <tr><td>changes</td><td>Detected changes (new_project, status_change, field_change)</td></tr>
+                        <tr><td>refresh_log</td><td>Audit trail (source, started_at, rows_processed, status)</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">Analytics Database: queue_v2.db (7.6 MB) - Star Schema</div>
+        <div class="accordion-grid">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-left">
+                        <span class="accordion-title">Dimension Tables</span>
+                        <span class="accordion-subtitle">Normalized lookup tables</span>
+                    </div>
+                    <div class="accordion-right"><span class="accordion-chevron">▼</span></div>
+                </div>
+                <div class="accordion-content">
+                    <table class="schema-table">
+                        <tr><td>dim_regions</td><td>region_code, region_name</td></tr>
+                        <tr><td>dim_developers</td><td>canonical_name, parent_company</td></tr>
+                        <tr><td>dim_technologies</td><td>technology_code, technology_category</td></tr>
+                        <tr><td>dim_statuses</td><td>status_code, status_category</td></tr>
+                        <tr><td>dim_locations</td><td>state, county, latitude, longitude</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-left">
+                        <span class="accordion-title">fact_projects</span>
+                        <span class="accordion-subtitle">Main fact table with foreign keys</span>
+                    </div>
+                    <div class="accordion-right"><span class="accordion-chevron">▼</span></div>
+                </div>
+                <div class="accordion-content">
+                    <table class="schema-table">
+                        <tr><td>region_id</td><td>→ dim_regions</td></tr>
+                        <tr><td>developer_id</td><td>→ dim_developers</td></tr>
+                        <tr><td>technology_id</td><td>→ dim_technologies</td></tr>
+                        <tr><td>status_id</td><td>→ dim_statuses</td></tr>
+                        <tr><td>location_id</td><td>→ dim_locations</td></tr>
+                        <tr><td>queue_id, project_name, capacity_mw</td><td>Core attributes</td></tr>
+                        <tr><td>has_ppa, ppa_seller</td><td>PPA status from FERC</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">Cache Files (.cache/)</div>
+        <div class="accordion-grid">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-left">
+                        <span class="accordion-title">Downloaded Files</span>
+                        <span class="accordion-subtitle">Raw ISO data and PUDL databases</span>
+                    </div>
+                    <div class="accordion-right"><span class="accordion-chevron">▼</span></div>
+                </div>
+                <div class="accordion-content">
+                    <table class="schema-table">
+                        <tr><td>nyiso_queue_direct.xlsx</td><td>NYISO live data</td></tr>
+                        <tr><td>caiso_queue_direct.xlsx</td><td>CAISO live data</td></tr>
+                        <tr><td>ercot_gis_raw.xlsx</td><td>ERCOT GIS raw</td></tr>
+                        <tr><td>ercot_queue_direct.parquet</td><td>ERCOT processed</td></tr>
+                        <tr><td>miso_queue_direct.parquet</td><td>MISO API data</td></tr>
+                        <tr><td>pjm_queue_direct.parquet</td><td>PJM API data</td></tr>
+                        <tr><td>spp_queue_direct.parquet</td><td>SPP gridstatus</td></tr>
+                        <tr><td>isone_queue_direct.parquet</td><td>ISO-NE gridstatus</td></tr>
+                        <tr><td>lbl_queued_up.xlsx</td><td>LBL historical</td></tr>
+                        <tr><td>pudl/pudl.sqlite</td><td>EIA PUDL database</td></tr>
+                        <tr><td>pudl/ferc1_xbrl.sqlite</td><td>FERC Form 1 database</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual Overview Tab -->
+    <div id="visual" class="tab-content">
+        <div class="visual-container">
+            <div class="flow-diagram">
+                <div class="flow-section">
+                    <div class="flow-section-label">ISO Queue Sources (7 ISOs)</div>
+                    <div class="flow-row">
+                        <div class="flow-node source" onclick="showModal('nyiso')"><div class="flow-node-label">NYISO</div><div class="flow-node-sub">.xlsx → projects</div></div>
+                        <div class="flow-node source" onclick="showModal('ercot')"><div class="flow-node-label">ERCOT</div><div class="flow-node-sub">MIS → .parquet</div></div>
+                        <div class="flow-node source" onclick="showModal('miso')"><div class="flow-node-label">MISO</div><div class="flow-node-sub">JSON API</div></div>
+                        <div class="flow-node source" onclick="showModal('pjm')"><div class="flow-node-label">PJM</div><div class="flow-node-sub">API + Manual</div></div>
+                        <div class="flow-node source" onclick="showModal('caiso')"><div class="flow-node-label">CAISO</div><div class="flow-node-sub">.xlsx (no dev)</div></div>
+                        <div class="flow-node source" onclick="showModal('spp')"><div class="flow-node-label">SPP</div><div class="flow-node-sub">gridstatus</div></div>
+                        <div class="flow-node source" onclick="showModal('isone')"><div class="flow-node-label">ISO-NE</div><div class="flow-node-sub">gridstatus</div></div>
+                        <div class="flow-node" style="border-color: #8b5cf6;" onclick="showModal('lbl')"><div class="flow-node-label">LBL</div><div class="flow-node-sub">36K historical</div></div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-section">
+                    <div class="flow-section-label">Cache Layer (.cache/)</div>
+                    <div class="flow-row">
+                        <div class="flow-node process"><div class="flow-node-label">direct_fetcher.py</div><div class="flow-node-sub">Download & parse</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node" style="border-color: #737373; background: #f5f5f5;"><div class="flow-node-label">.xlsx / .parquet</div><div class="flow-node-sub">Cached files</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node process"><div class="flow-node-label">_normalize_*()</div><div class="flow-node-sub">Column mapping</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node process"><div class="flow-node-label">data_validation.py</div><div class="flow-node-sub">Quality checks</div></div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-section">
+                    <div class="flow-section-label">Primary Storage (.data/)</div>
+                    <div class="flow-row">
+                        <div class="flow-node storage" onclick="showModal('queuedb')"><div class="flow-node-label">queue.db</div><div class="flow-node-sub">72 MB · projects table</div></div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-section">
+                    <div class="flow-section-label">Enrichment Layer</div>
+                    <div class="flow-row">
+                        <div class="flow-node enrichment" onclick="showModal('eia')"><div class="flow-node-label">EIA 860</div><div class="flow-node-sub">pudl.sqlite</div></div>
+                        <span class="flow-connector">+</span>
+                        <div class="flow-node enrichment" onclick="showModal('ferc')"><div class="flow-node-label">FERC Form 1</div><div class="flow-node-sub">ferc1_xbrl.sqlite</div></div>
+                        <span class="flow-connector">+</span>
+                        <div class="flow-node enrichment" onclick="showModal('devmatch')"><div class="flow-node-label">Developer Match</div><div class="flow-node-sub">RapidFuzz</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node storage"><div class="flow-node-label">enrichment.db</div><div class="flow-node-sub">2 MB</div></div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-section">
+                    <div class="flow-section-label">Analytics Layer</div>
+                    <div class="flow-row">
+                        <div class="flow-node storage" onclick="showModal('queuev2db')"><div class="flow-node-label">queue_v2.db</div><div class="flow-node-sub">Star schema</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node process"><div class="flow-node-label">scoring.py</div><div class="flow-node-sub">Feasibility 0-100</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node process"><div class="flow-node-label">intelligence.py</div><div class="flow-node-sub">Market analysis</div></div>
+                        <span class="flow-connector">→</span>
+                        <div class="flow-node storage"><div class="flow-node-label">app.py</div><div class="flow-node-sub">Streamlit UI</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title">Title</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) { header.parentElement.classList.toggle('open'); }
+        function toggleCard(btn) { btn.closest('.card').classList.toggle('open'); }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const modalData = {
+            nyiso: { title: 'NYISO', url: 'https://www.nyiso.com/documents/20142/1407078/NYISO-Interconnection-Queue.xlsx', cache: '.cache/nyiso_queue_direct.xlsx', table: 'projects (region=NYISO)', parser: 'direct_fetcher.py:69-99', description: 'Direct Excel download. Contains developer names, POI, county, queue dates.', fields: ['Queue Position → queue_id', 'Developer → developer', 'SP (MW) → capacity_mw', 'Type/Fuel → type', 'County → county', 'Status → status'] },
+            ercot: { title: 'ERCOT', url: 'https://www.ercot.com/misapp/servlets/IceDocListJsonWS?reportTypeId=15933', cache: '.cache/ercot_queue_direct.parquet', table: 'projects (region=ERCOT)', parser: 'direct_fetcher.py:325-417', description: 'MIS Portal GIS Report. Multi-sheet Excel. Queue dates backfilled from LBL.', fields: ['INR → queue_id', 'Interconnecting Entity → developer', 'Capacity (MW) → capacity_mw', 'Fuel → type', 'County → county'] },
+            miso: { title: 'MISO', url: 'https://www.misoenergy.org/api/giqueue/getprojects', cache: '.cache/miso_queue_direct.parquet', table: 'projects (region=MISO)', parser: 'direct_fetcher.py:145-203', description: 'Official JSON API. ~96.8% developer coverage.', fields: ['projectNumber → queue_id', 'transmissionOwner → developer', 'summerNetMW → capacity_mw', 'fuelType → type', 'poiName → poi'] },
+            pjm: { title: 'PJM', url: 'https://api.pjm.com/api/v1/gen_queues', cache: '.cache/pjm_queue_direct.parquet', table: 'projects (region=PJM)', parser: 'direct_fetcher.py:205-323', description: 'Data Miner 2 API (requires PJM_API_KEY). Paginated. Manual files needed.', fields: ['queue_number → queue_id', 'developer_name → developer', 'mw → capacity_mw', 'fuel_type → type', 'status → status'] },
+            caiso: { title: 'CAISO', url: 'http://www.caiso.com/PublishedDocuments/PublicQueueReport.xlsx', cache: '.cache/caiso_queue_direct.xlsx', table: 'projects (region=CAISO)', parser: 'direct_fetcher.py:101-143', description: 'Public queue report. NO developer names - enriched via EIA.', fields: ['Queue Position → queue_id', 'Project Name → name', 'Net MWs → capacity_mw', 'Fuel-1 → type', 'County → county'] },
+            spp: { title: 'SPP', url: 'https://opsportal.spp.org/Studies/GIInterconnectionQueue', cache: '.cache/spp_queue_direct.parquet', table: 'projects (region=SPP)', description: 'Via gridstatus library. ~80%+ developer coverage.', fields: ['Queue ID', 'Project Name', 'Developer', 'Capacity MW', 'Fuel Type', 'State'] },
+            isone: { title: 'ISO-NE', url: 'https://irtt.iso-ne.com/reports/external', cache: '.cache/isone_queue_direct.parquet', table: 'projects (region=ISO-NE)', parser: 'direct_fetcher.py:472-523', description: 'Via gridstatus library from IRTT portal.', fields: ['Queue ID', 'Project Name', 'Developer', 'Capacity MW', 'Fuel Type', 'Town'] },
+            lbl: { title: 'LBL Queued Up', url: 'https://emp.lbl.gov/queues', cache: '.cache/lbl_queued_up.xlsx', table: 'projects (source=lbl)', parser: 'unified_data.py:115-206', description: '36K+ historical projects. Used for completion rates, backfilling.', fields: ['q_id → queue_id', 'developer → developer', 'mw1 → capacity_mw', 'type_clean → type', 'q_status → status', 'q_date → queue_date'] },
+            eia: { title: 'EIA Form 860', url: 'https://www.eia.gov/electricity/data/eia860/', cache: '.cache/pudl/pudl.sqlite', table: 'core_eia860__scd_ownership, core_eia__entity_plants', parser: 'eia_pudl_loader.py', description: 'Ownership enrichment. Matches by State + County + Fuel + Capacity.', fields: ['eia_owner', 'eia_confidence (0.68-0.90)', 'eia_match_method', 'eia_plant_id'] },
+            ferc: { title: 'FERC Form 1', url: 'https://www.ferc.gov/form-1', cache: '.cache/pudl/ferc1_xbrl.sqlite', table: 'purchased_power_326_duration', parser: 'ferc_seller_extractor.py', description: 'PPA identification. Matches developers to FERC sellers.', fields: ['seller_name → developer match', 'buyer_utility', 'mwh_purchased', 'energy_charges'] },
+            devmatch: { title: 'Developer Registry', cache: '.data/queue_v2.db', table: 'dim_parent_companies, dim_filing_entities, dim_entity_aliases', parser: 'developer_matcher.py', description: 'Fuzzy matching (RapidFuzz). ≥95% auto, 85-95% confirm, 75-85% review.', fields: ['canonical_name', 'parent_company', 'match_confidence', 'match_method'] },
+            queuedb: { title: 'queue.db', cache: '.data/queue.db (72 MB)', table: 'projects, snapshots, changes, refresh_log', description: 'Primary database. ~40K rows. UNIQUE(queue_id, region, source).', fields: ['All ISO data normalized', 'Change tracking via snapshots', 'Audit via refresh_log'] },
+            queuev2db: { title: 'queue_v2.db', cache: '.data/queue_v2.db (7.6 MB)', table: 'dim_* (regions, developers, technologies, statuses, locations), fact_projects', description: 'Star schema for analytics. Foreign keys to all dimension tables.', fields: ['region_id → dim_regions', 'developer_id → dim_developers', 'technology_id → dim_technologies'] }
+        };
+
+        function showModal(key) {
+            const d = modalData[key]; if (!d) return;
+            document.getElementById('modal-title').textContent = d.title;
+            let h = '';
+            if (d.url) h += `<div class="modal-section"><div class="modal-label">Source URL</div><div class="modal-value"><a href="${d.url}" target="_blank">${d.url}</a></div></div>`;
+            if (d.cache) h += `<div class="modal-section"><div class="modal-label">Cache/DB File</div><div class="modal-code">${d.cache}</div></div>`;
+            if (d.table) h += `<div class="modal-section"><div class="modal-label">Database Table(s)</div><div class="modal-code">${d.table}</div></div>`;
+            if (d.parser) h += `<div class="modal-section"><div class="modal-label">Parser Location</div><div class="modal-code">${d.parser}</div></div>`;
+            if (d.description) h += `<div class="modal-section"><div class="modal-label">Description</div><div class="modal-value">${d.description}</div></div>`;
+            if (d.fields) h += `<div class="modal-section"><div class="modal-label">Column Mapping / Fields</div><div class="modal-tags">${d.fields.map(f => `<span class="tag">${f}</span>`).join('')}</div></div>`;
+            document.getElementById('modal-body').innerHTML = h;
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function closeModal(e) { if (!e || e.target.classList.contains('modal-overlay')) document.getElementById('modal').classList.remove('open'); }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>

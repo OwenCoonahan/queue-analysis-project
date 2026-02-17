@@ -434,6 +434,24 @@ def get_deal_report_css() -> str:
         color: #991b1b;
     }
 
+    .badge-elevated {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+    }
+
+    .badge-moderate {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
+    }
+
+    /* Score percentile text */
+    .score-percentile {
+        font-size: 9px;
+        color: #64748b;
+        margin-top: 6px;
+        font-style: italic;
+    }
+
     /* =============================================
        LAYOUT
        ============================================= */

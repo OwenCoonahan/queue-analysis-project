@@ -129,6 +129,34 @@ class DataStore:
             )
         ''')
 
+        # Qualified developers table - pre-qualified interconnection developers
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS qualified_developers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT UNIQUE NOT NULL,
+                region TEXT NOT NULL,
+                qualification_date TEXT,
+                source TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # Planning documents metadata
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS planning_documents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                region TEXT NOT NULL,
+                section TEXT NOT NULL,
+                filename TEXT NOT NULL,
+                file_path TEXT,
+                download_date TEXT,
+                size_kb REAL,
+                document_date TEXT,
+                UNIQUE(region, section, filename)
+            )
+        ''')
+
         # Create indexes
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_projects_region ON projects(region)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_projects_developer ON projects(developer)')
@@ -136,6 +164,7 @@ class DataStore:
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_projects_queue_id ON projects(queue_id)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_snapshots_date ON snapshots(snapshot_date)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_changes_date ON changes(detected_at)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_qualified_devs_region ON qualified_developers(region)')
 
         conn.commit()
         conn.close()
@@ -410,6 +439,56 @@ class DataStore:
 
         conn.commit()
         conn.close()
+
+    def upsert_qualified_developers(self, developers: List[Dict], region: str) -> Dict[str, int]:
+        """Insert or update qualified developers."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        stats = {'added': 0, 'updated': 0}
+
+        for dev in developers:
+            name = dev.get('name', '').strip()
+            if not name:
+                continue
+
+            cursor.execute('''
+                SELECT id FROM qualified_developers WHERE name = ?
+            ''', (name,))
+            existing = cursor.fetchone()
+
+            if existing:
+                cursor.execute('''
+                    UPDATE qualified_developers SET
+                        region = ?, qualification_date = ?, source = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = ?
+                ''', (region, dev.get('qualification_date'), dev.get('source'), existing['id']))
+                stats['updated'] += 1
+            else:
+                cursor.execute('''
+                    INSERT INTO qualified_developers (name, region, qualification_date, source)
+                    VALUES (?, ?, ?, ?)
+                ''', (name, region, dev.get('qualification_date'), dev.get('source')))
+                stats['added'] += 1
+
+        conn.commit()
+        conn.close()
+        return stats
+
+    def get_qualified_developers(self, region: str = None) -> List[Dict]:
+        """Get qualified developers, optionally filtered by region."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        if region:
+            cursor.execute('SELECT * FROM qualified_developers WHERE region = ?', (region,))
+        else:
+            cursor.execute('SELECT * FROM qualified_developers')
+
+        results = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return results
 
     def get_refresh_status(self) -> List[Dict]:
         """Get refresh status for all sources."""

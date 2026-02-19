@@ -70,6 +70,7 @@ class DataRefresher:
         results['nyiso'] = self.refresh_nyiso(quiet)
         results['ercot'] = self.refresh_ercot(quiet)
         results['miso'] = self.refresh_miso(quiet)  # Direct API with developer data
+        results['pjm'] = self.refresh_pjm(quiet)  # Direct Excel files (manual download)
         results['caiso'] = self.refresh_caiso(quiet)  # Direct Excel download
         results['spp'] = self.refresh_spp(quiet)  # gridstatus (Python 3.10+)
         results['isone'] = self.refresh_isone(quiet)  # gridstatus (Python 3.10+)
@@ -101,7 +102,7 @@ class DataRefresher:
             print("=" * 60)
             for source, result in results.items():
                 status = "OK" if result.get('success') else "FAILED"
-                if source in ['nyiso', 'ercot', 'miso', 'caiso', 'spp', 'isone', 'lbl']:
+                if source in ['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl']:
                     added = result.get('added', 0)
                     updated = result.get('updated', 0)
                     print(f"  {source}: {status} (+{added} new, {updated} updated)")
@@ -165,13 +166,51 @@ class DataRefresher:
             return {'success': False, 'error': str(e)}
 
     def refresh_nyiso(self, quiet: bool = False) -> dict:
-        """Refresh NYISO queue data."""
+        """Refresh NYISO queue data using comprehensive loader (all 7 sheets)."""
         if not quiet:
-            print("Refreshing NYISO...")
+            print("Refreshing NYISO (comprehensive - all sheets)...")
         log_id = self.db.log_refresh_start('nyiso')
 
         try:
-            # Download from NYISO
+            from nyiso_loader import NYISOLoader, refresh_nyiso as nyiso_refresh
+
+            # Use the comprehensive nyiso_loader which processes:
+            # - Interconnection Queue (active)
+            # - Cluster Projects (active)
+            # - Affected System Studies (active)
+            # - Withdrawn
+            # - Cluster Projects-Withdrawn
+            # - Affected System-Withdrawn
+            # - In Service (completed)
+
+            result = nyiso_refresh(quiet=quiet)
+
+            if result['success']:
+                stats = {
+                    'added': result.get('added', 0),
+                    'updated': result.get('updated', 0),
+                    'unchanged': result.get('unchanged', 0),
+                }
+                self.db.log_refresh_complete(log_id, stats)
+                return {'success': True, **stats}
+            else:
+                raise Exception(result.get('error', 'Unknown error'))
+
+        except ImportError:
+            # Fallback to direct download if nyiso_loader not available
+            if not quiet:
+                print("  Falling back to direct download...")
+            return self._refresh_nyiso_direct(quiet, log_id)
+
+        except Exception as e:
+            if not quiet:
+                print(f"  ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
+    def _refresh_nyiso_direct(self, quiet: bool, log_id: int) -> dict:
+        """Fallback: Direct download of NYISO queue (active sheet only)."""
+        try:
             url = "https://www.nyiso.com/documents/20142/1407078/NYISO-Interconnection-Queue.xlsx"
             cache_path = CACHE_DIR / 'nyiso_queue.xlsx'
 
@@ -183,38 +222,17 @@ class DataRefresher:
             with open(cache_path, 'wb') as f:
                 f.write(response.content)
 
-            # Load and normalize
             df = pd.read_excel(cache_path)
             if not quiet:
                 print(f"  Loaded {len(df)} projects")
 
-            # Validate raw data before normalization
-            validation = self.validator.validate_source_data(df, 'nyiso', raise_on_error=False)
-            if not validation.is_valid:
-                if not quiet:
-                    print(f"  VALIDATION FAILED:")
-                    for err in validation.errors:
-                        print(f"    - {err}")
-                raise ValidationError(f"NYISO validation failed", validation.errors)
-
-            if validation.warnings and not quiet:
-                print(f"  Validation warnings:")
-                for warn in validation.warnings[:3]:
-                    print(f"    - {warn[:70]}...")
-
-            # Normalize columns
             normalized = self._normalize_nyiso(df)
-
-            # Filter out invalid queue_ids
             normalized = normalized[
                 normalized['queue_id'].notna() &
                 (normalized['queue_id'] != '') &
                 (~normalized['queue_id'].astype(str).str.lower().isin(['nan', 'none', 'notes:']))
             ]
-            if not quiet:
-                print(f"  After filtering: {len(normalized)} valid projects")
 
-            # Upsert to database
             stats = self.db.upsert_projects(normalized, source='nyiso', region='NYISO')
             if not quiet:
                 print(f"  Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
@@ -296,18 +314,18 @@ class DataRefresher:
             return {'success': False, 'error': str(e)}
 
     def refresh_miso(self, quiet: bool = False) -> dict:
-        """Refresh MISO queue data via direct API (includes developer data)."""
+        """Refresh MISO queue data via public API (includes developer data)."""
         if not quiet:
-            print("Refreshing MISO (API with developer data)...")
+            print("Refreshing MISO (public API)...")
         log_id = self.db.log_refresh_start('miso_api')
 
         try:
-            from direct_fetcher import DirectFetcher
-            fetcher = DirectFetcher()
+            from miso_loader import MISOLoader
+            loader = MISOLoader()
 
             if not quiet:
                 print("  Fetching from MISO API...")
-            df = fetcher.fetch_miso(use_cache=False)
+            df = loader.load(use_cache=False)
 
             if df.empty:
                 raise Exception("No data returned from MISO API")
@@ -359,6 +377,49 @@ class DataRefresher:
 
             self.db.log_refresh_complete(log_id, stats)
             return {'success': True, **stats}
+
+        except Exception as e:
+            if not quiet:
+                print(f"  ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
+    def refresh_pjm(self, quiet: bool = False) -> dict:
+        """Refresh PJM queue data from downloaded Excel files.
+
+        Requires manual download of:
+        - PlanningQueues.xlsx from https://www.pjm.com/planning/services-requests/interconnection-queues
+        - CycleProjects-All.xlsx from PJM Transition Cycle reports (optional, for developer data)
+        """
+        if not quiet:
+            print("Refreshing PJM (from Excel files)...")
+        log_id = self.db.log_refresh_start('pjm_direct')
+
+        try:
+            from pjm_loader import PJMLoader, refresh_pjm as pjm_refresh
+
+            loader = PJMLoader()
+            files = loader.check_files()
+
+            if not files['planning_queues']:
+                raise Exception(
+                    "PJM PlanningQueues.xlsx not found. "
+                    "Download from https://www.pjm.com/planning/services-requests/interconnection-queues"
+                )
+
+            # Use the pjm_loader refresh function
+            result = pjm_refresh(quiet=quiet)
+
+            if result['success']:
+                stats = {
+                    'added': result.get('added', 0),
+                    'updated': result.get('updated', 0),
+                    'unchanged': result.get('unchanged', 0),
+                }
+                self.db.log_refresh_complete(log_id, stats)
+                return {'success': True, **stats}
+            else:
+                raise Exception(result.get('error', 'Unknown error'))
 
         except Exception as e:
             if not quiet:
@@ -677,8 +738,31 @@ class DataRefresher:
         })
 
     def _normalize_miso(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Normalize MISO API column names."""
-        # The direct_fetcher already renames columns, but we need to map to our schema
+        """Normalize MISO API column names.
+
+        Handles both:
+        - Raw API data (from direct_fetcher with columns like projectNumber, summerNetMW)
+        - Pre-normalized data (from miso_loader with columns like queue_id, capacity_mw)
+        """
+        # Check if data is already normalized (from miso_loader)
+        if 'queue_id' in df.columns:
+            # Data is already normalized, just ensure all required columns exist
+            return pd.DataFrame({
+                'queue_id': df.get('queue_id', ''),
+                'name': df.get('name', ''),
+                'developer': df.get('utility', df.get('developer', '')),  # miso_loader uses 'utility'
+                'capacity_mw': pd.to_numeric(df.get('capacity_mw', 0), errors='coerce'),
+                'type': df.get('type', ''),
+                'status': df.get('status', ''),
+                'state': df.get('state', ''),
+                'county': df.get('county', ''),
+                'poi': df.get('poi', ''),
+                'queue_date': '',  # MISO API doesn't provide queue dates
+                'cod': df.get('cod', '').astype(str) if 'cod' in df.columns else '',
+                'region': 'MISO',
+            })
+
+        # Raw API data - map to normalized schema
         return pd.DataFrame({
             'queue_id': df.get('Queue ID', df.get('projectNumber', '')),
             'name': '',  # MISO API doesn't have project names
@@ -910,7 +994,7 @@ Examples:
         """
     )
 
-    parser.add_argument('--source', '-s', choices=['nyiso', 'ercot', 'miso', 'caiso', 'spp', 'isone', 'lbl', 'all'],
+    parser.add_argument('--source', '-s', choices=['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl', 'all'],
                        default='all', help='Data source to refresh')
     parser.add_argument('--status', action='store_true', help='Show refresh status')
     parser.add_argument('--changes', type=int, metavar='DAYS',
@@ -945,6 +1029,8 @@ Examples:
             results = {'ercot': refresher.refresh_ercot(quiet=quiet)}
         elif args.source == 'miso':
             results = {'miso': refresher.refresh_miso(quiet=quiet)}
+        elif args.source == 'pjm':
+            results = {'pjm': refresher.refresh_pjm(quiet=quiet)}
         elif args.source == 'caiso':
             results = {'caiso': refresher.refresh_caiso(quiet=quiet)}
         elif args.source == 'spp':

@@ -374,13 +374,15 @@ python3 analytics.py --stats --region PJM
 ```python
 from reports import generate_deal_report
 
-# Generate comprehensive deal report
+# Generate comprehensive deal report (auto-numbered if no output_path)
 pdf_path = generate_deal_report(
-    project_id='J1234',
-    client_name='Acme Capital',
-    output_path='deal_report.pdf'
+    project_id='AB2-037',
+    client_name='Acme Capital'
 )
+# Creates: reports/output/report_007_AB2-037_PJM.pdf
 ```
+
+**Report Numbering**: Reports are auto-numbered sequentially (001, 002, etc.) when no `output_path` is specified. Counter stored in `reports/output/.report_counter`.
 
 Report includes:
 - Executive summary with score gauge

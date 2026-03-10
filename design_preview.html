@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/style.min.css" rel="stylesheet">
+  <style>
+    :root {
+      /* Dark mode (default) */
+      --bg-base: #0A0A0B;
+      --bg-subtle: #111113;
+      --bg-muted: #1A1A1D;
+      --bg-emphasis: #252529;
+      --text-primary: #F9FAFB;
+      --text-secondary: #A1A1AA;
+      --text-muted: #71717A;
+      --text-faint: #3F3F46;
+      --border-default: #27272A;
+      --border-subtle: #1F1F23;
+      --accent: #3B82F6;
+      --accent-hover: #2563EB;
+      --accent-muted: #1E3A5F;
+      --positive: #10B981;
+      --negative: #EF4444;
+      --warning: #F59E0B;
+      --cat-1: #3B82F6;
+      --cat-2: #10B981;
+      --cat-3: #F59E0B;
+      --cat-4: #EF4444;
+      --cat-5: #8B5CF6;
+      --cat-6: #94A3B8;
+      --font-sans: 'Geist', -apple-system, system-ui, sans-serif;
+      --font-inter: 'Inter', -apple-system, system-ui, sans-serif;
+      --font-plex: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .light-mode {
+      --bg-base: #FFFFFF;
+      --bg-subtle: #F8F9FA;
+      --bg-muted: #F1F3F5;
+      --bg-emphasis: #E9ECEF;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --text-faint: #D1D5DB;
+      --border-default: #E5E7EB;
+      --border-subtle: #F3F4F6;
+      --accent: #2563EB;
+      --accent-hover: #1D4ED8;
+      --accent-muted: #DBEAFE;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    /* Layout */
+    .app {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--bg-subtle);
+      border-right: 1px solid var(--border-default);
+      padding: var(--space-4);
+      position: fixed;
+      width: 220px;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .main {
+      margin-left: 220px;
+      padding: var(--space-6);
+      max-width: 1200px;
+    }
+
+    /* Sidebar */
+    .logo {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-section {
+      margin-bottom: var(--space-5);
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 100ms ease-out;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+      background: var(--text-muted);
+      border-radius: 3px;
+      opacity: 0.6;
+    }
+
+    .nav-shortcut {
+      margin-left: auto;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      background: var(--bg-muted);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    /* Mode Toggle */
+    .mode-toggle {
+      position: fixed;
+      top: var(--space-4);
+      right: var(--space-4);
+      display: flex;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .mode-btn {
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 100ms ease-out;
+    }
+
+    .mode-btn.active {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    /* Page Header */
+    .page-header {
+      margin-bottom: var(--space-6);
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-1);
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--space-8);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .metric {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-1);
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-delta {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      margin-top: var(--space-1);
+    }
+
+    .metric-delta.positive { color: var(--positive); }
+    .metric-delta.negative { color: var(--negative); }
+
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--space-3);
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .color-box {
+      height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      margin-bottom: var(--space-1);
+    }
+
+    .color-name {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .color-value {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    /* Palette Strip */
+    .palette-strip {
+      display: flex;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+      height: 40px;
+    }
+
+    .palette-segment {
+      flex: 1;
+    }
+
+    /* Typography */
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .type-label {
+      width: 80px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .type-sample {
+      flex: 1;
+    }
+
+    .text-metric { font-size: 32px; font-weight: 600; font-family: var(--font-mono); letter-spacing: -0.02em; }
+    .text-2xl { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+    .text-xl { font-size: 20px; font-weight: 600; }
+    .text-lg { font-size: 16px; font-weight: 500; }
+    .text-base { font-size: 14px; }
+    .text-sm { font-size: 13px; color: var(--text-secondary); }
+    .text-xs { font-size: 11px; color: var(--text-muted); }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 100ms ease-out;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    /* Inputs */
+    .input-row {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    .input-group {
+      flex: 1;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: var(--space-1);
+    }
+
+    .input {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      padding: 6px 10px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      transition: all 100ms ease-out;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-muted);
+    }
+
+    .input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Badges */
+    .badge-row {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+    }
+
+    .badge-default {
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+
+    .badge-positive {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+    }
+
+    .badge-negative {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+    }
+
+    .badge-info {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+    }
+
+    .light-mode .badge-positive {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .light-mode .badge-negative {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .light-mode .badge-warning {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .light-mode .badge-info {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-default);
+      background: var(--bg-subtle);
+    }
+
+    td {
+      font-size: 13px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    td.numeric {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    tr:hover td {
+      background: var(--bg-muted);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Chart */
+    .chart-container {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .chart-area {
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      min-height: 4px;
+      transition: opacity 100ms ease-out;
+    }
+
+    .bar:hover {
+      opacity: 0.8;
+    }
+
+    .chart-labels {
+      display: flex;
+      gap: 6px;
+      padding-top: var(--space-2);
+    }
+
+    .chart-label {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    /* Two column */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+
+    .card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-2);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+      line-height: 1.5;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: var(--space-3);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .card-meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* Sparkline (CSS only approximation) */
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 1px;
+      height: 24px;
+    }
+
+    .spark-bar {
+      width: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+      opacity: 0.6;
+    }
+
+    /* Status indicator */
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-dot.online { background: var(--positive); }
+    .status-dot.warning { background: var(--warning); }
+    .status-dot.offline { background: var(--negative); }
+
+    /* Font switching */
+    .font-inter, .font-inter * { font-family: var(--font-inter) !important; }
+    .font-inter .metric-value, .font-inter .numeric, .font-inter .text-metric,
+    .font-inter .nav-shortcut, .font-inter .type-label, .font-inter .chart-label,
+    .font-inter .color-value { font-family: var(--font-mono) !important; }
+
+    .font-plex, .font-plex * { font-family: var(--font-plex) !important; }
+    .font-plex .metric-value, .font-plex .numeric, .font-plex .text-metric,
+    .font-plex .nav-shortcut, .font-plex .type-label, .font-plex .chart-label,
+    .font-plex .color-value { font-family: var(--font-mono) !important; }
+
+    /* Font toggle */
+    .font-toggle {
+      position: fixed;
+      top: var(--space-4);
+      right: 140px;
+      display: flex;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .font-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 100ms ease-out;
+    }
+
+    .font-btn.active {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    /* Fix light mode color swatches */
+    .light-mode .color-box {
+      border: 1px solid #D1D5DB;
+    }
+  </style>
+</head>
+<body>
+  <div class="font-toggle">
+    <button class="font-btn active" onclick="setFont('geist')">Geist</button>
+    <button class="font-btn" onclick="setFont('inter')">Inter</button>
+    <button class="font-btn" onclick="setFont('plex')">Plex</button>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('dark')">Dark</button>
+    <button class="mode-btn" onclick="setMode('light')">Light</button>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        GridView
+      </div>
+
+      <nav class="nav-section">
+        <div class="nav-label">Navigation</div>
+        <a class="nav-item active">
+          <div class="nav-icon"></div>
+          Dashboard
+          <span class="nav-shortcut">D</span>
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          Projects
+          <span class="nav-shortcut">P</span>
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          Analytics
+          <span class="nav-shortcut">A</span>
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          Queue
+          <span class="nav-shortcut">Q</span>
+        </a>
+      </nav>
+
+      <nav class="nav-section">
+        <div class="nav-label">Data</div>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          MISO
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          PJM
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          SPP
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          ERCOT
+        </a>
+      </nav>
+
+      <nav class="nav-section">
+        <div class="nav-label">System</div>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          Settings
+        </a>
+        <a class="nav-item">
+          <div class="nav-icon"></div>
+          Keyboard
+          <span class="nav-shortcut">?</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">Design System</h1>
+        <p class="page-subtitle">Precision design for data-intensive applications</p>
+      </header>
+
+      <!-- Metrics -->
+      <section class="section">
+        <h2 class="section-title">Metrics</h2>
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="metric-label">Total Projects</div>
+            <div class="metric-value">2,847</div>
+            <div class="metric-delta positive">+12.4%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Queue Capacity</div>
+            <div class="metric-value">847 GW</div>
+            <div class="metric-delta positive">+8.3%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Avg Queue Time</div>
+            <div class="metric-value">4.2 yrs</div>
+            <div class="metric-delta negative">+0.3 yrs</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Completion Rate</div>
+            <div class="metric-value">23.1%</div>
+            <div class="metric-delta negative">-2.1%</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Colors -->
+      <section class="section">
+        <h2 class="section-title">Colors</h2>
+
+        <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Background & Text</h3>
+        <div class="color-grid" style="margin-bottom: var(--space-5);">
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--bg-base);"></div>
+            <div class="color-name">Base</div>
+            <div class="color-value">#0A0A0B</div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--bg-subtle);"></div>
+            <div class="color-name">Subtle</div>
+            <div class="color-value">#111113</div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--bg-muted);"></div>
+            <div class="color-name">Muted</div>
+            <div class="color-value">#1A1A1D</div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--accent);"></div>
+            <div class="color-name">Accent</div>
+            <div class="color-value">#3B82F6</div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--positive);"></div>
+            <div class="color-name">Positive</div>
+            <div class="color-value">#10B981</div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-box" style="background: var(--negative);"></div>
+            <div class="color-name">Negative</div>
+            <div class="color-value">#EF4444</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Data Categorical</h3>
+        <div class="palette-strip">
+          <div class="palette-segment" style="background: var(--cat-1);"></div>
+          <div class="palette-segment" style="background: var(--cat-2);"></div>
+          <div class="palette-segment" style="background: var(--cat-3);"></div>
+          <div class="palette-segment" style="background: var(--cat-4);"></div>
+          <div class="palette-segment" style="background: var(--cat-5);"></div>
+          <div class="palette-segment" style="background: var(--cat-6);"></div>
+        </div>
+
+        <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Data Sequential</h3>
+        <div class="palette-strip">
+          <div class="palette-segment" style="background: #1E3A5F;"></div>
+          <div class="palette-segment" style="background: #1E40AF;"></div>
+          <div class="palette-segment" style="background: #2563EB;"></div>
+          <div class="palette-segment" style="background: #3B82F6;"></div>
+          <div class="palette-segment" style="background: #60A5FA;"></div>
+          <div class="palette-segment" style="background: #93C5FD;"></div>
+        </div>
+      </section>
+
+      <!-- Typography -->
+      <section class="section">
+        <h2 class="section-title">Typography</h2>
+        <div class="type-scale">
+          <div class="type-row">
+            <div class="type-label">metric/32</div>
+            <div class="type-sample text-metric">847.2 GW</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">2xl/28</div>
+            <div class="type-sample text-2xl">Dashboard</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">xl/20</div>
+            <div class="type-sample text-xl">Page Title</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">lg/16</div>
+            <div class="type-sample text-lg">Section Header</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">base/14</div>
+            <div class="type-sample text-base">Body text for longer content</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">sm/13</div>
+            <div class="type-sample text-sm">Secondary text, descriptions</div>
+          </div>
+          <div class="type-row">
+            <div class="type-label">xs/11</div>
+            <div class="type-sample text-xs">Labels, captions, metadata</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components -->
+      <section class="section">
+        <h2 class="section-title">Components</h2>
+
+        <div style="margin-bottom: var(--space-5);">
+          <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Buttons</h3>
+          <div class="btn-row">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-ghost">Ghost</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-5);">
+          <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Badges</h3>
+          <div class="badge-row">
+            <span class="badge badge-default">Default</span>
+            <span class="badge badge-positive">Active</span>
+            <span class="badge badge-warning">Pending</span>
+            <span class="badge badge-negative">Withdrawn</span>
+            <span class="badge badge-info">Under Review</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-3);">Inputs</h3>
+          <div class="input-row">
+            <div class="input-group">
+              <label class="input-label">Project Name</label>
+              <input type="text" class="input" placeholder="Enter name">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Capacity (MW)</label>
+              <input type="text" class="input" placeholder="0" style="font-family: var(--font-mono);">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Search</label>
+              <input type="text" class="input" placeholder="Search projects...">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Table -->
+      <section class="section">
+        <h2 class="section-title">Data Table</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>ISO</th>
+                <th>Type</th>
+                <th style="text-align: right;">Capacity</th>
+                <th>Status</th>
+                <th style="text-align: right;">Queue Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sunrise Solar I</td>
+                <td>ERCOT</td>
+                <td>Solar</td>
+                <td class="numeric">350 MW</td>
+                <td><span class="status-dot online"></span> Active</td>
+                <td class="numeric">2023-03-15</td>
+              </tr>
+              <tr>
+                <td>Prairie Wind Farm</td>
+                <td>SPP</td>
+                <td>Wind</td>
+                <td class="numeric">500 MW</td>
+                <td><span class="status-dot warning"></span> Pending</td>
+                <td class="numeric">2023-06-22</td>
+              </tr>
+              <tr>
+                <td>Grid Storage Alpha</td>
+                <td>PJM</td>
+                <td>Storage</td>
+                <td class="numeric">200 MW</td>
+                <td><span class="status-dot online"></span> Active</td>
+                <td class="numeric">2024-01-08</td>
+              </tr>
+              <tr>
+                <td>Coastal Wind</td>
+                <td>NYISO</td>
+                <td>Offshore</td>
+                <td class="numeric">800 MW</td>
+                <td><span class="status-dot offline"></span> Withdrawn</td>
+                <td class="numeric">2022-11-30</td>
+              </tr>
+              <tr>
+                <td>Desert Sun II</td>
+                <td>CAISO</td>
+                <td>Solar + Storage</td>
+                <td class="numeric">450 MW</td>
+                <td><span class="status-dot online"></span> Active</td>
+                <td class="numeric">2023-09-14</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="section">
+        <h2 class="section-title">Charts</h2>
+        <div class="two-col">
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">Queue Capacity by Fuel Type</div>
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background: var(--cat-1);"></div> Solar</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--cat-2);"></div> Wind</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--cat-3);"></div> Storage</div>
+              </div>
+            </div>
+            <div class="chart-area">
+              <div class="bar-group">
+                <div class="bar" style="height: 85%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 60%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 30%; background: var(--cat-3);"></div>
+              </div>
+              <div class="bar-group">
+                <div class="bar" style="height: 70%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 75%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 25%; background: var(--cat-3);"></div>
+              </div>
+              <div class="bar-group">
+                <div class="bar" style="height: 55%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 80%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 20%; background: var(--cat-3);"></div>
+              </div>
+              <div class="bar-group">
+                <div class="bar" style="height: 90%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 40%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 35%; background: var(--cat-3);"></div>
+              </div>
+              <div class="bar-group">
+                <div class="bar" style="height: 45%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 50%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 15%; background: var(--cat-3);"></div>
+              </div>
+              <div class="bar-group">
+                <div class="bar" style="height: 35%; background: var(--cat-1);"></div>
+                <div class="bar" style="height: 25%; background: var(--cat-2);"></div>
+                <div class="bar" style="height: 10%; background: var(--cat-3);"></div>
+              </div>
+            </div>
+            <div class="chart-labels">
+              <div class="chart-label">MISO</div>
+              <div class="chart-label">PJM</div>
+              <div class="chart-label">SPP</div>
+              <div class="chart-label">ERCOT</div>
+              <div class="chart-label">CAISO</div>
+              <div class="chart-label">NYISO</div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">Monthly Applications</div>
+            </div>
+            <div class="chart-area">
+              <div class="bar" style="height: 40%; background: var(--accent);"></div>
+              <div class="bar" style="height: 55%; background: var(--accent);"></div>
+              <div class="bar" style="height: 45%; background: var(--accent);"></div>
+              <div class="bar" style="height: 70%; background: var(--accent);"></div>
+              <div class="bar" style="height: 65%; background: var(--accent);"></div>
+              <div class="bar" style="height: 85%; background: var(--accent);"></div>
+              <div class="bar" style="height: 75%; background: var(--accent);"></div>
+              <div class="bar" style="height: 60%; background: var(--accent);"></div>
+              <div class="bar" style="height: 90%; background: var(--accent);"></div>
+              <div class="bar" style="height: 80%; background: var(--accent);"></div>
+              <div class="bar" style="height: 70%; background: var(--accent);"></div>
+              <div class="bar" style="height: 95%; background: var(--accent);"></div>
+            </div>
+            <div class="chart-labels">
+              <div class="chart-label">J</div>
+              <div class="chart-label">F</div>
+              <div class="chart-label">M</div>
+              <div class="chart-label">A</div>
+              <div class="chart-label">M</div>
+              <div class="chart-label">J</div>
+              <div class="chart-label">J</div>
+              <div class="chart-label">A</div>
+              <div class="chart-label">S</div>
+              <div class="chart-label">O</div>
+              <div class="chart-label">N</div>
+              <div class="chart-label">D</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cards -->
+      <section class="section">
+        <h2 class="section-title">Cards</h2>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Sunrise Solar I</div>
+              <span class="badge badge-positive">Active</span>
+            </div>
+            <div class="card-desc">250 MW utility-scale solar in West Texas. Expected COD 2026.</div>
+            <div class="card-meta">
+              <div class="card-meta-item">ERCOT</div>
+              <div class="card-meta-item">Queue #847</div>
+              <div class="card-meta-item">Mar 2023</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Prairie Wind</div>
+              <span class="badge badge-warning">Pending</span>
+            </div>
+            <div class="card-desc">400 MW onshore wind development in Oklahoma panhandle.</div>
+            <div class="card-meta">
+              <div class="card-meta-item">SPP</div>
+              <div class="card-meta-item">Queue #1203</div>
+              <div class="card-meta-item">Jun 2023</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Grid Storage Alpha</div>
+              <span class="badge badge-info">Review</span>
+            </div>
+            <div class="card-desc">100 MW / 400 MWh battery storage co-located with solar.</div>
+            <div class="card-meta">
+              <div class="card-meta-item">PJM</div>
+              <div class="card-meta-item">Queue #2401</div>
+              <div class="card-meta-item">Jan 2024</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function setMode(mode) {
+      const body = document.body;
+      const buttons = document.querySelectorAll('.mode-btn');
+
+      if (mode === 'light') {
+        body.classList.add('light-mode');
+      } else {
+        body.classList.remove('light-mode');
+      }
+
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase() === mode) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    // Navigation click handlers
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Remove active from all
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        // Add active to clicked
+        this.classList.add('active');
+      });
+    });
+
+    // Font switching
+    function setFont(font) {
+      const body = document.body;
+      const buttons = document.querySelectorAll('.font-btn');
+
+      // Remove all font classes
+      body.classList.remove('font-inter', 'font-plex');
+
+      // Add selected font class (geist is default, no class needed)
+      if (font === 'inter') {
+        body.classList.add('font-inter');
+      } else if (font === 'plex') {
+        body.classList.add('font-plex');
+      }
+
+      // Update active button
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase() === font) {
+          btn.classList.add('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

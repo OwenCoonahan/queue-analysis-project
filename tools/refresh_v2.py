@@ -216,20 +216,28 @@ def record_project_changes(old_snapshot, quiet=False):
     return stats
 
 
-def sync_stale_records(quiet=False, dry_run=False):
+def sync_stale_records(quiet=False, dry_run=False, force_apply=False):
     """
-    Mark records as withdrawn if they're no longer in live ISO data.
-    This prevents over-counting from stale cached data.
+    Queue potential withdrawals for human review instead of auto-applying.
+
+    SAFETY FIX: This function now queues status changes to 'Withdrawn' for
+    human approval instead of auto-applying them. This prevents data corruption
+    from API failures, network issues, or format changes.
 
     Args:
         quiet: Suppress output
         dry_run: Preview changes without committing
+        force_apply: DANGEROUS - bypass validation and auto-apply (legacy behavior)
     """
+    from validation_gates import ValidationGates
+
     if not quiet:
         if dry_run:
             print("\n--- Syncing Stale Records (DRY RUN) ---")
+        elif force_apply:
+            print("\n--- Syncing Stale Records (FORCE MODE - NO VALIDATION) ---")
         else:
-            print("\n--- Syncing Stale Records ---")
+            print("\n--- Syncing Stale Records (Queueing for Review) ---")
 
     from direct_fetcher import DirectFetcher
     fetcher = DirectFetcher()
@@ -237,33 +245,68 @@ def sync_stale_records(quiet=False, dry_run=False):
     conn = sqlite3.connect(V1_PATH)
     cursor = conn.cursor()
 
-    total_updated = 0
-    stale_details = {}  # Track stale records for dry run
+    gates = ValidationGates()
+    total_queued = 0
+    total_applied = 0
+
+    def process_stale_records(region: str, live_ids: set, sources: list, exclude_statuses: list):
+        """Process stale records for a region - queue or apply based on mode."""
+        nonlocal total_queued, total_applied
+
+        placeholders_exclude = ','.join(['?'] * len(exclude_statuses))
+        cursor.execute(f"""
+            SELECT DISTINCT queue_id, status FROM projects
+            WHERE region = ? AND source IN ({','.join(['?']*len(sources))})
+            AND status NOT IN ({placeholders_exclude})
+        """, [region] + sources + exclude_statuses)
+
+        db_records = {r[0]: r[1] for r in cursor.fetchall()}
+        db_ids = set(db_records.keys())
+
+        stale = db_ids - live_ids
+        if not stale:
+            return 0
+
+        count = 0
+        for queue_id in stale:
+            old_status = db_records.get(queue_id, 'Active')
+
+            if force_apply and not dry_run:
+                # Legacy dangerous behavior - only with explicit flag
+                cursor.execute("""
+                    UPDATE projects SET status = 'Withdrawn'
+                    WHERE queue_id = ? AND region = ?
+                """, (queue_id, region))
+                total_applied += 1
+                count += 1
+            else:
+                # Safe behavior - queue for review
+                gates.queue_status_change(
+                    queue_id=queue_id,
+                    region=region,
+                    old_status=old_status,
+                    new_status='Withdrawn',
+                    reason='not_in_latest_fetch',
+                    source='sync'
+                )
+                total_queued += 1
+                count += 1
+
+        return count
 
     # ERCOT sync
     try:
         live_ercot = fetcher.fetch_ercot(use_cache=True)
         if not live_ercot.empty:
             live_ids = set(live_ercot['Queue ID'].tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'ERCOT' AND source IN ('ercot', 'lbl')
-                AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'ERCOT' AND queue_id IN ({placeholders})
-                    AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  ERCOT: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'ERCOT', live_ids,
+                ['ercot', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  ERCOT: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  ERCOT sync error: {e}")
@@ -273,25 +316,14 @@ def sync_stale_records(quiet=False, dry_run=False):
         live_miso = fetcher.fetch_miso(use_cache=True)
         if not live_miso.empty:
             live_ids = set(live_miso['Queue ID'].tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'MISO' AND source IN ('miso_api', 'lbl')
-                AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational', 'Done')
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'MISO' AND queue_id IN ({placeholders})
-                    AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational', 'Done')
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  MISO: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'MISO', live_ids,
+                ['miso_api', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational', 'Done']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  MISO: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  MISO sync error: {e}")
@@ -300,28 +332,16 @@ def sync_stale_records(quiet=False, dry_run=False):
     try:
         live_nyiso = fetcher.fetch_nyiso(use_cache=True)
         if not live_nyiso.empty:
-            # Get queue IDs from live data
             queue_col = 'Queue Pos.' if 'Queue Pos.' in live_nyiso.columns else 'Queue ID'
             live_ids = set(str(x) for x in live_nyiso[queue_col].dropna().tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'NYISO' AND source IN ('nyiso', 'lbl')
-                AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'NYISO' AND queue_id IN ({placeholders})
-                    AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  NYISO: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'NYISO', live_ids,
+                ['nyiso', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  NYISO: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  NYISO sync error: {e}")
@@ -330,96 +350,60 @@ def sync_stale_records(quiet=False, dry_run=False):
     try:
         live_caiso = fetcher.fetch_caiso(use_cache=True)
         if not live_caiso.empty:
-            # Get queue IDs - CAISO uses 'Queue Position'
             queue_col = 'Queue Position' if 'Queue Position' in live_caiso.columns else 'Queue ID'
             live_ids = set(str(x) for x in live_caiso[queue_col].dropna().tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'CAISO' AND source IN ('caiso', 'lbl')
-                AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'CAISO' AND queue_id IN ({placeholders})
-                    AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational')
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  CAISO: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'CAISO', live_ids,
+                ['caiso', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  CAISO: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  CAISO sync error: {e}")
 
-    # ISO-NE sync - only consider Active projects from live data
+    # ISO-NE sync
     try:
         live_isone = fetcher.fetch_isone(use_cache=True)
         if not live_isone.empty:
-            # Filter to only Active projects
             if 'Status' in live_isone.columns:
                 live_isone_active = live_isone[live_isone['Status'] == 'Active']
             else:
                 live_isone_active = live_isone
             queue_col = 'Queue ID' if 'Queue ID' in live_isone_active.columns else live_isone_active.columns[0]
             live_ids = set(str(x) for x in live_isone_active[queue_col].dropna().tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'ISO-NE' AND source IN ('isone', 'lbl')
-                AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational', 'Completed')
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'ISO-NE' AND queue_id IN ({placeholders})
-                    AND status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational', 'Completed')
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  ISO-NE: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'ISO-NE', live_ids,
+                ['isone', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational', 'Completed']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  ISO-NE: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  ISO-NE sync error: {e}")
 
-    # SPP sync - only consider Active projects from live data
+    # SPP sync
     try:
         live_spp = fetcher.fetch_spp(use_cache=True)
         if not live_spp.empty:
-            # Filter to only Active projects
             if 'Status' in live_spp.columns:
                 live_spp_active = live_spp[live_spp['Status'] == 'Active']
             else:
                 live_spp_active = live_spp
             queue_col = 'Queue ID' if 'Queue ID' in live_spp_active.columns else live_spp_active.columns[0]
             live_ids = set(str(x) for x in live_spp_active[queue_col].dropna().tolist())
-
-            cursor.execute("""
-                SELECT DISTINCT queue_id FROM projects
-                WHERE region = 'SPP' AND source IN ('spp', 'lbl')
-                AND (status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational') OR status IS NULL)
-            """)
-            db_ids = {r[0] for r in cursor.fetchall()}
-
-            stale = db_ids - live_ids
-            if stale:
-                placeholders = ','.join(['?'] * len(stale))
-                cursor.execute(f"""
-                    UPDATE projects SET status = 'Withdrawn'
-                    WHERE region = 'SPP' AND queue_id IN ({placeholders})
-                    AND (status NOT IN ('withdrawn', 'Withdrawn', 'operational', 'Operational') OR status IS NULL)
-                """, list(stale))
-                total_updated += cursor.rowcount
-                if not quiet:
-                    print(f"  SPP: {cursor.rowcount} stale records marked withdrawn")
+            count = process_stale_records(
+                'SPP', live_ids,
+                ['spp', 'lbl'],
+                ['withdrawn', 'Withdrawn', 'operational', 'Operational']
+            )
+            if not quiet and count:
+                action = "applied" if force_apply else "queued"
+                print(f"  SPP: {count} stale records {action}")
     except Exception as e:
         if not quiet:
             print(f"  SPP sync error: {e}")
@@ -427,14 +411,20 @@ def sync_stale_records(quiet=False, dry_run=False):
     if dry_run:
         conn.rollback()
         if not quiet:
-            print(f"  DRY RUN: Would update {total_updated} stale records")
+            print(f"  DRY RUN: Would queue {total_queued} records for review")
+    elif force_apply:
+        conn.commit()
+        if not quiet:
+            print(f"  FORCE APPLIED: {total_applied} stale records (DANGEROUS)")
     else:
         conn.commit()
         if not quiet:
-            print(f"  Total stale records updated: {total_updated}")
+            print(f"  Queued {total_queued} records for review")
+            print(f"  Run 'python validation_gates.py --pending' to review")
 
     conn.close()
-    return total_updated
+    gates.close()
+    return total_queued if not force_apply else total_applied
 
 
 def rebuild_v2(quiet=False, dry_run=False):

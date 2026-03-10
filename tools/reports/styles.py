@@ -697,6 +697,83 @@ def get_deal_report_css() -> str:
         color: #666;
         font-family: -apple-system, sans-serif;
     }
+
+    /* =============================================
+       SECTION INTRO TEXT
+       ============================================= */
+    .section-intro {
+        font-size: 10px;
+        color: #555;
+        margin: 0 0 14px 0;
+        line-height: 1.5;
+    }
+
+    /* =============================================
+       HISTOGRAM TABLE
+       ============================================= */
+    .histogram-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9px;
+    }
+
+    .histogram-table th {
+        text-align: left;
+        padding: 6px 8px;
+        font-weight: 600;
+        color: #666;
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border-bottom: 1px solid #ccc;
+        font-family: -apple-system, sans-serif;
+    }
+
+    .histogram-table td {
+        padding: 5px 8px;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+    }
+
+    .histogram-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* =============================================
+       FUNNEL CONTAINER
+       ============================================= */
+    .funnel-container {
+        margin-bottom: 12px;
+    }
+
+    .funnel-container .data-table td:nth-child(2),
+    .funnel-container .data-table td:nth-child(3),
+    .funnel-container .data-table td:nth-child(4) {
+        text-align: right;
+    }
+
+    .funnel-container .data-table th:nth-child(2),
+    .funnel-container .data-table th:nth-child(3),
+    .funnel-container .data-table th:nth-child(4) {
+        text-align: right;
+    }
+
+    /* =============================================
+       OUTCOME SUMMARY
+       ============================================= */
+    .outcome-summary {
+        flex: 1;
+    }
+
+    .outcome-summary .data-table td:nth-child(2),
+    .outcome-summary .data-table td:nth-child(3) {
+        text-align: right;
+    }
+
+    .outcome-summary .data-table th:nth-child(2),
+    .outcome-summary .data-table th:nth-child(3) {
+        text-align: right;
+    }
     '''
 
 

@@ -1,0 +1,560 @@
+eia_plant_code,utility_id,utility_name,plant_name,generator_id,state,county,status_code,status_description,technology,nameplate_capacity_mw,nameplate_energy_mwh,max_charge_mw,max_discharge_mw,storage_technology,sector_name,permitting_stage,co_located_renewable,source
+708,7140,Georgia Power Co,Hammond,5,GA,Floyd,U,Under Construction,Batteries,57.5,260,57.5,57.5,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+1355,10171,Kentucky Utilities Co,E W Brown,BESS,KY,Mercer,T,Regulatory Approved,Batteries,125,500,100,125,LIB,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+2038,7570,Great River Energy,Cambridge CT Hybrid,BA1,MN,Isanti,P,Planned,Batteries,1.5,150,0.5,1.5,MAB,Electric Utility,Planned - Permit Pending,,EIA-860-2024-Proposed
+2161,17833,City Utilities of Springfield - (MO),James River Power Station,BAT1,MO,Greene,P,Planned,Batteries,31,186,31,31,OTH,Electric Utility,Planned - Permit Pending,,EIA-860-2024-Proposed
+4050,20856,Wisconsin Power & Light Co,Edgewater,BESS1,WI,Sheboygan,T,Regulatory Approved,Batteries,99,396,99,99,LIB,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+6211,54803,"Dynegy Oakland, LLC",Dynegy Oakland Power Plant,GEN4,CA,Alameda,P,Planned,Batteries,43.3,173.2,43.3,43.3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+6474,10071,Kauai Island Utility Cooperative,Port Allen (HI),BBA9,HI,Kauai,L,Regulatory Approved (Not Under Construction),Batteries,6,12,6,6,LIB,Electric Utility,Permitted - Not Under Construction,PR,EIA-860-2024-Proposed
+7873,18454,Tampa Electric Co,H L Culbreath Bayside Power Station,BESS1,FL,Hillsborough,U,Under Construction,Batteries,20,40,20,20,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+10444,61950,Terra-Gen Operating Co-Solar,"Lockhart Solar PV, LLC",LHC1,CA,San Bernardino,U,Under Construction,Batteries,69,69,69,69,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+50736,63599,Pure Hedge LLC,Pure Hedge LLC,FSS13,CT,Windham,U,Under Construction,Batteries,20,50,6.3,6.3,NIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+55510,59527,"CalPeak Power, LLC",Border Hybrid Energy Center,HER,CA,San Diego,V,Inactive,Batteries,54.1,54.1,52,52,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+56446,50123,"Leeward Asset Management, LLC",Buena Vista Energy LLC,BVBAT,CA,Contra Costa,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+58639,10071,Kauai Island Utility Cooperative,KRS I Anahola Solar Hybrid,BESS8,HI,Kauai,P,Planned,Batteries,12,24,12,12,LIB,Electric Utility,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+58640,10071,Kauai Island Utility Cooperative,KRS II Koloa Solar,BESS7,HI,Kauai,P,Planned,Batteries,12,24,12,12,LIB,Electric Utility,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+61167,60796,91MC 8me LLC,Aratina Solar Center 1B,BESS,CA,San Bernardino,U,Under Construction,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+61169,60798,69SV 8me LLC,"Eland Solar & Storage Center, Phase 2 Hy",61169,CA,Kern,V,Inactive,Batteries,150,600,150,150,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+61170,60799,33UI 8me LLC,Gale 1 Solar,33UI9,UT,Millard,P,Planned,Batteries,150,600,150,150,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+61331,60971,NYC Energy LLC,NISA Electric Generation Project,BA1,NY,Kings,P,Planned,Batteries,79.9,1200,300,300,,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+61331,60971,NYC Energy LLC,NISA Electric Generation Project,BA2,NY,Kings,P,Planned,Batteries,220.1,1200,300,300,,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+61648,7140,Georgia Power Co,Robins Air Force Base Solar,2,GA,Bibb,U,Under Construction,Batteries,128,512,128,128,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+61667,18454,Tampa Electric Co,Wimauma Solar and Battery Storage,BESS1,FL,Hillsborough,TS,Testing/Commissioning,Batteries,40,80,40,40,LIB,Electric Utility,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+61803,56201,Engie North America,"Sierra Energy Storage, LLC",10003,CA,Tuolumne,TS,Testing/Commissioning,Batteries,10,40,10,10,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+62184,61716,Big Fork Solar,Big Fork Solar,27,SC,Barnwell,T,Regulatory Approved,Batteries,74.9,299.6,74.9,74.9,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+62188,61720,Colleton Solar,Colleton Solar,31,SC,Colleton,T,Regulatory Approved,Batteries,74.9,299.6,74.9,74.9,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+62190,61722,Crossroads Solar,Crossroads Solar,33,SC,Barnwell,T,Regulatory Approved,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+62299,61807,Quest Solar,Quest Solar,67,SC,Allendale,T,Regulatory Approved,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+62377,7140,Georgia Power Co,Moody Air Force Base Solar,2,GA,Lowndes,U,Under Construction,Batteries,49.5,198,49.5,49.5,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+62494,62023,Skeleton Creek Energy Center,Skeleton Creek Energy Center Hybrid,SCBAT,OK,Garfield,P,Planned,Batteries,252,1008,252,252,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+62529,62008,Hale Kuawehi Solar LLC,Hale Kuawehi Solar Hybrid,HKBA,HI,Hawaii,V,Inactive,Batteries,30,30,30,30,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+62729,62646,"Painter Energy Storage, LLC",Painter Energy Storage,PAIN1,CA,Santa Barbara,U,Under Construction,Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+62844,62733,Cranberry Point Energy Storage LLC,Cranberry Point Energy Storage,NA,MA,Plymouth,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+62892,62760,EDPR CA Solar Park VI LLC,EDPR CA Solar Park VI LLC (CA) Hybrid,SONR2,CA,Fresno,T,Regulatory Approved,Batteries,40,40,40,60,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+63113,62910,300MS 8me LLC,Southern Bighorn Solar Hybrid,BESS,NV,Clark,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+63202,62936,TREX US Red Holly LLC,TREX US Red Holly,701-S,TX,Lynn,L,Regulatory Approved (Not Under Construction),Batteries,50,200,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,PR,EIA-860-2024-Proposed
+63506,63243,"Solar Carver 3, LLC",Solar Carver 3 Hybrid,BCRV3,MA,Plymouth,V,Inactive,Batteries,1,2,2.1,2.1,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+63541,63257,"Solar Carver 1, LLC",Solar Carver 1 Hybrid,BCRV1,MA,Plymouth,V,Inactive,Batteries,2,1.9,4.5,4.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+63584,63289,Key Capture Energy,NY2 Battery,NY2,NY,Orange,L,Regulatory Approved (Not Under Construction),Batteries,151.5,303,151.5,151.5,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+63723,63416,Ho'Ohana Solar 1 LLC,Ho'Ohana Solar 1,HESS1,HI,Honolulu,TS,Testing/Commissioning,Batteries,52,208,52,52,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+63798,61222,174 Power Global Corp.,Atlas,ATLB1,AZ,La Paz,P,Planned,Batteries,300, , , ,,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+63841,63520,326FW 8me LLC,Arida Solar (Hybrid),BESS,NV,Clark,P,Planned,Batteries,370,1480,370,370,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+63850,63527,"Westlands Cherry, LLC",Cherry,BESS1,CA,Kings,T,Regulatory Approved,Batteries,40,160,40,40,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+63850,63527,"Westlands Cherry, LLC",Cherry,BESS2,CA,Kings,T,Regulatory Approved,Batteries,110,440,110,110,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+64202,56215,"Big Sky Wind, LLC","Big Star Solar, LLC (Hybrid)",BGSTB,TX,Bastrop,V,Inactive,Batteries,80,120,80,80,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+64208,63807,302PN 8me LLC,Red Antelope Solar & Energy Storage Farm,30PNB,AZ,Coconino,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+64209,63806,26SB 8me LLC,Bellefield 2 Solar & Energy Storage Farm,26SBB,CA,Kern,P,Planned,Batteries,500,2000,500,500,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+64210,63805,50LW 8me LLC,Bellefield Solar and Energy Storage Farm,50LWB,CA,Kern,P,Planned,Batteries,500,2000,500,500,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+64215,63825,45MG 8me LLC,Aratina Solar Center 2,45MGB,CA,Kern,T,Regulatory Approved,Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+64216,63826,201LC 8me LLC,Rockmont Solar and Storage Project,309SJ,NM,San Juan,P,Planned,Batteries,30,120,30,30,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+64235,63838,Hecate Grid Swiftsure LLC,Swiftsure,SWFTS,NY,Richmond,P,Planned,Batteries,121,121,30.3,30.3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+64236,63839,Hecate Grid Clermont 1 LLC,Clermont,CLRMT,NY,Nassau,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+64255,18642,Tennessee Valley Authority,Vonore Battery Energy Storage System,VBESS,TN,Monroe,U,Under Construction,Batteries,20,40,10,10,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+64428,64077,JVR Energy Park LLC,JVR Energy Park LLC,JVR1B,CA,San Diego,P,Planned,Batteries,70,70,63,22,FLB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+64529,58764,"Origis Energy USA, Inc",Golden Triangle,MS5_S,MS,Lowndes,V,Inactive,Batteries,50,200,50,50,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+64531,56201,Engie North America,Noosa Energy Storage LLC,KOV4A,CA,San Joaquin,U,Under Construction,Batteries,99,500,99,99,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+64615,64230,"Sanford ESS, LLC","Sanford ESS, LLC",1,ME,York,T,Regulatory Approved,Batteries,5,10,4.9,4.9,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+64616,64233,"South Portland ESS, LLC","South Portland ESS, LLC",1,ME,Cumberland,T,Regulatory Approved,Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+64632,64246,"99MT 8me, LLC",Sienna Solar Farm,99MTB,CA,San Bernardino,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+64633,64904,AES Clean Energy,Rexford Solar Farm,20SDB,CA,Tulare,V,Inactive,Batteries,240,960,240,240,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+64634,64245,"90FI 8me, LLC",Kingsley Solar Farm,90FIB,CA,Imperial,P,Planned,Batteries,74,296,74,74,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+64636,64244,"Big Rock ESS Assets, LLC",Big Rock Solar Farm,92JTB,CA,Imperial,V,Inactive,Batteries,200,200,200,200,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+64758,61514,"Agilitas Energy, Inc.",Manorville II,MANB,NY,Suffolk,L,Regulatory Approved (Not Under Construction),Batteries,0.8,2.9,0.7,0.7,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+64761,61514,"Agilitas Energy, Inc.",Patchogue ESS,PAT,NY,Suffolk,L,Regulatory Approved (Not Under Construction),Batteries,2,11.9,2,2,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+64849,64355,"Solariant Capital, LLC",Wildcat Solar Power Plant LLC,ATMWS,NM,McKinley,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+64859,64370,"IP Radian, LLC","IP Radian, LLC",RADBA,TX,Brown,V,Inactive,Batteries,160,320,160,160,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+64864,50123,"Leeward Asset Management, LLC",Chaparral Springs,CHAPB,CA,Kern,V,Inactive,Batteries,52,208,52,52,LIB,IPP Non-CHP,Inactive,PR,EIA-860-2024-Proposed
+64864,50123,"Leeward Asset Management, LLC",Chaparral Springs,WS3BA,CA,Kern,V,Inactive,Batteries,36,144,36,36,LIB,IPP Non-CHP,Inactive,PR,EIA-860-2024-Proposed
+64911,65265,Repsol Renewables NA,South Ripley Solar,CSRB1,NY,Chautauqua,L,Regulatory Approved (Not Under Construction),Batteries,20,80,20,20,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+65007,20856,Wisconsin Power & Light Co,Grant County,BESS1,WI,Grant,T,Regulatory Approved,Batteries,100,400,100,100,ECC,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+65011,20856,Wisconsin Power & Light Co,Wood County,BESS1,WI,Wood,T,Regulatory Approved,Batteries,75,300,75,75,ECC,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+65043,5248,Dominion Energy Inc.,Dulles Solar and Storage,DUST,VA,Loudoun,L,Regulatory Approved (Not Under Construction),Batteries,50,200,50,50,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65136,64514,"Royalston Solar One, LLC",Royalston Solar One,VCPS1,MA,Worcester,P,Planned,Batteries,2.5,5,2.5,2.5,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65141,61222,174 Power Global Corp.,Boulder Solar III LLC,BS3ES,NV,Clark,P,Planned,Batteries,127.9,511.4,127.9,127.9,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65145,64519,"Deer Wood Storage, LLC","Deer Wood Storage, LLC",ENX12,VA,Buckingham,P,Planned,Batteries,30,120,30,30,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65239,61514,"Agilitas Energy, Inc.","AE-ESS NWS 1, LLC",NWS,NY,Queens,U,Under Construction,Batteries,5,24.6,4.8,4.8,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65344,64674,Noria Hondo Solar LLC,Noria Hondo Solar (Hybrid),66149,TX,Kleberg,L,Regulatory Approved (Not Under Construction),Batteries,75,75,75,75,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65349,64684,Mulligan Solar,"Mulligan Solar, LLC",MLGA2,IL,Logan,L,Regulatory Approved (Not Under Construction),Batteries,40,160,40,40,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65395,64738,"Hummingbird Energy Storage, LLC",Hummingbird Energy Storage LLC,HUMB1,CA,Santa Clara,V,Inactive,Batteries,75,75,75,75,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+65396,64739,Black Walnut Energy Storage LLC,Black Walnut Energy Storage LLC,BW1,CA,Ventura,U,Under Construction,Batteries,15,15,15,15,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65398,64741,"Homestead Energy Storage, LLC",Homestead Energy Storage LLC,HMSD1,CA,Los Angeles,T,Regulatory Approved,Batteries,14,15,15,15,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+65401,5504,Vistra Corp,Newton Solar BESS LLC,BA,IL,Jasper,P,Planned,Batteries,2,8,2,2,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65407,64736,"Beartooth Energy Storage, LLC",Beartooth Energy Storage LLC,BEAR1,MT,Yellowstone,L,Regulatory Approved (Not Under Construction),Batteries,50,50,25,25,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65445,50123,"Leeward Asset Management, LLC",Ridgely Energy Farm,RBESS,TN,Lake,V,Inactive,Batteries,50,80,20,20,LIB,IPP Non-CHP,Inactive,PR,EIA-860-2024-Proposed
+65458,17609,Southern California Edison Co,Anode (Springville) BESS,ANOD1,CA,Tulare,V,Inactive,Batteries,112.5,450,112.5,112.5,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+65458,17609,Southern California Edison Co,Anode (Springville) BESS,ANOD2,CA,Tulare,V,Inactive,Batteries,112.5,450,112.5,112.5,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+65588,56201,Engie North America,Antlia,ANTLA,TX,Val Verde,U,Under Construction,Batteries,70,140,70,70,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65589,56201,Engie North America,Carina,CARNA,TX,Nueces,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65590,56201,Engie North America,Octans,OCTNS,TX,Pecos,U,Under Construction,Batteries,125,125,125,125,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65591,50123,"Leeward Asset Management, LLC",AVEP BESS,AVEPB,CA,Kern,V,Inactive,Batteries,126,504,126,126,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+65635,64937,Hecate Energy Desert Storage 1 LLC,Hecate Energy Desert Storage 1 LLC,HEDS1,CA,Riverside,TS,Testing/Commissioning,Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+65644,64927,"IP Lumina II, LLC",Lumina II Solar Project,LU2BA,TX,Scurry,V,Inactive,Batteries,160,320,160,160,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+65645,64924,"IP Lumina, LLC",Lumina Solar Project,LU1BA,TX,Scurry,TS,Testing/Commissioning,Batteries,160,320,160,160,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+65655,64934,"Chiquito Grid, LLC","Chiquito Grid, LLC",HECHQ,CA,Riverside,L,Regulatory Approved (Not Under Construction),Batteries,80,320,80,80,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65656,64935,"Ortega Grid, LLC","Ortega Grid, LLC",HEORG,CA,Riverside,V,Inactive,Batteries,20,40,20,20,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+65657,64936,"San Jacinto Grid, LLC","San Jacinto Grid, LLC",HESJG,CA,Riverside,TS,Testing/Commissioning,Batteries,65,40,20,20,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+65664,64947,EDPR CA Solar Park II LLC,Sandrini Solar 100,GENBA,CA,Kern,V,Inactive,Batteries,95.4,368,92,92,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+65703,64970,Hecate Grid Humidor Storage 1 LLC,Humidor Storage I,HEHUM,CA,Los Angeles,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65733,64978,Hecate Grid Carris Storage 1 LLC,Carris Storage I,HECAR,CA,Riverside,TS,Testing/Commissioning,Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+65788,63289,Key Capture Energy,TX 14 Venus Mill Storage,TX14,TX,Ellis,P,Planned,Batteries,100,200,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65808,65072,"Sacramento Valley Energy Center, LLC","Sacramento Valley Energy Center, LLC",BSVEC,CA,Sacramento,L,Regulatory Approved (Not Under Construction),Batteries,100, , , ,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65821,50123,"Leeward Asset Management, LLC",Honey Creek Solar,HNYBA,IN,White,P,Planned,Batteries,20,80,20,20,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+65823,50123,"Leeward Asset Management, LLC",Parowan Solar,PARB,UT,Iron,P,Planned,Batteries,58,232,58,58,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+65842,67189,Clear Fork,Clear Fork Creek Solar and BESS SLF,CFCBS,TX,Wilson,L,Regulatory Approved (Not Under Construction),Batteries,600,600,600,600,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65847,65084,Eldora Energy LLC,Eldora Energy LLC,ELDBS,TX,Matagorda,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65849,65081,Oriana Solar LLC,Oriana Solar LLC,ORIBS,TX,Victoria,P,Planned,Batteries,61,120,60,60,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65850,65080,Elio Energy LLC,Elio Energy LLC,ELIBS,TX,Brazoria,P,Planned,Batteries,300,600,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+65851,65079,Solar Proponent LLC,Hollow Branch Creek 2 Solar and BESS SLF,HB2BS,TX,Madison,L,Regulatory Approved (Not Under Construction),Batteries,460,460,460,460,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65852,65079,Solar Proponent LLC,Lunis Creek Solar and BESS SLF,LUNBS,TX,Jackson,L,Regulatory Approved (Not Under Construction),Batteries,621.4,621.4,621.4,621.4,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65853,65079,Solar Proponent LLC,Middlebrook Creek Solar and BESS,MIDBS,TX,Nacogdoches,L,Regulatory Approved (Not Under Construction),Batteries,302.9,302.9,302.9,302.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65854,65079,Solar Proponent LLC,Rowdy Creek Solar and BESS,RDYBS,TX,Lamar,L,Regulatory Approved (Not Under Construction),Batteries,350,350,350,350,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65855,65079,Solar Proponent LLC,Tehuacana Creek 1 Solar and BESS,TE1BS,TX,Navarro,L,Regulatory Approved (Not Under Construction),Batteries,418,418,418,418,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65860,56201,Engie North America,Avila,AVILA,TX,Pecos,U,Under Construction,Batteries,160,320,160,160,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65861,56201,Engie North America,Cachi,CACHI,TX,Guadalupe,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65870,56201,Engie North America,Castor,CASTR,TX,Brazoria,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65876,56201,Engie North America,Desna,DESNA,TX,Brazoria,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65880,56201,Engie North America,Zeya,ZEYA,TX,Galveston,U,Under Construction,Batteries,250,500,250,250,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65889,65088,"Nighthawk Energy Storage, LLC","Nighthawk Energy Storage, LLC",BESS,CA,San Diego,U,Under Construction,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+65897,65093,"RPCA Storage 1, LLC",Industrial Parkway Storage,INPKY,CA,Santa Barbara,T,Regulatory Approved,Batteries,9.8,37.6,9.4,9.4,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+65940,65112,"TotalEnergies Distributed Generation, LLC",Shasta College PH2 Solar Project,SCSPB,CA,Shasta,TS,Testing/Commissioning,Batteries,0.5,1,0.5,0.5,LIB,Commercial Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+65967,20847,Wisconsin Electric Power Co,Paris Solar,PSLR2,WI,Racine,V,Inactive,Batteries,100,440,110,110,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+65975,62842,"Lightsource Renewable Energy Asset Management, LLC",Starr Solar Ranch,TXSD2,TX,Starr,L,Regulatory Approved (Not Under Construction),Batteries,180,180,90,90,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+65981,62842,"Lightsource Renewable Energy Asset Management, LLC",Second Division Solar,TXSD2,TX,Brazoria,L,Regulatory Approved (Not Under Construction),Batteries,30,60,30,30,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66002,61012,AES Distributed Energy,AES Mountain View Solar,MVSBA,HI,Honolulu,V,Inactive,Batteries,7,35,6.4,7.4,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66066,61012,AES Distributed Energy,AES Waiawa Phase 2 Solar,WAIBA,HI,Honolulu,V,Inactive,Batteries,30,240,27.8,31.8,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66128,18454,Tampa Electric Co,Lake Mabel Solar and Battery Storage,BESS1,FL,Polk,TS,Testing/Commissioning,Batteries,40,103,40,40,LIB,Electric Utility,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+66216,65329,"Yaupon Solar, LLC",Yaupon Solar Project (Hybrid),BESS,TX,Milam,P,Planned,Batteries,100,100,100,100,ECC,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+66286,65398,"Peregrine Energy Storage, LLC",Peregrine Energy Storage LLC,PERE1,CA,San Diego,V,Inactive,Batteries,200,400,200,200,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66301,56769,Consolidated Edison Development Inc.,Peregrine BESS 1,PGBS1,TX,Goliad,P,Planned,Batteries,150, , , ,,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66302,56769,Consolidated Edison Development Inc.,Peregrine BESS 2,PGBS2,TX,Goliad,P,Planned,Batteries,150, , , ,,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66325,9191,Idaho Power Co,Hemmingway BESS,1,ID,Owyhee,TS,Testing/Commissioning,Batteries,80,320,20,80,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66325,9191,Idaho Power Co,Hemmingway BESS,3,ID,Owyhee,L,Regulatory Approved (Not Under Construction),Batteries,50,200,15,50,FLB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66325,9191,Idaho Power Co,Hemmingway BESS,HGWP2,ID,Owyhee,TS,Testing/Commissioning,Batteries,36,144,9,36,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66327,9191,Idaho Power Co,Elmore BESS,1,ID,Elmore,TS,Testing/Commissioning,Batteries,4,16,1,4,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66328,9191,Idaho Power Co,Filer BESS,1,ID,Twin Falls,TS,Testing/Commissioning,Batteries,2,4,1,4,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66329,9191,Idaho Power Co,Melba BESS,1,ID,Canyon,TS,Testing/Commissioning,Batteries,2,8,0.5,2,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66330,9191,Idaho Power Co,Weiser BESS,1,ID,Washington,TS,Testing/Commissioning,Batteries,3,12,0.8,3,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66337,65427,Tidwell Prairie,Tidwell Prairie Storage 1,SGES1,TX,Robertson,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66341,65815,Sunraycer Assets I LLC,Eagle Springs Hybrid,EGSB,TX,Delta,P,Planned,Batteries,55.1,220,55,55,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66342,65815,Sunraycer Assets I LLC,Gaia Hybrid,GAIAB,TX,Navarro,P,Planned,Batteries,76.8,307.2,76.8,76.8,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66363,61060,Cypress Creek Renewables,"Black Walnut Solar, LLC",GEN1B,NC,Jones,P,Planned,Batteries,32,128,32,32,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66385,61060,Cypress Creek Renewables,"Panther Branch Solar, LLC",GEN1B,NC,Duplin,P,Planned,Batteries,32,128,32,32,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66390,65445,"MRG Goody Solar Project, LLC",MRG Goody Solar Project Hybrid,GDYES,TX,Lamar,L,Regulatory Approved (Not Under Construction),Batteries,50.4,232,50.4,50.4,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+66391,65410,ACTX BESS Project LLC,Ash Creek BESS,BESS,TX,Hill,P,Planned,Batteries,306,612,306,306,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66400,66064,"Bexar ESS, LLC",Bexar ESS,OCBEX,TX,Bexar,V,Inactive,Batteries,100,100,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66401,66905,HEC Renewable Energy America LLC,OCI Hillsboro,OHLBS,TX,Hill,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66409,65481,"Hecate Grid Gwent Storage 1, LLC",Hecate Grid Gwent Storage 1,GWNT,CA,Ventura,P,Planned,Batteries,135,540,135,135,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66410,65451,Grizzly Ridge Solar LLC,Grizzly Ridge Solar,596,TX,Hamilton,TS,Testing/Commissioning,Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+66411,65485,"Hecate Grid East Valley Storage, LLC",Hecate Grid East Valley Storage,RMSY,TX,Cameron,P,Planned,Batteries,255,500,140,140,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66414,65483,"Hecate Energy Ramsey Storage, LLC",Hecate Energy Ramsey Storage,RMSY,TX,Wharton,P,Planned,Batteries,500,1000,500,500,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66431,65511,Aragon Energy Storage LLC,Aragon Energy Storage,ARAG1,GA,Polk,P,Planned,Batteries,150,600,150,150,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66475,65512,Catalyze Bloomington 2551 S Lilac Avenue Microgrid LLC,CA Bloomington 2551 S Lilac Avenue Micro,B8263,CA,San Bernardino,V,Inactive,Batteries,1.5,3,1.5,1.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66494,65550,"Nova Power, LLC",Menifee Power Bank,NOVA5,CA,Riverside,U,Under Construction,Batteries,60,240,60,60,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66497,61978,Convergent Energy and Power LP,Bensonhurst Energy Storage 1 LLC,BHBA1,NY,Kings,L,Regulatory Approved (Not Under Construction),Batteries,5,20,5,5,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66510,65515,"Catalyze Moss Landing Hilltop Rd Microgrid, LLC",CA Moss Landing 3040 Hilltop Rd,B9616,CA,Monterey,U,Under Construction,Batteries,1,2.5,1,1,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66511,65559,Catalyze Riverside 2356 Fleetwood Drive Microgrid LLC,CA Riverside 2356 Fleetwood Dr.,B8262,CA,Riverside,TS,Testing/Commissioning,Batteries,2,4,2,2,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66513,65561,"TJA 540R Main St. Acushnet, LLC",MA Acushnet 540R Main St,B8229,MA,Bristol,L,Regulatory Approved (Not Under Construction),Batteries,2,4,2,2,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66551,65594,EnerSmart Storage,EnerSmart Imperial Beach BESS,IB193,CA,San Diego,L,Regulatory Approved (Not Under Construction),Batteries,3,19.5,3,3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66552,65594,EnerSmart Storage,EnerSmart Mesa Heights Sub Station,MH162,CA,San Diego,L,Regulatory Approved (Not Under Construction),Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66599,16609,San Diego Gas & Electric Co,Dark Sky Energy Center,1,CA,San Diego,V,Inactive,Batteries,7.3,7.1,7.1,7.1,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+66606,65639,Cross Town Energy Storage LLC,Cross Town Energy Storage,CROS1,ME,Cumberland,U,Under Construction,Batteries,175,350,175,175,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66648,65673,"Blackwell Test Facility, LLC",Blackwell?s Corner Storage Facility,BLKWL,CA,Kern,V,Inactive,Batteries,2,9,2,2,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66659,65678,Malaga BESS LLC,Acid BESS,MAL,CA,Fresno,TS,Testing/Commissioning,Batteries,97,97,97,97,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66660,65680,Hanford BESS LLC,Lead BESS 1,HAN,CA,Kings,V,Inactive,Batteries,99.4,99.4,99.4,99.4,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66661,65681,Henrietta BESS LLC,Electrolyte BESS,HEN,CA,Kings,V,Inactive,Batteries,99.4,99.4,99.4,99.4,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66662,65680,Hanford BESS LLC,Lead BESS 2,BIA,CA,Kings,V,Inactive,Batteries,32,32,32,32,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66678,65682,"IP Aramis, LLC",Aramis I Solar Project,IPARB,CA,Alameda,L,Regulatory Approved (Not Under Construction),Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66682,63289,Key Capture Energy,"KCE NY 10, LLC",NY10,NY,Erie,P,Planned,Batteries,20,80,20,20,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66688,65694,"Bright Arrow Solar, LLC","Bright Arrow Solar, LLC",BASS1,TX,Hopkins,V,Inactive,Batteries,103.6,100,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66689,65695,Seven Flags BESS LLC,Seven Flags BESS LLC,7FLAG,TX,Webb,P,Planned,Batteries,100,200,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66691,65697,"Briggs Solar, LLC","Briggs Solar, LLC",BRUGG,TX,Haskell,L,Regulatory Approved (Not Under Construction),Batteries,70.5,141,70.5,70.5,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66692,61060,Cypress Creek Renewables,"Holly Branch Solar, LLC",HOLY,TX,Robertson,L,Regulatory Approved (Not Under Construction),Batteries,100,200,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66699,61950,Terra-Gen Operating Co-Solar,Lockhart Solar PV II,LHC2,CA,San Bernardino,U,Under Construction,Batteries,59.7,59.7,59.7,59.7,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66754,65594,EnerSmart Storage,EnerSmart El Cajon BESS,EC01,CA,San Diego,L,Regulatory Approved (Not Under Construction),Batteries,3,21,3,3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M01,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M02,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M03,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M04,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M05,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66755,65594,EnerSmart Storage,EnerSmart Murray BESS,M06,CA,San Diego,P,Planned,Batteries,3,15.8,3,3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66779,65751,RE Papago LLC,Papago Energy Storage,PPABA,AZ,Maricopa,V,Inactive,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66785,65761,"Lighthouse Arthur Kill, LLC",Elevate Arthur Kill,ELVAK,NY,Richmond,U,Under Construction,Batteries,15.1,60.4,15.1,15.1,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66786,65762,"Lighthouse Middletown, LLC",Elevate Middletown,ELVMT,CT,Middlesex,P,Planned,Batteries,275,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66787,65764,"Lighthouse Pier S, LLC",Elevate Pier S,ELVPS,CA,Los Angeles,P,Planned,Batteries,70,280,70,70,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66805,64452,"EDF Renewables Development, Inc.",Lycan Solar Project,LYCN2,CA,Riverside,P,Planned,Batteries,400,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66862,63289,Key Capture Energy,"KCE NY 29, LLC",NY29,NY,Suffolk,P,Planned,Batteries,79,316,79,79,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66871,65805,"GulfStar Power, LLC","GulfStar Power, LLC",BESS,TX,Wharton,TS,Testing/Commissioning,Batteries,300,467,300,300,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66872,65799,"Enel Green Power Estonian Solar Project, LLC","Estonian Solar Project, LLC",BESS,TX,Delta,TS,Testing/Commissioning,Batteries,100,158.3,101.6,101.6,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66879,63289,Key Capture Energy,"KCE CT 1, LLC",CT1,CT,Windham,P,Planned,Batteries,45,180,45,45,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66881,9273,AES Indiana,Pike County Energy Storage,BAT2,IN,Pike,TS,Testing/Commissioning,Batteries,200,877,200,200,OTH,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+66890,63137,Idemitsu Renewables,"SF Azalea, LLC",AZAL,CA,Kern,U,Under Construction,Batteries,60,152,38,38,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66891,65814,Innovative Solar 245 LLC,Indigo Solar & Storage,245BS,TX,Fisher,P,Planned,Batteries,180,330,165,165,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66893,62842,"Lightsource Renewable Energy Asset Management, LLC",Jones City 2 Solar,TXJS2,TX,Jones,U,Under Construction,Batteries,200,200,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+66894,65815,Sunraycer Assets I LLC,"Albatross Solar, LLC",ALBBA,TX,McLennan,P,Planned,Batteries,50.4,100,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66895,65815,Sunraycer Assets I LLC,"Lupinus Solar 1, LLC",LP1BA,TX,Franklin,P,Planned,Batteries,83,160,80,80,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66896,65815,Sunraycer Assets I LLC,"Lupinus Solar 2, LLC",LP2BA,TX,Franklin,P,Planned,Batteries,122.9,240,120,120,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+66897,65815,Sunraycer Assets I LLC,"Midpoint Solar, LLC",MIDBA,TX,Hill,U,Under Construction,Batteries,50,100,50,50,LIB,IPP Non-CHP,Permitted - Under Construction,PR,EIA-860-2024-Proposed
+66905,65819,"Ables Springs Solar, LLC",Ables Springs Solar & Storage,BESS,TX,Kaufman,V,Inactive,Batteries,100,157.7,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+66908,64452,"EDF Renewables Development, Inc.",Bonanza Solar and Storage Project,BZES,NV,Clark,L,Regulatory Approved (Not Under Construction),Batteries,195,780,195,195,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+66911,65821,Hecate Grid Intrepid 1 LLC,Hecate Grid Intrepid,HGIN1,NY,Nassau,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66911,65821,Hecate Grid Intrepid 1 LLC,Hecate Grid Intrepid,HGIN6,NY,Nassau,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+66913,65830,"Myrtle Storage, LLC",Myrtle Storage,MYRST,TX,Brazoria,TS,Testing/Commissioning,Batteries,150,225,150,150,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+66916,65833,"Danish Fields Storage, LLC",Danish Fields Storage,DANST,TX,Wharton,TS,Testing/Commissioning,Batteries,150,225,150,150,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,Y,EIA-860-2024-Proposed
+67039,65947,"Northern Orchard Solar PV, LLC","Northern Orchard Solar PV, LLC",NOBAT,CA,Kern,U,Under Construction,Batteries,92,368,92,92,LIB,IPP Non-CHP,Permitted - Under Construction,PR,EIA-860-2024-Proposed
+67059,65967,"Iron Belt Energy Storage Project, LLC",Iron Belt,1,TX,Borden,P,Planned,Batteries,400,480,399,399,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67105,66002,"Pastoria Solar Energy Company, LLC",Pastoria Solar,GEN1,CA,Kern,P,Planned,Batteries,80,320,80,80,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67118,16609,San Diego Gas & Electric Co,Santee BESS,1,CA,San Diego,U,Under Construction,Batteries,10,10,10,10,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+67119,60025,Greenbacker Renewable Energy Corporation,Ring Road,686B,MA,Plymouth,U,Under Construction,Batteries,2,13.5,2,2,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67157,49893,Invenergy Services LLC,Powell Solar,BESS1,OR,Crook,T,Regulatory Approved,Batteries,20.5,20.5,30,5,OTH,IPP Non-CHP,Permitted - Not Yet Under Construction,PR,EIA-860-2024-Proposed
+67183,9191,Idaho Power Co,Franklin Battery Storage,FRBS,ID,Twin Falls,TS,Testing/Commissioning,Batteries,60,240,15,60,FLB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67184,66053,"Beehive Energy Storage, LLC",Beehive Energy Storage,BHV1,AZ,Maricopa,T,Regulatory Approved,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67204,66087,Quail Ranch Solar and Battery Energy Storage System,Quail Ranch Solar and BESS,QRBES,NM,Bernalillo,L,Regulatory Approved (Not Under Construction),Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67229,66105,Trestles Grid LLC,Trestles Grid LLC,HGLPT,CA,Riverside,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67230,66107,"Carne Energy Storage, LLC","Carne Energy Storage, LLC",CS,NM,Luna,U,Under Construction,Batteries,130,260,65,65,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+67234,60059,ZGlobal Inc,Lara 2 Hybrid,LARAB,CA,Merced,V,Inactive,Batteries,0.9,3.7,0.6,0.6,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67249,66121,Rock Rose Energy Storage LLC,Rock Rose Energy Storage LLC,RRES,TX,Fort Bend,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67250,66122,Alina Energy LLC,Alina Energy LLC,ALIBS,TX,Wilson,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67257,17612,Bear Valley Electric Service,Bear Valley Battery Plant,BVEB1,CA,San Bernardino,L,Regulatory Approved (Not Under Construction),Batteries,5,5,5,5,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67276,60025,Greenbacker Renewable Energy Corporation,Upland,703B,MA,Plymouth,V,Inactive,Batteries,2.3,5.4,2.3,2.3,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67277,66143,"Alcosta Boulevard BR 15-DD Solar Project 2020, LLC",Bishop Ranch - BR 15-DD,4657B,CA,Contra Costa,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67278,66144,"Camino Ramon BR 2600 Solar Project 2020, LLC",Bishop Ranch - BR 2600,4146B,CA,Contra Costa,V,Inactive,Batteries,1.1,2.1,1.1,1.1,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67279,66145,"Highland Ave Solar 1, LLC",Borrego - Highland Ave,6572B,MA,Bristol,V,Inactive,Batteries,5,20,5,5,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+67283,66149,"Magic Mountain Parkway Solar Project 2023, LLC",Six Flags Magic Mountain,6569B,CA,Los Angeles,V,Inactive,Batteries,2,7.8,2,2,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67288,66125,"Foster Clean Power A, LLC",Foster Clean Power A,BESSA,CA,Humboldt,U,Under Construction,Batteries,1.3,5.2,1.3,1.3,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67291,66152,"Sun Streams Expansion, LLC",Sun Streams 4,GEN02,AZ,Maricopa,V,Inactive,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+67299,61944,MN8 Energy LLC,Pome BESS,10101,CA,San Diego,U,Under Construction,Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67321,49893,Invenergy Services LLC,Yuma Solar + Storage,BESS1,AZ,Yuma,V,Inactive,Batteries,67,268,70,67,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67322,64904,AES Clean Energy,Mamm Creek,MCESS,CO,Garfield,V,Inactive,Batteries,11.2,20,10,10,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+67323,64904,AES Clean Energy,High Mesa CO,HMESS,CO,Garfield,V,Inactive,Batteries,11.2,20,10,10,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+67328,66169,"Pluto Energy Storage, LLC",Pluto Energy Storage,PLUTO,AZ,Maricopa,T,Regulatory Approved,Batteries,75,300,75,75,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67341,66171,"SGT Hoskins Solar Project, LLC",SGT Hoskins Solar Project Hybrid,NOSES,TX,Lamar,P,Planned,Batteries,102.1,408.4,102.1,102.1,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67454,67092,"Scatter Wash Energy Storage, LLC",Scatter Wash 1,SW1,AZ,Maricopa,U,Under Construction,Batteries,170,680,170,170,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67455,67092,"Scatter Wash Energy Storage, LLC",Scatter Wash 2,SW2,AZ,Maricopa,U,Under Construction,Batteries,85,340,85,85,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67474,66217,Copia Power,Harquahala 2,BESS1,AZ,Maricopa,U,Under Construction,Batteries,300,1200,37.1,37.5,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67495,65076,"HEN Infrastructure, L.L.C.",Russek,RUSSK,TX,Reagan,TS,Testing/Commissioning,Batteries,9.9,9.9,9.9,9.9,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67498,64904,AES Clean Energy,McFarland C,MCFRC,AZ,Yuma,U,Under Construction,Batteries,185,740,185,185,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67501,66232,"Green River Energy Center, LLC",Green River Energy Center - Hybrid,GRBS,UT,Emery,T,Regulatory Approved,Batteries,400,1600,400,400,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+67503,66226,"Serrano Solar, LLC",Serrano,GEN02,AZ,Pima,V,Inactive,Batteries,213.8,855,100,213.8,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+67528,66250,"Milagro Solar I, LLC",Milagro Solar I,MLRBS,NM,Dona Ana,L,Regulatory Approved (Not Under Construction),Batteries,75,300,15,15,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67535,66234,Nexus Renewables U.S. Inc.,Bell Creek BESS LLC,ASHU1,TX,Brazoria,T,Regulatory Approved,Batteries,200.9,600,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67549,66265,"Kuna BESS, LLC",Kuna BESS,1,ID,Ada,U,Under Construction,Batteries,150,600,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67552,65654,Birch Creek Development,Elm Flats Solar,ELMBA,TX,Navarro,P,Planned,Batteries,50,100,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67553,66255,"RIC Development, LLC",Jim Wells BESS,RIC99,TX,Jim Hogg,P,Planned,Batteries,100.3,200.6,100.3,100.3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67555,66255,"RIC Development, LLC",Zephyr Storage,RIC98,TX,Brown,P,Planned,Batteries,185.6,371.2,185.6,185.6,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67556,66255,"RIC Development, LLC",Serrano BESS,RIC97,TX,Maverick,P,Planned,Batteries,185.6,371.2,185.6,185.6,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67558,66255,"RIC Development, LLC",Blackcat BESS,RIC96,TX,Matagorda,P,Planned,Batteries,200.6,401.6,200.6,200.6,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67565,66266,Form Energy Inc.,East Road Storage Project,CEC01,CA,Mendocino,T,Regulatory Approved,Batteries,5,500,5,5,MAB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67570,66272,"Cedar Hill ESS Assets, LLC",Cedar Hill ESS,3004,TX,Dallas,L,Regulatory Approved (Not Under Construction),Batteries,10,20,10,10,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67573,9191,Idaho Power Co,Happy Valley Battery Storage,HPVY,ID,Canyon,V,Inactive,Batteries,82,328,15,82,FLB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+67581,65144,"Samsung C&T Renewables, LLC",Cairos Solar and Storage,CIRSB,TX,Kinney,P,Planned,Batteries,77.3,154.6,77.3,77.3,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67598,66292,Desert Willow Energy Storage,Desert Willow Energy Storage,DWES,TX,Ellis,V,Inactive,Batteries,150,300,150,150,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67651,61060,Cypress Creek Renewables,Berkman Storage,BERK,TX,Galveston,T,Regulatory Approved,Batteries,100,200,100,100,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67652,61060,Cypress Creek Renewables,Bhalu,BHALU,TX,Howard,L,Regulatory Approved (Not Under Construction),Batteries,200,200,400,400,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67654,61060,Cypress Creek Renewables,Destiny Storage,DESTS,TX,Harris,T,Regulatory Approved,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67656,61060,Cypress Creek Renewables,Fort Watt Storage,FWATT,TX,Tarrant,L,Regulatory Approved (Not Under Construction),Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67658,61060,Cypress Creek Renewables,Jerboa Storage,JERBO,TX,Hidalgo,L,Regulatory Approved (Not Under Construction),Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67660,61060,Cypress Creek Renewables,Malala,MALAL,TX,Dallas,L,Regulatory Approved (Not Under Construction),Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67667,61060,Cypress Creek Renewables,"Third Coast BESS, LLC",3COAS,TX,Jackson,T,Regulatory Approved,Batteries,100,200,100,100,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67668,61060,Cypress Creek Renewables,Wallie Storage,WALLE,TX,Howard,L,Regulatory Approved (Not Under Construction),Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67669,17470,PUD No 1 of Snohomish County,Arlington Battery Energy Storage System,ABESS,WA,Snohomish,L,Regulatory Approved (Not Under Construction),Batteries,25,100,25,25,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67674,65815,Sunraycer Assets I LLC,Lupinus Storage 3,LUPE3,TX,Franklin,P,Planned,Batteries,50.9,101.6,50.8,50.8,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+67676,66318,"Zeta Solar, LLC",Zeta Solar & Storage,GEN02,CA,Merced,P,Planned,Batteries,75,300,75,75,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67680,66317,"Kola Energy Storage, LLC",Kola Energy Center,KOLA,CA,San Joaquin,V,Inactive,Batteries,275,1100,275,275,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67680,66317,"Kola Energy Storage, LLC",Kola Energy Center,KOLA2,CA,San Joaquin,V,Inactive,Batteries,125,700,175,175,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67710,66337,Exus New Mexico,TAG,TAGB1,NM,Sandoval,U,Under Construction,Batteries,50,231.4,57.8,57.8,OTH,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67711,15248,Portland General Electric Co,Seaside BESS,SESD1,OR,Multnomah,U,Under Construction,Batteries,200,800,200,200,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+67734,66348,"Silver State South Storage, LLC",Silver State South Storage,SSSB,NV,Clark,V,Inactive,Batteries,200,800,200,200,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67736,66346,"Silver Peak Solar, LLC",Silver Peak,SP1,NV,Clark,V,Inactive,Batteries,60,240,60,60,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67736,66346,"Silver Peak Solar, LLC",Silver Peak,SP2,NV,Clark,V,Inactive,Batteries,109,436,109,109,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67736,66346,"Silver Peak Solar, LLC",Silver Peak,SP3,NV,Clark,V,Inactive,Batteries,110,440,110,110,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67737,66352,SMT Ironman BESS LLC,SMT Ironman Battery Storage Plant,SMTIR,TX,Brazoria,TS,Testing/Commissioning,Batteries,304,440.8,304,304,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67740,66354,"Anole Energy Storage, LLC",Anole Energy Storage,AES,TX,Dallas,V,Inactive,Batteries,240,480,240,240,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67741,14354,PacifiCorp,OIT BESS,I,OR,Klamath,V,Inactive,Batteries,2,8,0.7,0.7,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+67752,66359,"Fort Duncan BESS,  LLC",Fort Duncan BESS,FTDUN,TX,Maverick,V,Inactive,Batteries,102.6,205.1,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67758,5109,DTE Electric Company,Slocum Energy Storage,SLOES,MI,Wayne,TS,Testing/Commissioning,Batteries,14,56,14,14,LIB,Electric Utility,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67759,5109,DTE Electric Company,Trenton Channel Energy Center,TCHEC,MI,Wayne,T,Regulatory Approved,Batteries,220,880,220,220,LIB,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67761,66363,Bypass BESS LLC,Bypass BESS,1,TX,Fort Bend,T,Regulatory Approved,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67764,66365,"Golden Fields Solar IV, LLC",Rosamond South 1,RBESS,CA,Kern,U,Under Construction,Batteries,117,472,117,117,LIB,IPP Non-CHP,Permitted - Under Construction,PR,EIA-860-2024-Proposed
+67767,66369,Mission Clean Energy Devco LLC,Bramble Energy Center,BECBA,TX,Zavala,P,Planned,Batteries,225.1,900.4,225.1,225.1,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67768,66369,Mission Clean Energy Devco LLC,Cumbia Energy Center,CECBA,TX,Nueces,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67774,65986,"Gransolar Texas Three, LLC",Pecan BESS,GRS3,TX,Leon,L,Regulatory Approved (Not Under Construction),Batteries,157.1,302.1,150,150,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67776,66373,Gransolar Texas Two LLC,Cuchillas PV and BESS,GRS2B,TX,Webb,L,Regulatory Approved (Not Under Construction),Batteries,306.9,625.1,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+67777,66374,Gransolar Texas Four LLC,Harryoung PV and BESS,GRS4B,TX,Cameron,L,Regulatory Approved (Not Under Construction),Batteries,190,374.1,186,186,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+67778,66375,"Gransolar Texas Sixteen, LLC",Findley PV and BESS,GR16B,TX,Limestone,L,Regulatory Approved (Not Under Construction),Batteries,50.3,100.7,50,50,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+67779,66376,Gransolar Texas Five LLC,Hayrick BESS,GRS5,TX,Coke,L,Regulatory Approved (Not Under Construction),Batteries,113.9,230.1,113.4,113.4,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67782,66380,Gransolar Texas Twenty Two LLC,RedSun PV and BESS,GS22B,TX,Burnet,L,Regulatory Approved (Not Under Construction),Batteries,84,201.4,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+67783,66381,Gransolar Texas Twelve LLC,Ventures BESS,GRS12,TX,Matagorda,L,Regulatory Approved (Not Under Construction),Batteries,226.8,402.8,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67784,66382,Gransolar Texas Eleven LLC,Vial BESS,GRS11,TX,Hill,L,Regulatory Approved (Not Under Construction),Batteries,141.4,273.3,134.4,134.4,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67798,66384,"GRS BESS Texas Seven, LLC",Steelhead Energy Storage,GRS7,TX,Fannin,L,Regulatory Approved (Not Under Construction),Batteries,193.7,382.7,190,190,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67819,65265,Repsol Renewables NA,Robinson Solar,CRSB1,NV,White Pine,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67823,60232,Clenera LLC,Roadrunner Solar and BESS,RRBES,AZ,Cochise,T,Regulatory Approved,Batteries,235,411,235,235,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67828,66405,Mordor ES1 LLC,Mordor ES1,MES1,CA,Inyo,V,Inactive,Batteries,25,100,25,25,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67829,66406,Mordor ES2 LLC,Mordor ES2,MES2,CA,Inyo,V,Inactive,Batteries,20,80,20,20,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67836,66412,"Emeren US, LLC",Gibson Solar Project - Hybrid,GSP2,CA,Yolo,T,Regulatory Approved,Batteries,13,52,13,13,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+67838,63289,Key Capture Energy,"KCE NY 30, LLC",NY30,NY,Suffolk,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67839,63289,Key Capture Energy,"KCE NY 31, LLC",NY31,NY,Suffolk,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67841,63289,Key Capture Energy,"KCE NY 36, LLC",NY36,NY,Oneida,P,Planned,Batteries,20,80,20,20,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67843,66416,SBESS TX7 LLC,Farmersville West,FARM,TX,Collin,TS,Testing/Commissioning,Batteries,9.9,24.7,9.9,9.9,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67844,66417,SBESS TX6 LLC,Hidden Lakes,HIDD,TX,Galveston,V,Inactive,Batteries,9.9,24.7,9.9,9.9,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67845,66418,SBESS TX5 LLC,Junction BESS,JUTX5,TX,Kimble,TS,Testing/Commissioning,Batteries,9.9,24.7,9.9,9.9,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67850,66422,ORNI 30 LLC,Arrowleaf Solar and Storage,ALBS1,CA,Imperial,U,Under Construction,Batteries,35,140,35,35,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67855,64904,AES Clean Energy,Westwing,WEST2,AZ,Maricopa,V,Inactive,Batteries,118,481,118,118,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67859,66434,"Foster Clean Power B, LLC",Foster Clean Power B,BESSB,CA,Humboldt,U,Under Construction,Batteries,1.2,5.4,1.4,1.4,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67867,66431,Liberty 1 Solar LLC,Liberty Hybrid Solar and Storage Project,LIB2,TX,Harris,V,Inactive,Batteries,65,62.4,60,60,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67874,66448,Parks Valley Energy LLC,Parks Valley Energy LLC,ENX32,WV,Hampshire,P,Planned,Batteries,150,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67878,20323,"Wellhead Services, Inc",Chula Vista Energy Center 2,BESS1,CA,San Diego,U,Under Construction,Batteries,50,219,50,50,LIB,Industrial Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67880,66445,"NineDot Holdings, LLC","Arthur Kill Energy, LLC",ND009,NY,Richmond,TS,Testing/Commissioning,Batteries,5,21.7,2.3,5,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+67882,66445,"NineDot Holdings, LLC","Empire Clean Energy, LLC",ND007,NY,Richmond,V,Inactive,Batteries,5,21.7,2.7,5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67882,66445,"NineDot Holdings, LLC","Empire Clean Energy, LLC",ND008,NY,Richmond,V,Inactive,Batteries,5,21.7,2.7,5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67884,66461,Two Oaks Solar and Storage,Two Oaks Solar and Storage LLC,ENX28,VA,Louisa,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67885,66445,"NineDot Holdings, LLC","Nelson Clean Energy, LLC",ND005,NY,Richmond,U,Under Construction,Batteries,3,12.4,1.6,3,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67885,66445,"NineDot Holdings, LLC","Nelson Clean Energy, LLC",ND006,NY,Richmond,U,Under Construction,Batteries,5,21.7,2.7,5,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67893,66462,Dunns Bridge II Solar and Storage Generation LLC,Dunns Bridge II Solar,DB2BS,IN,Starke,V,Inactive,Batteries,56.3,225,56.3,56.3,LIB,Electric Utility,Inactive,,EIA-860-2024-Proposed
+67894,66463,"51LV 8me, LLC",Bellefield 3 Solar and Battery Storage,51LVB,CA,Kern,P,Planned,Batteries,150,600,150,150,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67895,66464,"210MS 8me, LLC",Brittlebush Solar and Battery Storage,21MSB,TX,Henderson,P,Planned,Batteries,400,800,400,400,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67896,66465,"229HD 8me, LLC",Holstein 2 Battery Storage,229HD,TX,Nolan,P,Planned,Batteries,100,200,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67897,66466,"452HL 8me, LLC",Pasilla Solar and Battery Storage,45HLB,NM,Lea,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67898,66467,Escape Solar LLC,Escape Solar Plant,ESPHB,NV,Lincoln,L,Regulatory Approved (Not Under Construction),Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67905,24211,Tucson Electric Power Co,Roadrunner Reserve Phase 1,RDR1,AZ,Pima,U,Under Construction,Batteries,200,800,200,200,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+67917,65144,"Samsung C&T Renewables, LLC","Champaign BESS, LLC",CHMPN,TX,Glasscock,P,Planned,Batteries,202.7,400,202.6,202.6,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67918,65144,"Samsung C&T Renewables, LLC","Dios BESS, LLC",DIOS,TX,Jackson,P,Planned,Batteries,201.6,400,201.1,201.1,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67919,65144,"Samsung C&T Renewables, LLC","Dolce BESS, LLC",DOLCE,TX,Mitchell,P,Planned,Batteries,101.4,200,101.4,101.4,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67931,66480,Daggett Solar Power 1 LLC,Daggett 1,DAG1,CA,San Bernardino,V,Inactive,Batteries,113.5,454,113.5,113.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67934,66485,"Vernon Solar and Storage, LLC",Vernon Solar and Storage,VERNB,TX,Wilbarger,P,Planned,Batteries,38,70,35,35,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67945,64545,Vesper Energy Development LLC,Juniper Creek Storage,JCSIB,CA,Sacramento,T,Regulatory Approved,Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67949,65076,"HEN Infrastructure, L.L.C.",Poteet,POTEB,TX,Atascosa,V,Inactive,Batteries,9.9,9.9,9.9,9.9,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67956,66509,Red River Clean Energy,Concho Pearl Solar and Storage,CONBS,TX,Concho,T,Regulatory Approved,Batteries,162.4,324.8,162.4,162.4,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+67963,65076,"HEN Infrastructure, L.L.C.",Tynan,TYNNB,TX,Bee,V,Inactive,Batteries,9.9,9.9,9.9,9.9,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67964,803,Arizona Public Service Co,Agave,A400M,AZ,Maricopa,U,Under Construction,Batteries,150,600,150,150,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+67968,66526,"Burksol, LLC",Burksol Energy Storage,BES,TX,Dickens,V,Inactive,Batteries,100,200,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+67973,50123,"Leeward Asset Management, LLC",Sierra Pinta BESS,SP01,AZ,Yuma,U,Under Construction,Batteries,113,113,113,113,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+67978,17166,Sierra Pacific Power Co,Sierra Solar Hybrid,SSES1,NV,Churchill,L,Regulatory Approved (Not Under Construction),Batteries,400,1600,400,400,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67981,66527,May Renewables LLC,May Renewables,MAYB,SC,Orangeburg,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67982,64545,Vesper Energy Development LLC,Athens Solar I (Hybrid),ATHSB,CA,Placer,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67983,64545,Vesper Energy Development LLC,Aurora Renewable Energy (Hybrid),AURRB,CA,Stanislaus,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+67985,64545,Vesper Energy Development LLC,Hornet Solar II (TX) (Hybrid),HRT2B,TX,Swisher,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+67986,64545,Vesper Energy Development LLC,Meadow Springs Renewable Energy (Hybrid),MSPRB,IL,White,P,Planned,Batteries,150,600,150,150,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+67987,64545,Vesper Energy Development LLC,Mystic Springs Renewable Energy (Hybrid),MYSPB,TX,Kaufman,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68012,66549,Caballero CA Storage LLC,Caballero,CAB11,CA,San Luis Obispo,TS,Testing/Commissioning,Batteries,99.7,398.8,99.7,99.7,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68015,64545,Vesper Energy Development LLC,Emerald Hill Energy Storage,EMHES,TX,Dallas,P,Planned,Batteries,250,500,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68018,60059,ZGlobal Inc,Merced BESS,MRCDB,CA,Merced,U,Under Construction,Batteries,3,12,0.3,0.3,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68019,65144,"Samsung C&T Renewables, LLC",Richwood Solar and Storage,RICBA,OH,Union,P,Planned,Batteries,50,200,50,50,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68022,66554,Cowboy Solar I,Cowboy Solar I,CLPBS,WY,Laramie,P,Planned,Batteries,400,544,136,136,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68023,66555,BCE Seal Beach,BCE Seal Beach,SBBS1,CA,Orange,U,Under Construction,Batteries,16.7,64,16.7,16.7,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68030,64545,Vesper Energy Development LLC,Red Hollow Renewable Energy,RHLWB,TX,Archer,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68031,64545,Vesper Energy Development LLC,Scopus Solar,SCPSB,MO,Bollinger,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68032,64545,Vesper Energy Development LLC,Skylight Renewable Energy,SKREB,CA,Sutter,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68033,64545,Vesper Energy Development LLC,Sunrose Renewable Energy,SRSEB,TX,Austin,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68034,64545,Vesper Energy Development LLC,Sunscape Renewable Energy,SNSCB,TX,Nueces,P,Planned,Batteries,500,2000,500,500,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68035,64545,Vesper Energy Development LLC,Syracuse and Tours Renewable Energy,SYTOB,CA,Kern,T,Regulatory Approved,Batteries,40,160,40,40,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+68036,64545,Vesper Energy Development LLC,Vichy Solar,VCHSB,MO,Maries,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68043,64904,AES Clean Energy,Robeson Solar I,ROBSS,NC,Robeson,P,Planned,Batteries,28,28,28,28,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68054,11479,Madison Gas & Electric Co,Sunnyside Solar Energy Center,SNSB,WI,Dane,L,Regulatory Approved (Not Under Construction),Batteries,40,160,40,40,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68055,66567,"Prospect Power, LLC",Prospect Power BESS,PPB,VA,Rockingham,L,Regulatory Approved (Not Under Construction),Batteries,150,734,183.6,183.6,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68078,66509,Red River Clean Energy,Chisme Solar and Storage,CHIBS,TX,Mills,T,Regulatory Approved,Batteries,146,292,146,146,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68080,66581,GRS BESS Texas Eight LLC,Marcos PV and BESS,GRS8B,TX,Victoria,L,Regulatory Approved (Not Under Construction),Batteries,115.9,231.8,115,115,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68084,50123,"Leeward Asset Management, LLC",Morrow Lake BESS,MLB,TX,Frio,U,Under Construction,Batteries,200,400,400,400,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68146,65801,"Angelo Storage, LLC",Angelo Storage,ANGBA,TX,Tom Green,TS,Testing/Commissioning,Batteries,100,249.4,100,100,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68149,65803,"Raven Storage, LLC",Raven Storage,RAVEB,TX,Wharton,P,Planned,Batteries,100,290.9,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68153,66616,"Fremont Solar, LLC",Fremont Solar,BA1,UT,Iron,L,Regulatory Approved (Not Under Construction),Batteries,198,198,50,50,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68165,66607,"Belltown Power Texas 2, LLC",Brotherton Storage,BROBA,TX,Anderson,L,Regulatory Approved (Not Under Construction),Batteries,176.1,352.3,176.1,176.1,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68166,66607,"Belltown Power Texas 2, LLC",Dolomite Storage,DOLBA,TX,Ellis,L,Regulatory Approved (Not Under Construction),Batteries,125.7,251.4,125.7,125.7,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68168,66607,"Belltown Power Texas 2, LLC",Kahla Storage,KAHBA,TX,Leon,L,Regulatory Approved (Not Under Construction),Batteries,200.9,401.8,200.9,200.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68170,66607,"Belltown Power Texas 2, LLC",Mcgee Storage,MCGBA,TX,Henderson,L,Regulatory Approved (Not Under Construction),Batteries,151.3,123,76.5,76.5,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68171,66607,"Belltown Power Texas 2, LLC",Mcmurtre Storage,MCMBA,TX,Hunt,L,Regulatory Approved (Not Under Construction),Batteries,176.1,352.3,176.1,176.1,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68172,66607,"Belltown Power Texas 2, LLC",Myers Solar and Storage,MYEBT,TX,Goliad,L,Regulatory Approved (Not Under Construction),Batteries,75.7,151.4,75.7,75.7,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68173,66607,"Belltown Power Texas 2, LLC",Sandford Solar and Storage,SANBT,TX,Wise,L,Regulatory Approved (Not Under Construction),Batteries,100.9,252.4,100.9,100.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68174,66607,"Belltown Power Texas 2, LLC",Stegall Solar and Storage,STEBA,TX,Bell,L,Regulatory Approved (Not Under Construction),Batteries,50.5,100.9,50.5,50.5,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68176,66607,"Belltown Power Texas 2, LLC",Willis Storage,WILBA,TX,Hunt,L,Regulatory Approved (Not Under Construction),Batteries,176.1,352.3,176.1,176.1,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68177,66607,"Belltown Power Texas 2, LLC",Windmill Ridge Storage,WINBA,TX,Brazoria,L,Regulatory Approved (Not Under Construction),Batteries,151.4,302.8,151.4,151.4,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68178,66607,"Belltown Power Texas 2, LLC",Yooperlite Storage,YOOBA,TX,Wise,L,Regulatory Approved (Not Under Construction),Batteries,175.7,351.3,175.7,175.7,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68181,66617,"Big Elm Storage, LLC",Big Elm Storage,BELMB,TX,Bell,V,Inactive,Batteries,100,250.8,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68189,66623,"Great Kiskadee Storage, LLC",Great Kiskadee Storage,GKDBS,TX,Hidalgo,TS,Testing/Commissioning,Batteries,100,249.4,100,100,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68209,66650,Noble Solar LLC,Purple Sage Energy Center,PSGBS,NV,Clark,P,Planned,Batteries,400,1600,400,400,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68210,59300,PNM Resources,Sandia Energy Center,BESS,NM,Bernalillo,T,Regulatory Approved,Batteries,60,240,60,60,LIB,Electric Utility,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+68215,66646,"ReWild Renewables, LLC",Braley Hill North Solar,BRAES,MA,Plymouth,L,Regulatory Approved (Not Under Construction),Batteries,5,26,5,4.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68216,66646,"ReWild Renewables, LLC",Cushman Road Solar,CUSES,MA,Plymouth,L,Regulatory Approved (Not Under Construction),Batteries,3,9.6,3,3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68217,66646,"ReWild Renewables, LLC",Featherbed Lane South Solar,FEAES,MA,Plymouth,L,Regulatory Approved (Not Under Construction),Batteries,1,5,1,1,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68218,66646,"ReWild Renewables, LLC",Randall Lane Solar,RANES,MA,Plymouth,L,Regulatory Approved (Not Under Construction),Batteries,5,21,5,4.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68219,66646,"ReWild Renewables, LLC",Snipatuit Road Solar,SNIES,MA,Plymouth,L,Regulatory Approved (Not Under Construction),Batteries,4,12.8,4,4,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68235,65869,Prologis Logistics Services Incorporated,Romeoville 34B-SLCHI234,C34BB,IL,Will,L,Regulatory Approved (Not Under Construction),Batteries,0.5,0.5,0.5,0.3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68239,65869,Prologis Logistics Services Incorporated,Romeoville 34A-SLCHI234,C34AB,IL,Will,L,Regulatory Approved (Not Under Construction),Batteries,0.5,0.5,0.5,0.3,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68240,66669,"Solar Star 3, LLC",Solar Star 3,SS3BT,CA,Kern,L,Regulatory Approved (Not Under Construction),Batteries,23,92,23,23,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68241,66670,"Solar Star 4, LLC",Solar Star 4,SS4BT,CA,Kern,L,Regulatory Approved (Not Under Construction),Batteries,23,92,23,23,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68261,66687,MS1,Sun Bear,SNBR2,CO,Montezuma,L,Regulatory Approved (Not Under Construction),Batteries,756,3024,756,756,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68281,66700,"BOCA bn, LLC",Box Canyon (AZ),BOCA2,AZ,Pinal,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68282,66701,"CENT bn, LLC",Centralia Battery Energy Storage System,CENT,WA,Thurston,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68283,66702,"DESA bn, LLC",Desert Sand BESS,DESA,AZ,Maricopa,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68285,66708,Puuloa Solar LLC,Puuloa Solar,PS-2,HI,Honolulu,P,Planned,Batteries,6,24,6,6,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68287,66681,"EAGL bn, LLC",Eagle Eye Solar and Storage,EAGL2,AZ,La Paz,L,Regulatory Approved (Not Under Construction),Batteries,400,1600,400,400,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68298,66704,"THSI bn, LLC",THREE SISTERS Solar Generation and BESS,THSI1,AZ,Pinal,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,600,600,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68299,66705,"TUAL bn, LLC",Tualatin Battery Energy Storage System,TUAL,OR,Washington,P,Planned,Batteries,400,1600,400,400,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68300,66706,"SINC bn, LLC",Sinclair BESS,SINC,WA,Jefferson,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68309,66697,Alpin Holding LLC,Sunday Solar,SUNB,VA,Rockingham,P,Planned,Batteries,140,140,140,140,OTH,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68312,66697,Alpin Holding LLC,Echelon Solar,ECHEB,OH,Carroll,P,Planned,Batteries,80,80,80,80,OTH,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68313,66697,Alpin Holding LLC,May Solar,MAYB,VA,Pulaski,P,Planned,Batteries,150,150,150,150,OTH,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68314,66697,Alpin Holding LLC,Issa Solar,ISSAP,VA,Carroll,P,Planned,Batteries,150,150,150,150,OTH,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68315,66711,"ARFL bn, LLC",Anthelope Hills Solar Generation BESS,ARFL2,MT,Beaverhead,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68316,66712,"BIGL bn, LLC",Biglow Solar Generation and BESS,BIGL2,OR,Sherman,L,Regulatory Approved (Not Under Construction),Batteries,250,1000,250,250,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68317,66713,"DUTC bn, LLC",Dutchman Solar generation and BESS,DUTC2,WY,Converse,L,Regulatory Approved (Not Under Construction),Batteries,499,1996,499,499,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68321,66716,"ATLAS BESS IV, LLC",Atlas BESS IV LLC,ALT4,AZ,La Paz,V,Inactive,Batteries,150,600,150,150,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68322,66717,Atlas VII LLC,Atlas VII,ALT7A,AZ,La Paz,V,Inactive,Batteries,180,720,180,180,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68322,66717,Atlas VII LLC,Atlas VII,ALT7B,AZ,La Paz,V,Inactive,Batteries,120,480,120,120,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68323,66718,Atlas VIII LLC,Atlas VIII,ALT8A,AZ,La Paz,V,Inactive,Batteries,210.4,841.6,210.4,210.4,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68323,66718,Atlas VIII LLC,Atlas VIII,ALT8B,AZ,La Paz,V,Inactive,Batteries,172,688,172,172,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68324,66719,Atlas IX LLC,Atlas IX,ALT9,AZ,La Paz,V,Inactive,Batteries,150,600,150,150,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68328,66715,"Yuma bn, LLC",ORCHARD Solar Generation and BESS,ORCH2,AZ,Yuma,L,Regulatory Approved (Not Under Construction),Batteries,500,2000,500,500,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68332,66735,"DEGA bn, LLC",Dega Solar and Storage,DEGA2,AL,Talladega,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68334,66742,Evans Creek Energy Storage LLC,Evans Creek Energy Storage Project,EVCRK,TX,Val Verde,U,Under Construction,Batteries,103,400, , ,,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68341,66736,"GREE bn, LLC",Greenwater BESS,GREE,WA,Pierce,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68342,66737,"HOHI bn, LLC",Hop Hill Solar Generation and BESS,HOHI2,WA,Benton,L,Regulatory Approved (Not Under Construction),Batteries,1200,5600,1400,1400,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68343,66738,"GRVA bn, LLC",Grand Valley Solar Generation and BESS,GRVA2,CO,Mesa,L,Regulatory Approved (Not Under Construction),Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68344,66739,"LOSN, LLC",Lower Snake Solar Generation BESS,LOSN2,WA,Garfield,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68345,66740,"OPPO bn, LLC",Oportunity Solar Generation and BESS,OPPO2,MT,Deer Lodge,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68346,4226,Consolidated Edison Co-NY Inc,Brownsville Energy Storage System,ESSBR,NY,Kings,U,Under Construction,Batteries,5.8,5.8,5.8,5.8,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+68348,66751,Alamo City ESS LLC,Alamo City ESS,ACESS,TX,Bexar,P,Planned,Batteries,200,400,200,20,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68349,66752,Avant Prairie ESS LLC,Avant Prairie ESS,AVBS1,TX,Freestone,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68350,66754,Bravo ESS LLC,Bravo ESS,BESS1,TX,Zapata,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68353,66757,La Salle ESS LLC,La Salle ESS,LSBS1,TX,LaSalle,P,Planned,Batteries,500,1000,500,500,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68355,66759,Lazy U ESS 1 LLC,Lazy U ESS 1,LUBA1,TX,Hardeman,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68356,66760,Lazy U ESS 2 LLC,Lazy U ESS 2,LUBA2,TX,Hardeman,P,Planned,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68360,66764,Prost ESS LLC,Prost ESS,PRESS,TX,Austin,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68361,66765,Rush ESS LLC,Rush ESS,RUESS,TX,Bexar,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68362,66766,Sun Angel ESS LLC,Sun Angel ESS,SABS1,TX,Angelina,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68363,66767,SunShiner ESS LLC,SunShiner ESS,SSESS,TX,Zavala,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68364,66768,Tex-Bar ESS LLC,Tex-Bar ESS,TBESS,TX,Madison,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68365,66769,"Old 300 Storage Center, LLC",Old 300 Storage Center,8681,TX,Fort Bend,U,Under Construction,Batteries,250,500,250,250,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68366,66731,BrightNight Power,AGATE BESS,AGAT,WA,Kitsap,L,Regulatory Approved (Not Under Construction),Batteries,170,680,170,170,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68367,66731,BrightNight Power,Pepper Hammock Solar and Storage,PEHA2,GA,Wayne,L,Regulatory Approved (Not Under Construction),Batteries,400,1600,400,400,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68370,66731,BrightNight Power,Salmonfly Solar and Storage,SALM2,OR,Jefferson,L,Regulatory Approved (Not Under Construction),Batteries,247,988,247,247,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68371,66731,BrightNight Power,Red Butte Solar and Storage,REBU2,UT,Iron,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68396,66778,"Sunstone Solar, LLC",Sunstone Solar,PGB45,OR,Morrow,L,Regulatory Approved (Not Under Construction),Batteries,1200,4800,1200,1200,OTH,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68414,66784,"311SV 8me, LLC",Catclaw Solar,SV,AZ,Maricopa,L,Regulatory Approved (Not Under Construction),Batteries,250,1000,250,250,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68422,66812,Callisto II Energy Center LLC,Callisto II Energy Center,CALII,TX,Harris,P,Planned,Batteries,400,800,400,400,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68423,66813,St Gall Energy Storage II LLC,St Gall Energy Storage II,SGES2,TX,Pecos,P,Planned,Batteries,100,200,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68424,66814,Tibbits Energy Storage LLC,Tibbits Energy Storage,TIBB1,MI,Branch,P,Planned,Batteries,104.9,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68425,66815,Tidwell Prairie II LLC,Tidwell Prairie II,TWPII,TX,Robertson,P,Planned,Batteries,200,400,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68426,66816,Voyager Energy Storage LLC,Voyager Energy Storage,VOYGR,MI,Washtenaw,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68428,66786,Gatsby Energy Storage LLC,Gatsby Energy Storage Project,GTSBY,TX,Pecos,U,Under Construction,Batteries,103.4,200, , ,,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68452,66818,301AK 8me LLC,Kitt Solar,KITTB,AZ,Pinal,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68456,66825,"Blue Summit II Storage, LLC",Blue Summit II Storage,BSIIS,TX,Wilbarger,P,Planned,Batteries,150,150,150,100,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68460,66821,Roadrunner Crossing Energy Storage LLC,Roadrunner Crossing Energy Storage LLC,7137,TX,Eastland,U,Under Construction,Batteries,150,150,150,159.2,LIB,Industrial Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68461,66831,Key Energy Storage LLC,Key Energy Storage,KEYBA,CA,Fresno,T,Regulatory Approved,Batteries,75,600,75,75,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68461,66831,Key Energy Storage LLC,Key Energy Storage,KEYBB,CA,Fresno,T,Regulatory Approved,Batteries,190,760,190,190,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68461,66831,Key Energy Storage LLC,Key Energy Storage,KEYBC,CA,Fresno,T,Regulatory Approved,Batteries,35,280,35,35,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68466,66217,Copia Power,Centennial Flats,CFB1,AZ,La Paz,U,Under Construction,Batteries,89, , , ,,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68466,66217,Copia Power,Centennial Flats,CFB2,AZ,La Paz,U,Under Construction,Batteries,89, , , ,,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68466,66217,Copia Power,Centennial Flats,CFB3,AZ,La Paz,U,Under Construction,Batteries,89, , , ,,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68475,66843,Kearsarge Riverpark I LLC,Kearsarge Riverpark I LLC,RIV1,MA,Middlesex,V,Inactive,Batteries,5,11.2,5,5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68476,66843,Kearsarge Riverpark I LLC,Kearsarge Riverpark II LLC,RIV2,MA,Middlesex,V,Inactive,Batteries,5,11.2,5,5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68477,66844,Pediment BESS I LLC,Pediment BESS I,1,AZ,Maricopa,U,Under Construction,Batteries,250,1000,250,250,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68485,66856,22SV 8ME LLC,Rexford 2 Solar Farm,22SVB,CA,Tulare,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+68486,66857,44ST 8ME LLC,Sienna 2 Solar and Storage Project,44STB,CA,San Bernardino,P,Planned,Batteries,55,220,55,55,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+68492,66853,"Sun Pond, LLC",Sun Pond,GEN02,AZ,Maricopa,V,Inactive,Batteries,85,340,85,85,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+68494,66848,VESI 15 LLC,Shirk Energy Storage,SHRK1,CA,Tulare,U,Under Construction,Batteries,80,320,80,80,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68495,66849,VESI 37 LLC,Bird Dog Energy Storage,BDOG1,TX,San Patricio,U,Under Construction,Batteries,60,120,60,60,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68496,66850,VESI 38 LLC,Lower Rio Energy Storage,LOWR1,TX,Hidalgo,U,Under Construction,Batteries,60,120,60,60,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68499,56215,"Big Sky Wind, LLC","Crowned Heron 1 - Storage, LLC",CWHBA,TX,Fort Bend,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68500,56215,"Big Sky Wind, LLC","Crowned Heron 2 - Storage, LLC",CWH2,TX,Fort Bend,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68509,56215,"Big Sky Wind, LLC","Ventasso Energy Storage, LLC",VNT,CA,San Diego,U,Under Construction,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68512,7140,Georgia Power Co,McGrau Ford Battery Storage Facility,1,GA,Cherokee,U,Under Construction,Batteries,265,530,265,265,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+68512,7140,Georgia Power Co,McGrau Ford Battery Storage Facility,2,GA,Cherokee,U,Under Construction,Batteries,265,1060,265,265,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+68513,56215,"Big Sky Wind, LLC","Cartwheel 1 - Storage, LLC",CWHBA,TX,Hopkins,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68518,60059,ZGlobal Inc,Merced 2 BESS,MRC2B,CA,Merced,U,Under Construction,Batteries,2,8,2,2,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68519,60059,ZGlobal Inc,Madena 3,MDNA3,CA,Yuba,U,Under Construction,Batteries,3.9,15.7,3.9,3.9,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68520,60059,ZGlobal Inc,Madena 4,MNDA4,CA,Placer,L,Regulatory Approved (Not Under Construction),Batteries,5,20,4.9,4.9,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68522,66893,Executive Parkway BR8-O Solar Project 2020 LLC,Bishop Ranch - BR 8-O,4975B,CA,Contra Costa,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68523,66894,Executive Parkway BR8-Q Solar Project 2020 LLC,Bishop Ranch - BR 8-Q,4977B,CA,Contra Costa,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68524,66895,Alcosta Boulevard BR 15-AA Solar Project 2020 LLC,Bishop Ranch - BR 15-AA,4654B,CA,Contra Costa,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68525,66896,"Alcosta Boulevard BR 15-CC Solar Project 2020, LLC",Bishop Ranch - BR 15-CC,4656B,CA,Contra Costa,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68526,66907,Laketricity USA Inc.,Kama 1 LLC,11B,CA,Mendocino,T,Regulatory Approved,Batteries,0.4,0.8,0.4,0.4,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68529,66908,Flatland Storage LLC,Flatland Storage,FS01,AZ,Pinal,P,Planned,Batteries,200,800,200,200,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68536,58764,"Origis Energy USA, Inc",Optimist,MS7_S,MS,Clay,T,Regulatory Approved,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68542,66917,"East Avenue Q Solar Project 2022, LLC",Palmdale Water District 6MG Tank,7170B,CA,Los Angeles,V,Inactive,Batteries,0.3,0.6,0.3,0.3,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68543,66918,"Mountain Street Solar Project 2019, LLC",Town of Sharon Portfolio -Mt St Landfill,3850B,MA,Norfolk,V,Inactive,Batteries,5.7,13.5,5.7,5.7,LIB,IPP Non-CHP,Inactive,Y,EIA-860-2024-Proposed
+68576,66949,Breckinridge Energy Storage LLC,Breckinridge Energy Storage,BRKES,OK,Garfield,V,Inactive,Batteries,65,260,65,65,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68577,66951,"Woodward Energy Storage, LLC",Woodward Energy Storage,BESS1,OK,Woodward,V,Inactive,Batteries,40,160,40,40,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68580,66950,Lydian Energy,Headcamp BESS,MHB,TX,Pecos,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68581,66950,Lydian Energy,Mendoza Trail BESS,MTB,TX,Crane,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68582,66950,Lydian Energy,Pintail BESS,PPB,TX,San Patricio,U,Under Construction,Batteries,200,400,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68583,66950,Lydian Energy,Rock N' Roll,RRB,TX,Brazoria,L,Regulatory Approved (Not Under Construction),Batteries,250,535,250,250,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68596,66963,"Dominguez Grid, LLC",Dominguez Energy Storage,DES1,UT,Salt Lake,T,Regulatory Approved,Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68600,66977,"Las Virgenes Road Solar Project 2022, LLC",Las Virgenes MWD - Composting Plant,7236B,CA,Los Angeles,V,Inactive,Batteries,0.5,1.1,0.5,0.5,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68604,66980,Dahlia Energy LLC,Dahlia Energy,DALBS,TX,La Salle,P,Planned,Batteries,100,200,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+68607,66976,Pelicans Jaw Solar LLC,Pelicans Jaw Hybrid Solar,PJBS1,CA,Kern,L,Regulatory Approved (Not Under Construction),Batteries,238.5,238.5,238.5,238.5,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68613,66994,"Guajillo Energy Storage, LLC",Guajillo Energy Storage,GUAJ1,TX,Webb,V,Inactive,Batteries,228.7,228.7,65,65,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68616,66989,Route 66 Energy Storage,Route 66 Energy Storage,R66,NM,Cibola,U,Under Construction,Batteries,49.5,198,49.5,49.5,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68617,66988,Sky Ranch Bess II,Sky Ranch BESS II,SRII,NM,Valencia,U,Under Construction,Batteries,100,400,400,400,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68633,67009,Kingbird Solar Energy LLC,Kingbird Solar Energy LLC,KBESS,KS,Bourbon,P,Planned,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68661,67018,64NB 8me LLC,Aratina Solar Center 1A,64BES,CA,San Bernardino,U,Under Construction,Batteries,75,300,75,75,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68665,66255,"RIC Development, LLC",Summerhill BESS,RIC87,TX,Taylor,P,Planned,Batteries,143,286,286,286,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68666,66255,"RIC Development, LLC",Stonewall BESS,RIC88,TX,Stonewall,P,Planned,Batteries,135,270,270,270,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68667,66255,"RIC Development, LLC",Chimney Rock BESS,RIC89,TX,Taylor,P,Planned,Batteries,156,312,312,312,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68668,66255,"RIC Development, LLC",Coke BESS,RIC90,TX,Coke,P,Planned,Batteries,220,440,440,440,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68671,66255,"RIC Development, LLC",Houston County BESS,RIC91,TX,Houston,P,Planned,Batteries,125,250,250,250,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68672,58764,"Origis Energy USA, Inc",Chalan,CHA_B,CA,Kern,T,Regulatory Approved,Batteries,25,100,25,25,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68673,58764,"Origis Energy USA, Inc",Sand Luis West,SLW_S,CA,Fresno,T,Regulatory Approved,Batteries,31.3,125,31.3,31.3,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68686,67035,Prologis Logistics Services Incorporated BESS,Citrus City BESS,MCC01,TX,Hidalgo,TS,Testing/Commissioning,Batteries,9.9,24.7,4,9.9,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68687,67035,Prologis Logistics Services Incorporated BESS,Rio Grande City BESS 2,RGC01,TX,Starr,TS,Testing/Commissioning,Batteries,9.9,24.7,2,9.9,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68738,66509,Red River Clean Energy,Cannibal Draw Solar and Storage,CANBS,TX,Glasscock,T,Regulatory Approved,Batteries,98.6,232,98.6,98.6,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68748,67037,"Tierra Seca BESS, LLC",Tierra Seca,TS,TX,Val Verde,U,Under Construction,Batteries,100,200,100,100,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68758,67038,"IP Easley, LLC",Easley Solar,IPEA2,CA,Riverside,T,Regulatory Approved,Batteries,350,1400,350,350,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68758,67038,"IP Easley, LLC",Easley Solar,IPEA3,CA,Riverside,T,Regulatory Approved,Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68759,67039,"IP Quantum BESS, LLC",Quantum BESS,IPQ1B,TX,Haskell,P,Planned,Batteries,321,642,321,321,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68761,67041,"IP Quantum II BESS, LLC",Quantum II BESS,IPQ2B,TX,Haskell,P,Planned,Batteries,321,642,321,321,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68763,67058,"DECH bn, LLC",Deschutes Solar and BESS,DECH2,OR,Wasco,L,Regulatory Approved (Not Under Construction),Batteries,1000,4000,1000,1000,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68799,9191,Idaho Power Co,Boise Bench BESS,BOBS,ID,Ada,L,Regulatory Approved (Not Under Construction),Batteries,150,600,15,150,FLB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68801,67071,Kingman Energy Storage LLC,Kingman Energy Storage,NUCOR,AZ,Mohave,V,Inactive,Batteries,50,200,50,50,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68802,67074,Minco II Energy Storage LLC,Minco II Energy Storage,MINS2,OK,Grady,V,Inactive,Batteries,65,65,65,65,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68809,67079,Evelyn Energy Storage LLC,Hidden Lakes Reliability Project,HL001,TX,Galveston,V,Inactive,Batteries,220,440,220,220,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68813,61060,Cypress Creek Renewables,Vitex Storage,VITEX,NV,Clark,L,Regulatory Approved (Not Under Construction),Batteries,300,1200,300,300,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68814,66234,Nexus Renewables U.S. Inc.,Brazos River BESS LLC,ASHU2,TX,Brazoria,P,Planned,Batteries,180,360,180,180,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68842,67086,Chillingham Storage LLC,Chillingham Storage,CHILB,TX,Bell,TS,Testing/Commissioning,Batteries,150,150,150,150,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68852,67096,"Bell 1 Storage, LLC",Hermes Storage BESS,HSBE1,TX,Bell,V,Inactive,Batteries,100.4,200,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+68854,67111,Angiola East LLC,Angela Solar Project,ABESS,CA,Tulare,U,Under Construction,Batteries,40,80,20,20,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68866,67114,Santa Teresa Solar,Santa Teresa Solar,SAN,NM,Dona Ana,U,Under Construction,Batteries,150,600,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+68868,67115,"Shallow Basket Energy, LLC",Shallow Basket,SBBS1,NM,Rio Arriba,TS,Testing/Commissioning,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68871,61060,Cypress Creek Renewables,Timber Mill Solar,TIMIB,NC,Jones,P,Planned,Batteries,32,128,32,32,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+68874,67128,Inertia Energy Storage LLC,Inertia Energy Storage,IES,TX,Haskell,TS,Testing/Commissioning,Batteries,13,45,13,13,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68875,67129,Wakefield MA BESS 1 LLC,Wakefield MA BESS 1,90914,MA,Middlesex,U,Under Construction,Batteries,5,2.4,5,5,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68877,67134,"Wildcat Ranch Energy Storage, LLC",Wildcat Ranch Energy Storage,WLDC1,TX,Cochran,P,Planned,Batteries,120,480,120,120,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+68879,67130,Bocanova Power LLC,Bocanova Energy Storage,BCNV1,TX,Brazoria,U,Under Construction,Batteries,150,300,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68883,64452,"EDF Renewables Development, Inc.",Sawtooth Solar,STBA,AZ,Pinal,L,Regulatory Approved (Not Under Construction),Batteries,250,1000,250,250,LIB,IPP Non-CHP,Permitted - Not Under Construction,Y,EIA-860-2024-Proposed
+68891,66922,Pacifico Power,Visalia - (CA),VISB,CA,Tulare,TS,Testing/Commissioning,Batteries,1,3.9,1,1,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+68901,67148,"BT Claxton Solar, LLC",Claxton Solar,CLABA,TX,Hopkins,L,Regulatory Approved (Not Under Construction),Batteries,75.7,151.4,75.7,75.7,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68902,67149,"BT Ferguson Solar, LLC",Echols Creek Solar,ECHBA,TX,Lamar,L,Regulatory Approved (Not Under Construction),Batteries,100.6,100.6,100.6,100.6,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68906,67151,"Pine Forest Solar I, LLC",Pine Forest Solar I,PFBA,TX,Hopkins,U,Under Construction,Batteries,200,200,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68906,67151,"Pine Forest Solar I, LLC",Pine Forest Solar I,PFBA2,TX,Hopkins,U,Under Construction,Batteries,200,200,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68907,67152,CDH Vidal LLC,Vidal Energy Center,1,CA,San Bernardino,U,Under Construction,Batteries,160,640,160,160,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68909,67154,Imperial Sun Solar LLC,Imperial Sun Solar,ISSBA,CA,Imperial,P,Planned,Batteries,100,400,100,100,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68911,67157,Flint,Flint,27288,OH,Franklin,U,Under Construction,Batteries,200,1000,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68912,67158,Padua 1,Padua 1,12341,TX,Bexar,U,Under Construction,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68913,67159,Padua 2,Padua 2,12342,TX,Bexar,U,Under Construction,Batteries,150,600,150,150,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68914,67160,Padua 3,Padua 3,12343,TX,Bexar,U,Under Construction,Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68915,67162,"Ferdinand Grid, LLC",Ferdinand Energy Center,1,TX,Bexar,L,Regulatory Approved (Not Under Construction),Batteries,200,800,200,200,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+68923,67167,Enterprise BESS LLC,Enterprise BESS,ENTB,CA,San Diego,T,Regulatory Approved,Batteries,54.1,54.1,54.1,54.1,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68924,67168,Panoche BESS LLC,Iron BESS,IROB,CA,Fresno,T,Regulatory Approved,Batteries,59.5,59.4,57,57,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68925,67169,Midway BESS LLC,Midway BESS,MIDB,CA,Fresno,T,Regulatory Approved,Batteries,124.6,124.6,124.6,124.6,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68932,67171,Overnight Solar LLC,Overnight Solar,OSBA,CA,San Bernardino,P,Planned,Batteries,150,600,150,150,LIB,IPP Non-CHP,Planned - Permit Pending,,EIA-860-2024-Proposed
+68937,24211,Tucson Electric Power Co,Roadrunner Reserve Phase 2,RDR2,AZ,,U,Under Construction,Batteries,200,800,200,200,OTH,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+68940,66571,Clenera DevCo LLC,Country Acres Clean Power LLC,CABS,CA,Placer,T,Regulatory Approved,Batteries,172,688,172,172,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,Y,EIA-860-2024-Proposed
+68953,67176,"Kifer Energy Storage, LLC",Kifer BESS 1,KB1,CA,Santa Clara,U,Under Construction,Batteries,50,200,50,50,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68954,67192,RWE Clean Energy,Alpaugh BESS,ALPHB,CA,Tulare,U,Under Construction,Batteries,10,10,10,10,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68980,67196,"Gonzaga Ridge Battery Facility, LLC",Gonzaga Ridge Battery Facility,GRBF,CA,Merced,U,Under Construction,Batteries,51.8,200,51.8,51.8,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+68988,13781,Northern States Power Co - Minnesota,Sherco LDES,SHB01,MN,Sherburne,T,Regulatory Approved,Batteries,10,1000,16,10,MAB,Electric Utility,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+68997,67207,TotalEnergies Renewables USA LLC,Thermo Fisher Pleasanton,TFPBA,CA,Alameda,TS,Testing/Commissioning,Batteries,0.7, , , ,,Industrial Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+69004,57416,"Acciona Energy USA Global, LLC",Adelite Storage Project LLC,ADELI,TX,Milam,T,Regulatory Approved,Batteries,230,460,233.3,230,LIB,IPP Non-CHP,Permitted - Not Yet Under Construction,,EIA-860-2024-Proposed
+69023,3046,Duke Energy Progress - (NC),Knightdale Battery,KNBA1,NC,Wake,U,Under Construction,Batteries,100,200,100,100,LIB,Electric Utility,Permitted - Under Construction,,EIA-860-2024-Proposed
+69024,67223,Glenarm BESS LLC,Glenarm BESS Plant,GLNB1,CA,Los Angeles,L,Regulatory Approved (Not Under Construction),Batteries,25,100,25,25,LIB,Electric Utility,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+69026,67227,Tanzanite Energy Storage LLC,Tanzanite Storage,TANZ,TX,Henderson,TS,Testing/Commissioning,Batteries,283.2,283.2,264.4,257.7,LIB,IPP Non-CHP,Permitted - Testing/Commissioning,,EIA-860-2024-Proposed
+69027,67192,RWE Clean Energy,"Stoneridge Solar, LLC",SSBA,TX,Milam,V,Inactive,Batteries,100,200,100,100,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+69030,20323,"Wellhead Services, Inc",North Johnson Energy Center,BESS1,CA,San Diego,U,Under Construction,Batteries,50,219,50,50,LIB,Industrial Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+69041,67231,"Iron Springs BESS, LLC",Iron Springs BESS,ISBA,UT,Iron,U,Under Construction,Batteries,80,80,80,80,LIB,IPP Non-CHP,Permitted - Under Construction,Y,EIA-860-2024-Proposed
+69042,67232,"Solar DG NM Amalia, LLC",Kit Carson Co-Op,AMBES,NM,Taos,U,Under Construction,Batteries,12.9,25.9,13.5,13.5,LIB,IPP Non-CHP,Permitted - Under Construction,,EIA-860-2024-Proposed
+69044,67230,Platinum Energy Storage LLC,Platinum Storage,PLAT,TX,Fannin,V,Inactive,Batteries,348,298.3,299.8,300,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+69045,67210,"Sealy Power, LLC",Sealy BESS,WAL,TX,Austin,V,Inactive,Batteries,200,400,200,200,LIB,IPP Non-CHP,Inactive,,EIA-860-2024-Proposed
+69056,66571,Clenera DevCo LLC,CO Bar Solar and BESS,CBBA,AZ,Coconino,P,Planned,Batteries,400,1600,400,400,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+69057,66571,Clenera DevCo LLC,CO Bar D Solar and BESS,CBDBA,AZ,Coconino,P,Planned,Batteries,394,1576,394,394,LIB,IPP Non-CHP,Planned - Permit Pending,Y,EIA-860-2024-Proposed
+69058,66571,Clenera DevCo LLC,CO Bar C Solar and BESS,CBCBA,AZ,Coconino,P,Planned,Batteries,206,824,206,206,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed
+69059,66571,Clenera DevCo LLC,Crimson Orchard Solar and BESS,COBA,AZ,Coconino,L,Regulatory Approved (Not Under Construction),Batteries,100,400,100,100,LIB,IPP Non-CHP,Permitted - Not Under Construction,,EIA-860-2024-Proposed
+69060,66571,Clenera DevCo LLC,Snowflake A Solar and BESS,SNFBA,AZ,Navajo,P,Planned,Batteries,475,1900,475,475,LIB,IPP Non-CHP,Planned - Permit Pending,PR,EIA-860-2024-Proposed

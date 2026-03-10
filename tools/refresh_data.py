@@ -872,6 +872,7 @@ class DataRefresher:
         - EIA Form 860 Proposed (federal, most reliable)
         - California CEC Power Plants (state-level)
         - California CPUC RPS (utility contracts)
+        - New York NYSERDA Large-Scale Renewables
         """
         if not quiet:
             print("Refreshing permit data...")
@@ -886,6 +887,9 @@ class DataRefresher:
 
         # California CPUC (Priority 2)
         results['cpuc_permits'] = self.refresh_cpuc_permits(quiet)
+
+        # New York NYSERDA (Priority 2)
+        results['nyserda_permits'] = self.refresh_nyserda_permits(quiet)
 
         # Summary
         total_added = sum(r.get('added', 0) for r in results.values())
@@ -1008,6 +1012,44 @@ class DataRefresher:
 
             # Upsert to database
             stats = self.db.upsert_permits(permits_df, source='cpuc_rps')
+            if not quiet:
+                print(f"    Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
+
+            self.db.log_refresh_complete(log_id, stats)
+            return {'success': True, **stats}
+
+        except Exception as e:
+            if not quiet:
+                print(f"    ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
+    def refresh_nyserda_permits(self, quiet: bool = False) -> dict:
+        """Refresh New York NYSERDA large-scale renewables data."""
+        if not quiet:
+            print("  Loading NY NYSERDA large-scale renewables...")
+        log_id = self.db.log_refresh_start('nyserda_permits')
+
+        try:
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent / 'permitting-scrapers'))
+            from nyserda_loader import NYSERDALoader
+
+            loader = NYSERDALoader()
+            permits_df = loader.load(use_cache=False)
+
+            if permits_df.empty:
+                raise Exception("No data returned from NYSERDA")
+
+            if not quiet:
+                print(f"    Loaded {len(permits_df):,} NYSERDA projects")
+
+                # Show how many have queue numbers (linkable to NYISO queue)
+                with_queue = permits_df['interconnection_queue_number'].notna().sum()
+                print(f"    {with_queue:,} have interconnection queue numbers")
+
+            # Upsert to database
+            stats = self.db.upsert_permits(permits_df, source='nyserda')
             if not quiet:
                 print(f"    Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
 
@@ -1152,7 +1194,7 @@ Examples:
 
     parser.add_argument('--source', '-s',
                        choices=['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl',
-                                'permits', 'eia_permits', 'cec_permits', 'cpuc_permits', 'all'],
+                                'permits', 'eia_permits', 'cec_permits', 'cpuc_permits', 'nyserda_permits', 'all'],
                        default='all', help='Data source to refresh')
     parser.add_argument('--status', action='store_true', help='Show refresh status')
     parser.add_argument('--changes', type=int, metavar='DAYS',
@@ -1205,6 +1247,8 @@ Examples:
             results = {'cec_permits': refresher.refresh_cec_permits(quiet=quiet)}
         elif args.source == 'cpuc_permits':
             results = {'cpuc_permits': refresher.refresh_cpuc_permits(quiet=quiet)}
+        elif args.source == 'nyserda_permits':
+            results = {'nyserda_permits': refresher.refresh_nyserda_permits(quiet=quiet)}
 
         # Check for failures in cron mode
         if quiet:

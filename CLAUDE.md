@@ -32,6 +32,20 @@ Run `python3 db_status.py` for current stats anytime.
 
 ---
 
+## Workspace Context
+
+This project is part of the **World Domination** workspace. For cross-project work, start Claude Code from the parent directory:
+
+```bash
+cd "/Users/owencoonahan/Documents/World Domination"
+# Then open Claude Code
+```
+
+**Parent workspace:** `../../CLAUDE.md`
+**Agent coordination:** `../../.agents/` (Claude Code ↔ OpenClaw communication)
+
+---
+
 ## Architecture
 
 ### Single Source of Truth

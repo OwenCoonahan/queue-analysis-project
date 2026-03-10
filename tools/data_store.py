@@ -157,6 +157,36 @@ class DataStore:
             )
         ''')
 
+        # Permits table - tracks permitting status from EIA/state sources
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS permits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                permit_id TEXT NOT NULL,
+                source TEXT NOT NULL,
+                queue_id TEXT,
+                region TEXT,
+                match_confidence REAL,
+                match_method TEXT,
+                project_name TEXT,
+                developer TEXT,
+                capacity_mw REAL,
+                technology TEXT,
+                state TEXT,
+                county TEXT,
+                latitude REAL,
+                longitude REAL,
+                status TEXT,
+                status_code TEXT,
+                status_date TEXT,
+                expected_cod TEXT,
+                raw_data TEXT,
+                row_hash TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(permit_id, source)
+            )
+        ''')
+
         # Create indexes
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_projects_region ON projects(region)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_projects_developer ON projects(developer)')
@@ -165,6 +195,13 @@ class DataStore:
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_snapshots_date ON snapshots(snapshot_date)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_changes_date ON changes(detected_at)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_qualified_devs_region ON qualified_developers(region)')
+
+        # Permit indexes
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_permits_queue_id ON permits(queue_id)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_permits_source ON permits(source)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_permits_state ON permits(state)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_permits_status ON permits(status)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_permits_developer ON permits(developer)')
 
         conn.commit()
         conn.close()
@@ -515,6 +552,231 @@ class DataStore:
         df = self.get_projects(region=region)
         df.to_csv(output_path, index=False)
         return len(df)
+
+    # =========================================================================
+    # Permit Methods
+    # =========================================================================
+
+    def _compute_permit_hash(self, row: Dict) -> str:
+        """Compute hash of permit row for change detection."""
+        key_fields = ['project_name', 'developer', 'capacity_mw', 'technology', 'status', 'status_code', 'expected_cod']
+        values = [str(row.get(f, '')) for f in key_fields]
+        return hashlib.md5('|'.join(values).encode()).hexdigest()
+
+    def upsert_permits(self, df: pd.DataFrame, source: str) -> Dict[str, int]:
+        """
+        Insert or update permits from a DataFrame.
+
+        Required columns: permit_id
+        Optional columns: project_name, developer, capacity_mw, technology,
+                         state, county, latitude, longitude, status, status_code,
+                         expected_cod, queue_id, region, match_confidence
+
+        Returns dict with counts: added, updated, unchanged
+        """
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        stats = {'added': 0, 'updated': 0, 'unchanged': 0}
+
+        for _, row in df.iterrows():
+            row_dict = row.to_dict()
+            permit_id = str(row_dict.get('permit_id', ''))
+
+            if not permit_id:
+                continue
+
+            row_hash = self._compute_permit_hash(row_dict)
+
+            # Check if exists
+            cursor.execute('''
+                SELECT id, row_hash FROM permits
+                WHERE permit_id = ? AND source = ?
+            ''', (permit_id, source))
+            existing = cursor.fetchone()
+
+            if existing:
+                if existing['row_hash'] != row_hash:
+                    # Update existing row
+                    cursor.execute('''
+                        UPDATE permits SET
+                            queue_id = ?, region = ?, match_confidence = ?, match_method = ?,
+                            project_name = ?, developer = ?, capacity_mw = ?, technology = ?,
+                            state = ?, county = ?, latitude = ?, longitude = ?,
+                            status = ?, status_code = ?, status_date = ?, expected_cod = ?,
+                            raw_data = ?, row_hash = ?, updated_at = CURRENT_TIMESTAMP
+                        WHERE id = ?
+                    ''', (
+                        row_dict.get('queue_id'), row_dict.get('region'),
+                        row_dict.get('match_confidence'), row_dict.get('match_method'),
+                        row_dict.get('project_name'), row_dict.get('developer'),
+                        row_dict.get('capacity_mw'), row_dict.get('technology'),
+                        row_dict.get('state'), row_dict.get('county'),
+                        row_dict.get('latitude'), row_dict.get('longitude'),
+                        row_dict.get('status'), row_dict.get('status_code'),
+                        row_dict.get('status_date'), row_dict.get('expected_cod'),
+                        json.dumps(row_dict, default=str), row_hash,
+                        existing['id']
+                    ))
+                    stats['updated'] += 1
+                else:
+                    stats['unchanged'] += 1
+            else:
+                # Insert new row
+                cursor.execute('''
+                    INSERT INTO permits (
+                        permit_id, source, queue_id, region, match_confidence, match_method,
+                        project_name, developer, capacity_mw, technology,
+                        state, county, latitude, longitude,
+                        status, status_code, status_date, expected_cod,
+                        raw_data, row_hash
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    permit_id, source,
+                    row_dict.get('queue_id'), row_dict.get('region'),
+                    row_dict.get('match_confidence'), row_dict.get('match_method'),
+                    row_dict.get('project_name'), row_dict.get('developer'),
+                    row_dict.get('capacity_mw'), row_dict.get('technology'),
+                    row_dict.get('state'), row_dict.get('county'),
+                    row_dict.get('latitude'), row_dict.get('longitude'),
+                    row_dict.get('status'), row_dict.get('status_code'),
+                    row_dict.get('status_date'), row_dict.get('expected_cod'),
+                    json.dumps(row_dict, default=str), row_hash
+                ))
+                stats['added'] += 1
+
+        conn.commit()
+        conn.close()
+        return stats
+
+    def get_permits(
+        self,
+        queue_id: str = None,
+        state: str = None,
+        status: str = None,
+        source: str = None,
+        technology: str = None,
+        developer: str = None,
+    ) -> pd.DataFrame:
+        """Query permits with filters."""
+        conn = self._get_conn()
+
+        query = "SELECT * FROM permits WHERE 1=1"
+        params = []
+
+        if queue_id:
+            query += " AND queue_id = ?"
+            params.append(queue_id)
+
+        if state:
+            query += " AND state = ?"
+            params.append(state)
+
+        if status:
+            query += " AND status LIKE ?"
+            params.append(f'%{status}%')
+
+        if source:
+            query += " AND source = ?"
+            params.append(source)
+
+        if technology:
+            query += " AND technology LIKE ?"
+            params.append(f'%{technology}%')
+
+        if developer:
+            query += " AND developer LIKE ?"
+            params.append(f'%{developer}%')
+
+        query += " ORDER BY capacity_mw DESC"
+
+        df = pd.read_sql_query(query, conn, params=params)
+        conn.close()
+        return df
+
+    def link_permit_to_project(self, permit_id: str, source: str, queue_id: str,
+                                region: str, confidence: float, method: str) -> bool:
+        """Link a permit to a queue project."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            UPDATE permits SET
+                queue_id = ?, region = ?, match_confidence = ?, match_method = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE permit_id = ? AND source = ?
+        ''', (queue_id, region, confidence, method, permit_id, source))
+
+        updated = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return updated
+
+    def get_permit_for_project(self, queue_id: str, region: str = None) -> Optional[Dict]:
+        """Get permit data for a specific queue project."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        if region:
+            cursor.execute('''
+                SELECT * FROM permits
+                WHERE queue_id = ? AND region = ?
+                ORDER BY match_confidence DESC
+                LIMIT 1
+            ''', (queue_id, region))
+        else:
+            cursor.execute('''
+                SELECT * FROM permits
+                WHERE queue_id = ?
+                ORDER BY match_confidence DESC
+                LIMIT 1
+            ''', (queue_id,))
+
+        result = cursor.fetchone()
+        conn.close()
+
+        return dict(result) if result else None
+
+    def get_permit_stats(self) -> Dict[str, Any]:
+        """Get permit statistics."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM permits")
+        total = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM permits WHERE queue_id IS NOT NULL")
+        matched = cursor.fetchone()[0]
+
+        cursor.execute("""
+            SELECT source, COUNT(*) as count, SUM(capacity_mw) as mw
+            FROM permits GROUP BY source
+        """)
+        by_source = [dict(row) for row in cursor.fetchall()]
+
+        cursor.execute("""
+            SELECT status, COUNT(*) as count
+            FROM permits GROUP BY status ORDER BY count DESC
+        """)
+        by_status = [dict(row) for row in cursor.fetchall()]
+
+        cursor.execute("""
+            SELECT state, COUNT(*) as count
+            FROM permits WHERE state IS NOT NULL
+            GROUP BY state ORDER BY count DESC LIMIT 10
+        """)
+        by_state = [dict(row) for row in cursor.fetchall()]
+
+        conn.close()
+
+        return {
+            'total_permits': total,
+            'matched_to_queue': matched,
+            'match_rate': matched / total if total > 0 else 0,
+            'by_source': by_source,
+            'by_status': by_status,
+            'top_states': by_state,
+        }
 
 
 def main():

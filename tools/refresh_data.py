@@ -864,6 +864,162 @@ class DataRefresher:
         conn.close()
         return updated
 
+    def refresh_permits(self, quiet: bool = False) -> dict:
+        """
+        Refresh permit data from all sources.
+
+        Sources:
+        - EIA Form 860 Proposed (federal, most reliable)
+        - California CEC Power Plants (state-level)
+        - California CPUC RPS (utility contracts)
+        """
+        if not quiet:
+            print("Refreshing permit data...")
+
+        results = {}
+
+        # EIA Planned Generators (Priority 1)
+        results['eia_permits'] = self.refresh_eia_permits(quiet)
+
+        # California CEC (Priority 2)
+        results['cec_permits'] = self.refresh_cec_permits(quiet)
+
+        # California CPUC (Priority 2)
+        results['cpuc_permits'] = self.refresh_cpuc_permits(quiet)
+
+        # Summary
+        total_added = sum(r.get('added', 0) for r in results.values())
+        total_updated = sum(r.get('updated', 0) for r in results.values())
+        success = all(r.get('success', False) for r in results.values())
+
+        return {
+            'success': success,
+            'added': total_added,
+            'updated': total_updated,
+            'details': results,
+        }
+
+    def refresh_eia_permits(self, quiet: bool = False) -> dict:
+        """Refresh EIA Form 860 proposed generators."""
+        if not quiet:
+            print("  Loading EIA proposed generators...")
+        log_id = self.db.log_refresh_start('eia_permits')
+
+        try:
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent / 'permitting-scrapers'))
+            from eia_planned_loader import EIAPlannedLoader
+            from permit_matcher import PermitMatcher
+
+            # Load EIA data
+            loader = EIAPlannedLoader()
+            permits_df = loader.load(use_cache=False)
+
+            if permits_df.empty:
+                raise Exception("No data returned from EIA loader")
+
+            if not quiet:
+                print(f"    Loaded {len(permits_df):,} EIA permits")
+
+            # Match to queue projects
+            if not quiet:
+                print("    Matching to queue projects...")
+            matcher = PermitMatcher()
+            matched_df = matcher.match_batch(permits_df)
+
+            # Get match stats
+            matched_count = matched_df['queue_id'].notna().sum()
+            if not quiet:
+                print(f"    Matched {matched_count:,} permits to queue projects ({100*matched_count/len(matched_df):.1f}%)")
+
+            # Upsert to database
+            stats = self.db.upsert_permits(matched_df, source='eia_860')
+            if not quiet:
+                print(f"    Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
+
+            self.db.log_refresh_complete(log_id, stats)
+            return {'success': True, **stats}
+
+        except Exception as e:
+            if not quiet:
+                print(f"    ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
+    def refresh_cec_permits(self, quiet: bool = False) -> dict:
+        """Refresh California CEC Power Plants data."""
+        if not quiet:
+            print("  Loading California CEC data...")
+        log_id = self.db.log_refresh_start('cec_permits')
+
+        try:
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent / 'permitting-scrapers'))
+            from california_cec_loader import CaliforniaCECLoader
+
+            loader = CaliforniaCECLoader()
+            permits_df = loader.load(use_cache=False)
+
+            if permits_df.empty:
+                if not quiet:
+                    print("    No CEC data available (may need manual download)")
+                self.db.log_refresh_complete(log_id, {'added': 0, 'updated': 0, 'unchanged': 0})
+                return {'success': True, 'added': 0, 'updated': 0, 'unchanged': 0, 'note': 'No data available'}
+
+            if not quiet:
+                print(f"    Loaded {len(permits_df):,} CEC permits")
+
+            # Upsert to database
+            stats = self.db.upsert_permits(permits_df, source='cec')
+            if not quiet:
+                print(f"    Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
+
+            self.db.log_refresh_complete(log_id, stats)
+            return {'success': True, **stats}
+
+        except Exception as e:
+            if not quiet:
+                print(f"    ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
+    def refresh_cpuc_permits(self, quiet: bool = False) -> dict:
+        """Refresh California CPUC RPS data."""
+        if not quiet:
+            print("  Loading California CPUC RPS data...")
+        log_id = self.db.log_refresh_start('cpuc_permits')
+
+        try:
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent / 'permitting-scrapers'))
+            from california_cpuc_loader import CaliforniaCPUCLoader
+
+            loader = CaliforniaCPUCLoader()
+            permits_df = loader.load(use_cache=True)  # CPUC requires manual download often
+
+            if permits_df.empty:
+                if not quiet:
+                    print("    No CPUC data available (requires manual download from CPUC website)")
+                self.db.log_refresh_complete(log_id, {'added': 0, 'updated': 0, 'unchanged': 0})
+                return {'success': True, 'added': 0, 'updated': 0, 'unchanged': 0, 'note': 'Manual download required'}
+
+            if not quiet:
+                print(f"    Loaded {len(permits_df):,} CPUC contracts")
+
+            # Upsert to database
+            stats = self.db.upsert_permits(permits_df, source='cpuc_rps')
+            if not quiet:
+                print(f"    Added: {stats['added']}, Updated: {stats['updated']}, Unchanged: {stats['unchanged']}")
+
+            self.db.log_refresh_complete(log_id, stats)
+            return {'success': True, **stats}
+
+        except Exception as e:
+            if not quiet:
+                print(f"    ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
+
     def _backfill_ercot_queue_dates(self) -> int:
         """
         Backfill ERCOT queue dates from LBL historical data.
@@ -994,7 +1150,9 @@ Examples:
         """
     )
 
-    parser.add_argument('--source', '-s', choices=['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl', 'all'],
+    parser.add_argument('--source', '-s',
+                       choices=['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl',
+                                'permits', 'eia_permits', 'cec_permits', 'cpuc_permits', 'all'],
                        default='all', help='Data source to refresh')
     parser.add_argument('--status', action='store_true', help='Show refresh status')
     parser.add_argument('--changes', type=int, metavar='DAYS',
@@ -1039,6 +1197,14 @@ Examples:
             results = {'isone': refresher.refresh_isone(quiet=quiet)}
         elif args.source == 'lbl':
             results = {'lbl': refresher.refresh_lbl(quiet=quiet)}
+        elif args.source == 'permits':
+            results = refresher.refresh_permits(quiet=quiet)
+        elif args.source == 'eia_permits':
+            results = {'eia_permits': refresher.refresh_eia_permits(quiet=quiet)}
+        elif args.source == 'cec_permits':
+            results = {'cec_permits': refresher.refresh_cec_permits(quiet=quiet)}
+        elif args.source == 'cpuc_permits':
+            results = {'cpuc_permits': refresher.refresh_cpuc_permits(quiet=quiet)}
 
         # Check for failures in cron mode
         if quiet:

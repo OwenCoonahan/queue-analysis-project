@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Due Diligence Report: Desna | 200 MW Storage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #1a1a1a;
+            --border-color: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --accent-green: #00ff88;
+            --accent-blue: #00a8ff;
+            --accent-yellow: #ffcc00;
+            --accent-orange: #ff8800;
+            --accent-red: #ff4444;
+            --accent-purple: #aa66ff;
+        }
+
+        body {
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Header */
+        .report-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .report-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .report-badge.status {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+
+        .report-badge.ec {
+            background: rgba(255, 204, 0, 0.1);
+            border-color: rgba(255, 204, 0, 0.3);
+            color: var(--accent-yellow);
+        }
+
+        .project-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .project-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Score Gauge */
+        .score-section {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            margin: 32px 0;
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .score-gauge {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+
+        .score-gauge svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-gauge-bg {
+            fill: none;
+            stroke: var(--bg-secondary);
+            stroke-width: 12;
+        }
+
+        .score-gauge-fill {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 113;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-details {
+            flex: 1;
+        }
+
+        .score-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .score-item {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .score-item-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .score-item-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .score-item-value.high { color: var(--accent-green); }
+        .score-item-value.medium { color: var(--accent-yellow); }
+        .score-item-value.low { color: var(--accent-red); }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        /* Key Metrics */
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-value.highlight {
+            color: var(--accent-green);
+        }
+
+        /* Large Stats */
+        .stat-large {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .stat-large-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-large-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin: 48px 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Developer Card */
+        .developer-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .developer-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .developer-info h4 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .developer-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bars */
+        .progress-bar-container {
+            margin: 16px 0;
+        }
+
+        .progress-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-value {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-bar-fill.green { background: var(--accent-green); }
+        .progress-bar-fill.yellow { background: var(--accent-yellow); }
+        .progress-bar-fill.red { background: var(--accent-red); }
+        .progress-bar-fill.blue { background: var(--accent-blue); }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            font-size: 14px;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* Status Indicators */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.active { background: var(--accent-green); }
+        .status-dot.pending { background: var(--accent-yellow); }
+        .status-dot.withdrawn { background: var(--accent-red); }
+
+        /* Risk Assessment */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .risk-item {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .risk-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .risk-item-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .risk-level {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .risk-level.low {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+        }
+
+        .risk-level.medium {
+            background: rgba(255, 204, 0, 0.15);
+            color: var(--accent-yellow);
+        }
+
+        .risk-level.high {
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .risk-item-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* DD Checklist */
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checklist-icon.complete {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .checklist-icon.pending {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-muted);
+        }
+
+        .checklist-content h5 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .checklist-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Financial Projections */
+        .financial-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        .financial-item {
+            text-align: center;
+        }
+
+        .financial-item-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .financial-item-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Map Placeholder */
+        .map-container {
+            height: 300px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-overlay {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .map-overlay h5 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .map-overlay p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .report-footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .report-footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 120px;
+            padding-top: 16px;
+        }
+
+        .bar-chart-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bar {
+            width: 100%;
+            background: var(--accent-blue);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: height 0.5s ease;
+        }
+
+        .bar.highlight {
+            background: var(--accent-green);
+        }
+
+        .bar-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .bar-value {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="report-meta">
+                <span class="report-badge status">Under Construction</span>
+                <span class="report-badge ec">Energy Community +10%</span>
+                <span class="report-badge">ERCOT</span>
+                <span class="report-badge">Report #001</span>
+            </div>
+            <h1 class="project-title">Desna</h1>
+            <p class="project-subtitle">200 MW Battery Energy Storage System | Brazoria County, Texas</p>
+        </header>
+
+        <!-- Investment Score -->
+        <section class="score-section">
+            <div class="score-gauge">
+                <svg width="160" height="160" viewBox="0 0 160 160">
+                    <circle class="score-gauge-bg" cx="80" cy="80" r="60"></circle>
+                    <circle class="score-gauge-fill" cx="80" cy="80" r="60"></circle>
+                </svg>
+                <div class="score-value">
+                    <div class="score-number">70</div>
+                    <div class="score-label">Score</div>
+                </div>
+            </div>
+            <div class="score-details">
+                <h3>Investment Readiness Assessment</h3>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <div class="score-item-label">Developer</div>
+                        <div class="score-item-value high">A</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-item-label">Market</div>
+                        <div class="score-item-value medium">B+</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-item-label">ITC Eligible</div>
+                        <div class="score-item-value high">40%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics -->
+        <div class="grid-3">
+            <div class="card">
+                <div class="stat-large">
+                    <div class="stat-large-value" style="color: var(--accent-green);">200<span style="font-size: 24px;">MW</span></div>
+                    <div class="stat-large-label">Nameplate Capacity</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-large">
+                    <div class="stat-large-value" style="color: var(--accent-yellow);">$60-80M</div>
+                    <div class="stat-large-label">Est. Total Investment</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-large">
+                    <div class="stat-large-value" style="color: var(--accent-blue);">$24-32M</div>
+                    <div class="stat-large-label">ITC Value (40%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Details -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Project Details</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Technology</span>
+                    <span class="metric-value">Battery Energy Storage (BESS)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Status</span>
+                    <span class="metric-value highlight">Under Construction (&lt;50%)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">EIA Status Code</span>
+                    <span class="metric-value">U</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">State</span>
+                    <span class="metric-value">Texas</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">County</span>
+                    <span class="metric-value">Brazoria</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ISO/RTO</span>
+                    <span class="metric-value">ERCOT</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">ITC Eligibility</span>
+                    <span class="card-badge">40% Total</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Base ITC Rate</span>
+                    <span class="metric-value">30%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Energy Community Bonus</span>
+                    <span class="metric-value highlight">+10%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Domestic Content Bonus</span>
+                    <span class="metric-value">TBD (+10%)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">EC Qualification</span>
+                    <span class="metric-value">MSA with fossil fuel employment</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ITC Value Range</span>
+                    <span class="metric-value highlight">$24-32M</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer Section -->
+        <div class="section-header">
+            <h2 class="section-title">Developer Analysis</h2>
+            <p class="section-subtitle">Track record and portfolio assessment for Engie North America</p>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="developer-header">
+                    <div class="developer-logo">EN</div>
+                    <div class="developer-info">
+                        <h4>Engie North America</h4>
+                        <p>Subsidiary of ENGIE SA (Paris: ENGI)</p>
+                    </div>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Total Queue Projects</span>
+                    <span class="metric-value">39</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Operational Projects</span>
+                    <span class="metric-value highlight">11</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Withdrawn Projects</span>
+                    <span class="metric-value" style="color: var(--accent-red);">18</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Completion Rate</span>
+                    <span class="metric-value highlight">28.2%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Operational MW</span>
+                    <span class="metric-value">1,234 MW</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Completion Rate Comparison</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-header">
+                        <span class="progress-bar-label">Engie North America</span>
+                        <span class="progress-bar-value" style="color: var(--accent-green);">28.2%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill green" style="width: 56.4%;"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-header">
+                        <span class="progress-bar-label">ERCOT Storage Average</span>
+                        <span class="progress-bar-value">1.5%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill blue" style="width: 3%;"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-header">
+                        <span class="progress-bar-label">Industry Average (Storage)</span>
+                        <span class="progress-bar-value">3.5%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill blue" style="width: 7%;"></div>
+                    </div>
+                </div>
+                <p style="margin-top: 16px; font-size: 13px; color: var(--text-secondary);">
+                    Engie's 28.2% completion rate is <strong style="color: var(--accent-green);">19x higher</strong> than the ERCOT storage market average.
+                </p>
+            </div>
+        </div>
+
+        <!-- Engie Portfolio -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <span class="card-title">Engie ERCOT Storage Portfolio (Active)</span>
+                <span class="card-badge">5 Projects | 875 MW</span>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Capacity</th>
+                        <th>County</th>
+                        <th>Status</th>
+                        <th>Energy Community</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="status-dot active"></span>Desna</td>
+                        <td>200 MW</td>
+                        <td>Brazoria</td>
+                        <td>Under Construction</td>
+                        <td style="color: var(--accent-green);">Yes (+10%)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Cachi</td>
+                        <td>200 MW</td>
+                        <td>Guadalupe</td>
+                        <td>Under Construction</td>
+                        <td style="color: var(--accent-green);">Yes (+10%)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Castor</td>
+                        <td>200 MW</td>
+                        <td>Brazoria</td>
+                        <td>Under Construction</td>
+                        <td style="color: var(--accent-green);">Yes (+10%)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Avila</td>
+                        <td>160 MW</td>
+                        <td>Pecos</td>
+                        <td>Under Construction</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Carina</td>
+                        <td>150 MW</td>
+                        <td>Nueces</td>
+                        <td>Under Construction</td>
+                        <td style="color: var(--accent-green);">Yes (+10%)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Octans</td>
+                        <td>125 MW</td>
+                        <td>Pecos</td>
+                        <td>Under Construction</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-dot active"></span>Antlia</td>
+                        <td>70 MW</td>
+                        <td>Val Verde</td>
+                        <td>Under Construction</td>
+                        <td style="color: var(--accent-green);">Yes (+10%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Market Analysis -->
+        <div class="section-header">
+            <h2 class="section-title">Market Analysis</h2>
+            <p class="section-subtitle">ERCOT storage market dynamics and competitive landscape</p>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">ERCOT Storage Pipeline</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Active Projects</span>
+                    <span class="metric-value">689</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Active Capacity</span>
+                    <span class="metric-value">123,326 MW</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Operational</span>
+                    <span class="metric-value">4 projects (81 MW)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Withdrawn</span>
+                    <span class="metric-value">257 projects (41,302 MW)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Historical Success Rate</span>
+                    <span class="metric-value" style="color: var(--accent-red);">1.5%</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Storage Success by Region</span>
+                </div>
+                <div class="bar-chart">
+                    <div class="bar-chart-item">
+                        <span class="bar-value">5.3%</span>
+                        <div class="bar" style="height: 106px;"></div>
+                        <span class="bar-label">ISO-NE</span>
+                    </div>
+                    <div class="bar-chart-item">
+                        <span class="bar-value">4.9%</span>
+                        <div class="bar" style="height: 98px;"></div>
+                        <span class="bar-label">CAISO</span>
+                    </div>
+                    <div class="bar-chart-item">
+                        <span class="bar-value">4.5%</span>
+                        <div class="bar" style="height: 90px;"></div>
+                        <span class="bar-label">MISO</span>
+                    </div>
+                    <div class="bar-chart-item">
+                        <span class="bar-value">3.9%</span>
+                        <div class="bar" style="height: 78px;"></div>
+                        <span class="bar-label">West</span>
+                    </div>
+                    <div class="bar-chart-item">
+                        <span class="bar-value">3.8%</span>
+                        <div class="bar" style="height: 76px;"></div>
+                        <span class="bar-label">PJM</span>
+                    </div>
+                    <div class="bar-chart-item">
+                        <span class="bar-value">1.5%</span>
+                        <div class="bar highlight" style="height: 30px;"></div>
+                        <span class="bar-label">ERCOT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Analysis -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <span class="card-title">Location: Brazoria County, Texas</span>
+            </div>
+            <div class="grid-2" style="margin-bottom: 0;">
+                <div>
+                    <div class="metric-row">
+                        <span class="metric-label">County Population</span>
+                        <span class="metric-value">388,000</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Primary Industries</span>
+                        <span class="metric-value">Petrochemical, Manufacturing</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Energy Community Status</span>
+                        <span class="metric-value highlight">Qualified</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">EC Qualification Basis</span>
+                        <span class="metric-value">MSA with fossil fuel employment</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Other Projects in County</span>
+                        <span class="metric-value">10+ (incl. Austin Bayou 753 MW Solar)</span>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div style="color: var(--text-muted); text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 8px;">TX</div>
+                        <div>Brazoria County</div>
+                        <div style="font-size: 12px; margin-top: 4px;">Houston-Galveston Region</div>
+                    </div>
+                    <div class="map-overlay">
+                        <h5>Brazoria County</h5>
+                        <p>Southeast Texas, Gulf Coast</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Assessment -->
+        <div class="section-header">
+            <h2 class="section-title">Risk Assessment</h2>
+            <p class="section-subtitle">Key risks and mitigating factors</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="risk-grid">
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">Developer Experience</span>
+                        <span class="risk-level low">Low Risk</span>
+                    </div>
+                    <p class="risk-item-desc">Engie is a global energy leader with proven track record. 28% completion rate far exceeds market average.</p>
+                </div>
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">Market Concentration</span>
+                        <span class="risk-level medium">Medium Risk</span>
+                    </div>
+                    <p class="risk-item-desc">ERCOT has highly competitive storage market with 123 GW in pipeline. Revenue stack depends on ancillary services.</p>
+                </div>
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">Interconnection</span>
+                        <span class="risk-level low">Low Risk</span>
+                    </div>
+                    <p class="risk-item-desc">Project already under construction indicates interconnection agreement secured and grid studies complete.</p>
+                </div>
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">Permitting</span>
+                        <span class="risk-level low">Low Risk</span>
+                    </div>
+                    <p class="risk-item-desc">Texas has favorable permitting environment. Construction status confirms major permits obtained.</p>
+                </div>
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">Supply Chain</span>
+                        <span class="risk-level medium">Medium Risk</span>
+                    </div>
+                    <p class="risk-item-desc">Battery supply constraints and tariff uncertainties. Domestic content bonus may require US-sourced components.</p>
+                </div>
+                <div class="risk-item">
+                    <div class="risk-item-header">
+                        <span class="risk-item-title">ITC Compliance</span>
+                        <span class="risk-level low">Low Risk</span>
+                    </div>
+                    <p class="risk-item-desc">Energy Community status confirmed. 30% base ITC + 10% EC bonus = 40% secured. Prevailing wage requirements apply.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Projections -->
+        <div class="section-header">
+            <h2 class="section-title">Financial Summary</h2>
+            <p class="section-subtitle">Investment estimates and ITC value</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <span class="card-title">Investment Economics</span>
+                <span class="card-badge">200 MW / 4-hr duration assumed</span>
+            </div>
+            <div class="financial-summary">
+                <div class="financial-item">
+                    <div class="financial-item-value" style="color: var(--accent-blue);">$60-80M</div>
+                    <div class="financial-item-label">Total Capex</div>
+                </div>
+                <div class="financial-item">
+                    <div class="financial-item-value" style="color: var(--accent-green);">40%</div>
+                    <div class="financial-item-label">ITC Rate</div>
+                </div>
+                <div class="financial-item">
+                    <div class="financial-item-value" style="color: var(--accent-yellow);">$24-32M</div>
+                    <div class="financial-item-label">ITC Value</div>
+                </div>
+                <div class="financial-item">
+                    <div class="financial-item-value" style="color: var(--text-secondary);">$300-400/kWh</div>
+                    <div class="financial-item-label">Est. System Cost</div>
+                </div>
+            </div>
+            <div style="margin-top: 24px;">
+                <div class="metric-row">
+                    <span class="metric-label">Capacity (MW)</span>
+                    <span class="metric-value">200 MW</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Duration (assumed)</span>
+                    <span class="metric-value">4 hours (800 MWh)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Base ITC</span>
+                    <span class="metric-value">30%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Energy Community Bonus</span>
+                    <span class="metric-value highlight">+10%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Domestic Content Bonus (potential)</span>
+                    <span class="metric-value">+10% (TBD)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Maximum Potential ITC</span>
+                    <span class="metric-value highlight">50%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DD Checklist -->
+        <div class="section-header">
+            <h2 class="section-title">Due Diligence Checklist</h2>
+            <p class="section-subtitle">Required verification items before investment</p>
+        </div>
+
+        <div class="card">
+            <ul class="checklist">
+                <li class="checklist-item">
+                    <span class="checklist-icon complete">&#10003;</span>
+                    <div class="checklist-content">
+                        <h5>Developer Track Record Verified</h5>
+                        <p>Engie North America: 28.2% completion rate, 11 operational projects, 1.2 GW operating</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon complete">&#10003;</span>
+                    <div class="checklist-content">
+                        <h5>Energy Community Eligibility Confirmed</h5>
+                        <p>Brazoria County qualifies as Energy Community (MSA with fossil fuel employment threshold)</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon complete">&#10003;</span>
+                    <div class="checklist-content">
+                        <h5>Construction Status Verified</h5>
+                        <p>EIA Form 860 status "U" confirms project under construction (&lt;50% complete)</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Interconnection Agreement</h5>
+                        <p>Obtain executed GIA from ERCOT with network upgrade cost allocation</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>County/State Permits</h5>
+                        <p>Verify local building permits, environmental clearances, land use approvals</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Equipment Supply Agreements</h5>
+                        <p>Review battery procurement contracts, delivery schedules, warranty terms</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Revenue Contracts</h5>
+                        <p>Review offtake agreements, tolling arrangements, or merchant revenue projections</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Site Control Documentation</h5>
+                        <p>Verify land ownership or long-term lease agreements</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Insurance Coverage</h5>
+                        <p>Review builder's risk, property, and liability insurance policies</p>
+                    </div>
+                </li>
+                <li class="checklist-item">
+                    <span class="checklist-icon pending"></span>
+                    <div class="checklist-content">
+                        <h5>Prevailing Wage Compliance</h5>
+                        <p>Verify Davis-Bacon wage requirements for ITC bonus eligibility</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <p>Due Diligence Report generated March 2026</p>
+            <p style="margin-top: 8px;">Data sources: EIA Form 860, ERCOT interconnection queue, DOE Energy Communities</p>
+            <p style="margin-top: 8px;">Prepared for ITC investment analysis purposes</p>
+        </footer>
+    </div>
+</body>
+</html>

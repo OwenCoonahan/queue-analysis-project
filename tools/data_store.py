@@ -34,7 +34,8 @@ import hashlib
 
 # Database location - can be overridden for cloud sync
 DATA_DIR = Path(__file__).parent / '.data'
-DB_PATH = DATA_DIR / 'queue.db'
+DB_PATH = DATA_DIR / 'master.db'
+DG_DB_PATH = DATA_DIR / 'dg.db'
 
 
 class DataStore:
@@ -76,9 +77,11 @@ class DataStore:
                 source TEXT,
                 raw_data TEXT,
                 row_hash TEXT,
+                sources TEXT,
+                primary_source TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(queue_id, region, source)
+                UNIQUE(queue_id, region)
             )
         ''')
 
@@ -217,10 +220,26 @@ class DataStore:
         """
         Insert or update projects from a DataFrame.
 
+        Golden record pattern: one row per (queue_id, region).
+        Each source updates the existing record rather than creating duplicates.
+        Source provenance is tracked in the project_sources table.
+
         Returns dict with counts: added, updated, unchanged
         """
         conn = self._get_conn()
         cursor = conn.cursor()
+
+        # Ensure project_sources table exists
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS project_sources (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                queue_id TEXT NOT NULL,
+                region TEXT NOT NULL,
+                source TEXT NOT NULL,
+                updated_at TEXT,
+                UNIQUE(queue_id, region, source)
+            )
+        ''')
 
         stats = {'added': 0, 'updated': 0, 'unchanged': 0}
 
@@ -234,17 +253,17 @@ class DataStore:
 
             row_hash = self._compute_hash(row_dict)
 
-            # Check if exists
+            # Check if project exists (by queue_id + region, regardless of source)
             cursor.execute('''
-                SELECT id, row_hash, status FROM projects
-                WHERE queue_id = ? AND region = ? AND source = ?
-            ''', (queue_id, row_region, source))
+                SELECT id, row_hash, status, source, sources FROM projects
+                WHERE queue_id = ? AND region = ?
+            ''', (queue_id, row_region))
             existing = cursor.fetchone()
 
             if existing:
                 if existing['row_hash'] != row_hash:
                     # Record change if status changed
-                    if existing['status'] != row_dict.get('status'):
+                    if existing['status'] != row_dict.get('status') and row_dict.get('status'):
                         cursor.execute('''
                             INSERT INTO changes (queue_id, region, change_type, field_name,
                                                old_value, new_value, project_name)
@@ -252,40 +271,56 @@ class DataStore:
                         ''', (queue_id, row_region, existing['status'],
                               row_dict.get('status'), row_dict.get('name')))
 
-                    # Update existing row
-                    cursor.execute('''
-                        UPDATE projects SET
-                            name = ?, developer = ?, capacity_mw = ?, type = ?,
-                            status = ?, state = ?, county = ?, poi = ?,
-                            queue_date = ?, cod = ?, raw_data = ?, row_hash = ?,
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE id = ?
-                    ''', (
-                        row_dict.get('name'), row_dict.get('developer'),
-                        row_dict.get('capacity_mw'), row_dict.get('type'),
-                        row_dict.get('status'), row_dict.get('state'),
-                        row_dict.get('county'), row_dict.get('poi'),
-                        str(row_dict.get('queue_date', '')), str(row_dict.get('cod', '')),
-                        json.dumps(row_dict, default=str), row_hash,
-                        existing['id']
-                    ))
+                    # Update fields — only overwrite with non-null values
+                    update_fields = {}
+                    for field in ['name', 'developer', 'capacity_mw', 'type', 'status',
+                                  'state', 'county', 'poi', 'queue_date', 'cod']:
+                        new_val = row_dict.get(field)
+                        if new_val and str(new_val).strip():
+                            update_fields[field] = new_val
+
+                    if update_fields:
+                        set_clause = ', '.join(f"{f} = ?" for f in update_fields)
+                        values = list(update_fields.values())
+
+                        cursor.execute(f'''
+                            UPDATE projects SET {set_clause},
+                                raw_data = ?, row_hash = ?,
+                                updated_at = CURRENT_TIMESTAMP
+                            WHERE id = ?
+                        ''', values + [json.dumps(row_dict, default=str), row_hash, existing['id']])
+
+                    # Update sources list
+                    try:
+                        current_sources = json.loads(existing['sources'] or '[]')
+                    except (json.JSONDecodeError, TypeError):
+                        current_sources = [existing['source']] if existing['source'] else []
+                    if source not in current_sources:
+                        current_sources.append(source)
+                        cursor.execute(
+                            'UPDATE projects SET sources = ? WHERE id = ?',
+                            (json.dumps(sorted(current_sources)), existing['id'])
+                        )
+
                     stats['updated'] += 1
                 else:
                     stats['unchanged'] += 1
             else:
-                # Insert new row
+                # Insert new golden record
+                sources_json = json.dumps([source])
                 cursor.execute('''
                     INSERT INTO projects (queue_id, region, name, developer, capacity_mw,
                                         type, status, state, county, poi, queue_date, cod,
-                                        source, raw_data, row_hash)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                        source, primary_source, sources, raw_data, row_hash)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     queue_id, row_region, row_dict.get('name'), row_dict.get('developer'),
                     row_dict.get('capacity_mw'), row_dict.get('type'),
                     row_dict.get('status'), row_dict.get('state'),
                     row_dict.get('county'), row_dict.get('poi'),
                     str(row_dict.get('queue_date', '')), str(row_dict.get('cod', '')),
-                    source, json.dumps(row_dict, default=str), row_hash
+                    source, source, sources_json,
+                    json.dumps(row_dict, default=str), row_hash
                 ))
 
                 # Record as new project
@@ -295,6 +330,12 @@ class DataStore:
                 ''', (queue_id, row_region, row_dict.get('name')))
 
                 stats['added'] += 1
+
+            # Track source provenance
+            cursor.execute('''
+                INSERT OR REPLACE INTO project_sources (queue_id, region, source, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ''', (queue_id, row_region, source))
 
         conn.commit()
         conn.close()

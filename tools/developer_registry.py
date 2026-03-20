@@ -309,7 +309,7 @@ class DeveloperRegistry:
 
         Returns number of unique canonical developers.
         """
-        db_path = DATA_DIR / 'queue.db'
+        db_path = DATA_DIR / 'master.db'
         if not db_path.exists():
             logger.error(f"Database not found: {db_path}")
             return 0
@@ -377,7 +377,7 @@ class DeveloperRegistry:
         Returns:
             Tuple of (updated_count, unique_canonical_count)
         """
-        db_path = DATA_DIR / 'queue.db'
+        db_path = DATA_DIR / 'master.db'
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 

@@ -24,7 +24,7 @@ from collections import defaultdict
 CACHE_DIR = Path(__file__).parent / '.cache' / 'energy_communities'
 COAL_CLOSURE_CSV = CACHE_DIR / 'Coal_Closures_EnergyComm_v2024_1' / 'IRA_EnergyComm_CTracts_CoalClosures_v2024_1.csv'
 MSA_FFE_CSV = CACHE_DIR / 'MSA_NMSA_EC_FFE_v2024_1' / 'MSA_NonMSA_EnergyCommunities_FossilFuelEmp_v2024_1.csv'
-V2_PATH = Path(__file__).parent / '.data' / 'queue_v2.db'
+V2_PATH = Path(__file__).parent / '.data' / 'master.db'
 
 # State name to abbreviation mapping
 STATE_ABBREV = {
@@ -195,21 +195,11 @@ def enrich_queue_with_energy_community(save: bool = True):
     conn = sqlite3.connect(V2_PATH)
     conn.row_factory = sqlite3.Row
 
-    # Add column if not exists
-    try:
-        conn.execute("ALTER TABLE fact_projects ADD COLUMN energy_community_eligible BOOLEAN DEFAULT NULL")
-        conn.execute("ALTER TABLE fact_projects ADD COLUMN energy_community_type TEXT DEFAULT NULL")
-        print("\nAdded energy_community columns to fact_projects")
-    except sqlite3.OperationalError:
-        # Column already exists
-        pass
-
     # Get projects with locations
     query = """
-        SELECT p.project_id, p.queue_id, l.state, l.county
-        FROM fact_projects p
-        JOIN dim_locations l ON p.location_id = l.location_id
-        WHERE l.state IS NOT NULL AND l.county IS NOT NULL
+        SELECT id, queue_id, state, county
+        FROM projects
+        WHERE state IS NOT NULL AND county IS NOT NULL
     """
 
     cursor = conn.execute(query)
@@ -241,16 +231,16 @@ def enrich_queue_with_energy_community(save: bool = True):
 
             if save:
                 conn.execute("""
-                    UPDATE fact_projects
+                    UPDATE projects
                     SET energy_community_eligible = 1,
                         energy_community_type = ?
-                    WHERE project_id = ?
-                """, (ec_type_str, project['project_id']))
+                    WHERE id = ?
+                """, (ec_type_str, project['id']))
 
     # Set non-eligible projects explicitly
     if save:
         conn.execute("""
-            UPDATE fact_projects
+            UPDATE projects
             SET energy_community_eligible = 0
             WHERE energy_community_eligible IS NULL
         """)
@@ -276,7 +266,7 @@ def get_energy_community_stats():
     conn = sqlite3.connect(V2_PATH)
 
     # Check if column exists
-    cursor = conn.execute("PRAGMA table_info(fact_projects)")
+    cursor = conn.execute("PRAGMA table_info(projects)")
     columns = [row[1] for row in cursor.fetchall()]
 
     if 'energy_community_eligible' not in columns:
@@ -287,14 +277,13 @@ def get_energy_community_stats():
     # Get stats by region
     query = """
         SELECT
-            r.region_code,
+            region,
             COUNT(*) as total,
-            SUM(CASE WHEN p.energy_community_eligible = 1 THEN 1 ELSE 0 END) as eligible,
-            SUM(CASE WHEN p.energy_community_type LIKE '%coal%' THEN 1 ELSE 0 END) as coal,
-            SUM(CASE WHEN p.energy_community_type LIKE '%ffe%' THEN 1 ELSE 0 END) as ffe
-        FROM fact_projects p
-        JOIN dim_regions r ON p.region_id = r.region_id
-        GROUP BY r.region_code
+            SUM(CASE WHEN energy_community_eligible = 1 THEN 1 ELSE 0 END) as eligible,
+            SUM(CASE WHEN energy_community_type LIKE '%coal%' THEN 1 ELSE 0 END) as coal,
+            SUM(CASE WHEN energy_community_type LIKE '%ffe%' THEN 1 ELSE 0 END) as ffe
+        FROM projects
+        GROUP BY region
         ORDER BY total DESC
     """
 

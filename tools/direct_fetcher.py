@@ -99,18 +99,42 @@ class DirectFetcher:
             return pd.DataFrame()
 
     def _parse_caiso_excel(self, filepath) -> pd.DataFrame:
-        """Parse CAISO Excel file with proper header handling."""
-        try:
-            df = pd.read_excel(filepath, sheet_name='Grid GenerationQueue', header=3)
-        except:
-            df = pd.read_excel(filepath, sheet_name=0, header=3)
+        """Parse CAISO Excel file — all 3 sheets (Active, Completed, Withdrawn)."""
+        xlsx = pd.ExcelFile(filepath)
+        all_dfs = []
 
-        # Drop any rows that are all NaN
+        sheet_configs = {
+            'Grid GenerationQueue': 'ACTIVE',
+            'Completed Generation Projects': 'COMPLETED',
+            'Withdrawn Generation Projects': 'WITHDRAWN',
+        }
+
+        for sheet_name, status_override in sheet_configs.items():
+            if sheet_name not in xlsx.sheet_names:
+                continue
+            try:
+                df = pd.read_excel(xlsx, sheet_name=sheet_name, header=3)
+                df = df.dropna(how='all')
+                df.columns = [str(c).replace('\n', ' ').strip() for c in df.columns]
+
+                # Normalize status — use sheet-level override if Application Status is uniform
+                if 'Application Status' not in df.columns:
+                    df['Application Status'] = status_override
+
+                df['_sheet'] = sheet_name
+                df['iso'] = 'CAISO'
+                all_dfs.append(df)
+            except Exception as e:
+                print(f"  Warning: Could not parse CAISO sheet '{sheet_name}': {e}")
+
+        if all_dfs:
+            combined = pd.concat(all_dfs, ignore_index=True, sort=False)
+            return combined
+
+        # Fallback to first sheet only
+        df = pd.read_excel(filepath, sheet_name=0, header=3)
         df = df.dropna(how='all')
-
-        # Clean up column names (remove newlines)
         df.columns = [str(c).replace('\n', ' ').strip() for c in df.columns]
-
         df['iso'] = 'CAISO'
         return df
 
@@ -471,10 +495,10 @@ class DirectFetcher:
 
     def fetch_isone(self, use_cache: bool = True) -> pd.DataFrame:
         """
-        Fetch ISO-NE interconnection queue via gridstatus.
+        Fetch ISO-NE interconnection queue directly from IRTT HTML table.
 
-        Requires Python 3.10+ for gridstatus.
-        Developer data is in 'Interconnecting Entity' field.
+        Scrapes https://irtt.iso-ne.com/reports/external which has the full
+        public queue with ~1,750 projects. Replaces the stale gridstatus approach.
         """
         cache_file = CACHE_DIR / 'isone_queue_direct.parquet'
 
@@ -485,24 +509,77 @@ class DirectFetcher:
                 print(f"Using cached ISO-NE data ({cache_age/3600:.1f}h old)")
                 return pd.read_parquet(cache_file)
 
-        print("Fetching ISO-NE queue via gridstatus...")
+        print("Fetching ISO-NE queue from IRTT...")
         try:
-            import gridstatus
-            isone = gridstatus.ISONE()
-            df = isone.get_interconnection_queue()
+            from bs4 import BeautifulSoup
 
-            print(f"  Downloaded {len(df)} projects from ISO-NE")
+            url = 'https://irtt.iso-ne.com/reports/external'
+            response = self.session.get(url, timeout=120)
+            response.raise_for_status()
 
-            # Standardize column names
+            soup = BeautifulSoup(response.content, 'html.parser')
+            table = soup.find('table', id='publicqueue') or soup.find('table')
+
+            if not table:
+                raise Exception("No queue table found in IRTT HTML")
+
+            # Parse headers
+            thead = table.find('thead')
+            cols = [th.get_text(strip=True) for th in thead.find_all('th')] if thead else []
+
+            # Parse rows — handle img tags for status indicators
+            tbody = table.find('tbody')
+            all_data = []
+            for row in tbody.find_all('tr'):
+                tds = row.find_all('td')
+                cells = []
+                for td in tds:
+                    img = td.find('img')
+                    if img:
+                        cells.append(img.get('alt', img.get('title', td.get_text(strip=True))))
+                    else:
+                        cells.append(td.get_text(strip=True))
+                all_data.append(cells[:len(cols)])
+
+            # Deduplicate column names (IRTT has 'SIS' twice)
+            seen = {}
+            deduped_cols = []
+            for c in cols:
+                if c in seen:
+                    seen[c] += 1
+                    deduped_cols.append(f"{c}_{seen[c]}")
+                else:
+                    seen[c] = 0
+                    deduped_cols.append(c)
+
+            df = pd.DataFrame(all_data, columns=deduped_cols)
+            print(f"  Scraped {len(df)} projects from IRTT")
+
+            # Standardize column names to match expected format
             col_map = {
-                'Interconnecting Entity': 'Developer',
+                'QP': 'Queue ID',
+                'Alternative Name': 'Project Name',
+                'Fuel Type': 'Generation Type',
+                'Net MW': 'Capacity (MW)',
+                'Summer MW': 'Summer Capacity (MW)',
+                'Winter MW': 'Winter Capacity (MW)',
+                'ST': 'State',
+                'Op Date': 'Proposed COD',
+                'Requested': 'Queue Date',
+                'POI': 'Interconnection Location',
+                'Dev': 'Developer',
+                'Project Status': 'Project Status',
+                'Status': 'Status',
+                'W/D Date': 'Withdrawn Date',
+                'Zone': 'Zone',
             }
             df = df.rename(columns=col_map)
             df['iso'] = 'ISONE'
 
             # Report developer coverage
-            dev_count = df['Developer'].notna() & (df['Developer'] != '')
-            print(f"  Developer coverage: {dev_count.sum()}/{len(df)} ({dev_count.sum()/len(df)*100:.1f}%)")
+            if 'Developer' in df.columns:
+                dev_count = df['Developer'].notna() & (df['Developer'] != '')
+                print(f"  Developer coverage: {dev_count.sum()}/{len(df)} ({dev_count.sum()/len(df)*100:.1f}%)")
 
             # Cache the data
             df.to_parquet(cache_file)
@@ -510,13 +587,27 @@ class DirectFetcher:
             return df
 
         except ImportError:
-            print("  Error: gridstatus not available. Run with Python 3.10+")
-            if cache_file.exists():
-                print("  Using cached data")
-                return pd.read_parquet(cache_file)
-            return pd.DataFrame()
+            print("  Error: beautifulsoup4 not installed. pip install beautifulsoup4")
+            # Fall back to gridstatus if bs4 not available
+            return self._fetch_isone_gridstatus(cache_file)
         except Exception as e:
-            print(f"  Error: {e}")
+            print(f"  Error scraping IRTT: {e}")
+            # Fall back to gridstatus
+            return self._fetch_isone_gridstatus(cache_file)
+
+    def _fetch_isone_gridstatus(self, cache_file: Path) -> pd.DataFrame:
+        """Fallback: Fetch ISO-NE via gridstatus (may be stale)."""
+        try:
+            import gridstatus
+            print("  Falling back to gridstatus...")
+            isone = gridstatus.ISONE()
+            df = isone.get_interconnection_queue()
+            df = df.rename(columns={'Interconnecting Entity': 'Developer'})
+            df['iso'] = 'ISONE'
+            df.to_parquet(cache_file)
+            print(f"  Downloaded {len(df)} projects (gridstatus fallback)")
+            return df
+        except Exception:
             if cache_file.exists():
                 print("  Using cached data")
                 return pd.read_parquet(cache_file)

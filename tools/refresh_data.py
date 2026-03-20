@@ -76,6 +76,11 @@ class DataRefresher:
         results['isone'] = self.refresh_isone(quiet)  # gridstatus (Python 3.10+)
         results['lbl'] = self.refresh_lbl(quiet)
 
+        # Generator/permit data
+        if not quiet:
+            print("\n--- Generator & Permit Data ---")
+        results['eia_860m'] = self.refresh_eia860m(quiet)
+
         # Market data
         if not quiet:
             print("\n--- Market Data ---")
@@ -84,6 +89,11 @@ class DataRefresher:
         results['transmission'] = self.refresh_market_data('transmission', quiet)
         results['ppa'] = self.refresh_market_data('ppa', quiet)
         results['permits'] = self.refresh_market_data('permits', quiet)
+
+        # Enrichment pass — tax credits, energy community, low-income
+        if not quiet:
+            print("\n--- Enrichment ---")
+        results['enrichment'] = self.run_enrichment(quiet)
 
         # Create snapshot after refresh
         if not quiet:
@@ -102,7 +112,7 @@ class DataRefresher:
             print("=" * 60)
             for source, result in results.items():
                 status = "OK" if result.get('success') else "FAILED"
-                if source in ['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl']:
+                if source in ['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl', 'eia_860m']:
                     added = result.get('added', 0)
                     updated = result.get('updated', 0)
                     print(f"  {source}: {status} (+{added} new, {updated} updated)")
@@ -113,6 +123,43 @@ class DataRefresher:
             self.validator.print_summary()
 
         return results
+
+    def run_enrichment(self, quiet: bool = False) -> dict:
+        """Run all enrichment modules on the current database."""
+        results = {}
+
+        # Tax credits (includes energy community + low-income checks)
+        try:
+            if not quiet:
+                print("Enriching with tax credit eligibility...")
+            from tax_credits import enrich_queue_with_tax_credits
+            stats = enrich_queue_with_tax_credits(save=True)
+            results['tax_credits'] = {'success': True, 'eligible': stats.get('eligible', 0)}
+            if not quiet:
+                print(f"  Tax credits: {stats.get('eligible', 0):,} eligible projects")
+        except Exception as e:
+            results['tax_credits'] = {'success': False, 'error': str(e)}
+            if not quiet:
+                print(f"  Tax credits: FAILED - {e}")
+
+        # Low-income community
+        try:
+            if not quiet:
+                print("Enriching with low-income community data...")
+            from low_income_community import enrich_queue_with_low_income
+            stats = enrich_queue_with_low_income(save=True)
+            if stats:
+                results['low_income'] = {'success': True, 'eligible': stats.get('eligible', 0)}
+                if not quiet:
+                    print(f"  Low-income: {stats.get('eligible', 0):,} eligible projects")
+            else:
+                results['low_income'] = {'success': False, 'error': 'No data loaded'}
+        except Exception as e:
+            results['low_income'] = {'success': False, 'error': str(e)}
+            if not quiet:
+                print(f"  Low-income: FAILED - {e}")
+
+        return {'success': all(r.get('success') for r in results.values()), 'details': results}
 
     def refresh_market_data(self, data_type: str, quiet: bool = False) -> dict:
         """Refresh market data modules."""
@@ -165,8 +212,27 @@ class DataRefresher:
                 print(f"  ERROR: {e}")
             return {'success': False, 'error': str(e)}
 
+    def _download_nyiso_excel(self, quiet: bool = False) -> Path:
+        """Download latest NYISO queue Excel file to cache."""
+        url = "https://www.nyiso.com/documents/20142/1407078/NYISO-Interconnection-Queue.xlsx"
+        cache_path = CACHE_DIR / 'nyiso_queue_current.xlsx'
+
+        if not quiet:
+            print("  Downloading NYISO queue Excel...")
+        response = requests.get(url, timeout=60, headers={
+            'User-Agent': 'Queue-Analysis-Platform/1.0'
+        })
+        response.raise_for_status()
+
+        with open(cache_path, 'wb') as f:
+            f.write(response.content)
+
+        if not quiet:
+            print(f"  Downloaded {len(response.content)/1024:.0f} KB → {cache_path.name}")
+        return cache_path
+
     def refresh_nyiso(self, quiet: bool = False) -> dict:
-        """Refresh NYISO queue data using comprehensive loader (all 7 sheets)."""
+        """Refresh NYISO queue data: auto-download + comprehensive loader (all 7 sheets)."""
         if not quiet:
             print("Refreshing NYISO (comprehensive - all sheets)...")
         log_id = self.db.log_refresh_start('nyiso')
@@ -174,14 +240,12 @@ class DataRefresher:
         try:
             from nyiso_loader import NYISOLoader, refresh_nyiso as nyiso_refresh
 
-            # Use the comprehensive nyiso_loader which processes:
-            # - Interconnection Queue (active)
-            # - Cluster Projects (active)
-            # - Affected System Studies (active)
-            # - Withdrawn
-            # - Cluster Projects-Withdrawn
-            # - Affected System-Withdrawn
-            # - In Service (completed)
+            # Auto-download the Excel file before loading
+            try:
+                self._download_nyiso_excel(quiet)
+            except Exception as dl_err:
+                if not quiet:
+                    print(f"  Download failed ({dl_err}), using cached file...")
 
             result = nyiso_refresh(quiet=quiet)
 
@@ -779,13 +843,18 @@ class DataRefresher:
         })
 
     def _normalize_caiso(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Normalize CAISO column names."""
-        # CAISO public queue doesn't include developer names
+        """Normalize CAISO column names (all 3 sheets: Active, Completed, Withdrawn)."""
+        # Withdrawn sheet uses 'Project Name - Confidential' instead of 'Project Name'
+        name_col = df.get('Project Name', df.get('Project Name - Confidential', ''))
+
+        # Capacity: prefer Net MWs to Grid, fall back to MW-1
+        capacity = df.get('Net MWs to Grid', df.get('MW-1', 0))
+
         return pd.DataFrame({
             'queue_id': df.get('Queue Position', ''),
-            'name': df.get('Project Name', ''),
+            'name': name_col,
             'developer': '',  # Not in CAISO public file - enriched via EIA
-            'capacity_mw': pd.to_numeric(df.get('Net MWs to Grid', df.get('On-Peak MWs Deliverability', 0)), errors='coerce'),
+            'capacity_mw': pd.to_numeric(capacity, errors='coerce'),
             'type': df.get('Fuel-1', df.get('Type-1', '')),
             'status': df.get('Application Status', ''),
             'state': 'CA',  # All CAISO projects are in CA
@@ -814,19 +883,40 @@ class DataRefresher:
         })
 
     def _normalize_isone(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Normalize ISO-NE column names from gridstatus."""
+        """Normalize ISO-NE column names (IRTT scraper or gridstatus fallback)."""
+        # Map IRTT fuel type codes to standard names
+        fuel_map = {
+            'WND': 'Wind', 'SUN': 'Solar', 'BAT': 'Storage', 'NG': 'Gas',
+            'WAT': 'Hydro', 'NUC': 'Nuclear', 'OT': 'Other', 'DFO': 'Oil',
+            'BIT': 'Coal', 'WDS': 'Biomass', 'LFG': 'Landfill Gas',
+            'MWH': 'Storage', 'WH': 'Waste Heat',
+        }
+        fuel_type = df.get('Generation Type', df.get('Fuel Type', ''))
+        if hasattr(fuel_type, 'map'):
+            fuel_type = fuel_type.map(lambda x: fuel_map.get(str(x).strip(), str(x)) if pd.notna(x) else '')
+
+        # IRTT: 'Status' = W/C/A code, 'Project Status' = detailed text
+        # Map W/C/A codes to standard statuses, prefer detailed text when available
+        status_code = df.get('Status', pd.Series(dtype=str))
+        status_detail = df.get('Project Status', pd.Series(dtype=str))
+        code_map = {'W': 'Withdrawn', 'C': 'Operational', 'A': 'Active'}
+        status = status_detail.where(
+            status_detail.notna() & (status_detail != ''),
+            status_code.map(lambda x: code_map.get(str(x).strip(), str(x)) if pd.notna(x) else 'Active')
+        ) if hasattr(status_code, 'map') else df.get('Status', '')
+
         return pd.DataFrame({
             'queue_id': df.get('Queue ID', ''),
-            'name': df.get('Project Name', ''),
+            'name': df.get('Project Name', df.get('Alternative Name', '')),
             'developer': df.get('Developer', df.get('Interconnecting Entity', '')),
-            'capacity_mw': pd.to_numeric(df.get('Capacity (MW)', 0), errors='coerce'),
-            'type': df.get('Generation Type', ''),
-            'status': df.get('Status', df.get('Project Status', '')),
+            'capacity_mw': pd.to_numeric(df.get('Capacity (MW)', df.get('Net MW', 0)), errors='coerce'),
+            'type': fuel_type,
+            'status': status,
             'state': df.get('State', ''),
             'county': df.get('County', ''),
-            'poi': df.get('Interconnection Location', ''),
+            'poi': df.get('Interconnection Location', df.get('POI', '')),
             'queue_date': df.get('Queue Date', ''),
-            'cod': df.get('Proposed Completion Date', df.get('Op Date', '')),
+            'cod': df.get('Proposed Completion Date', df.get('Proposed COD', df.get('Op Date', ''))),
             'region': 'ISO-NE',
         })
 
@@ -863,6 +953,34 @@ class DataRefresher:
         conn.commit()
         conn.close()
         return updated
+
+    def refresh_eia860m(self, quiet: bool = False) -> dict:
+        """Refresh EIA Form 860M monthly pre-operational generator data."""
+        if not quiet:
+            print("Refreshing EIA-860M monthly generators...")
+        log_id = self.db.log_refresh_start('eia_860m')
+
+        try:
+            from eia860m_loader import refresh_eia860m as eia860m_refresh
+
+            result = eia860m_refresh(quiet=quiet)
+
+            if result['success']:
+                stats = {
+                    'added': result.get('added', 0),
+                    'updated': result.get('updated', 0),
+                    'unchanged': result.get('unchanged', 0),
+                }
+                self.db.log_refresh_complete(log_id, stats)
+                return {'success': True, **stats}
+            else:
+                raise Exception(result.get('error', 'Unknown error'))
+
+        except Exception as e:
+            if not quiet:
+                print(f"  ERROR: {e}")
+            self.db.log_refresh_complete(log_id, {}, str(e))
+            return {'success': False, 'error': str(e)}
 
     def refresh_permits(self, quiet: bool = False) -> dict:
         """
@@ -1194,13 +1312,16 @@ Examples:
 
     parser.add_argument('--source', '-s',
                        choices=['nyiso', 'ercot', 'miso', 'pjm', 'caiso', 'spp', 'isone', 'lbl',
-                                'permits', 'eia_permits', 'cec_permits', 'cpuc_permits', 'nyserda_permits', 'all'],
+                                'eia_860m', 'permits', 'eia_permits', 'cec_permits', 'cpuc_permits',
+                                'nyserda_permits', 'all'],
                        default='all', help='Data source to refresh')
     parser.add_argument('--status', action='store_true', help='Show refresh status')
     parser.add_argument('--changes', type=int, metavar='DAYS',
                        help='Show changes in last N days')
     parser.add_argument('--force', '-f', action='store_true',
                        help='Force refresh even if recently updated')
+    parser.add_argument('--enrich', action='store_true',
+                       help='Run enrichment only (tax credits, low-income) without refreshing data')
     parser.add_argument('--cron', action='store_true',
                        help='Cron-friendly mode (quiet, exit codes only)')
 
@@ -1215,6 +1336,11 @@ Examples:
     if args.changes:
         show_changes(db, args.changes)
         return 0
+
+    if args.enrich:
+        refresher = DataRefresher()
+        result = refresher.run_enrichment(quiet=False)
+        return 0 if result.get('success') else 1
 
     # Run refresh
     refresher = DataRefresher()
@@ -1239,6 +1365,8 @@ Examples:
             results = {'isone': refresher.refresh_isone(quiet=quiet)}
         elif args.source == 'lbl':
             results = {'lbl': refresher.refresh_lbl(quiet=quiet)}
+        elif args.source == 'eia_860m':
+            results = {'eia_860m': refresher.refresh_eia860m(quiet=quiet)}
         elif args.source == 'permits':
             results = refresher.refresh_permits(quiet=quiet)
         elif args.source == 'eia_permits':

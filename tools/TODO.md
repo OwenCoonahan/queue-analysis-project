@@ -4,6 +4,10 @@ Last Updated: 2026-03-10
 
 ## High Priority
 
+### System Maintenance
+
+- [x] **Upgrade Claude Code**: `brew upgrade claude-code` ✓ (2.1.4 → 2.1.72, completed 2026-03-11)
+
 ### Manual Downloads Required
 
 | Task | Source | URL | Save To |

@@ -1,5 +1,25 @@
 # Queue Analysis - Project Instructions
 
+## ⚠ COORDINATION REQUIRED
+
+You are one of multiple Claude Code instances working on this codebase.
+
+**Before starting work:**
+1. Read `../../TODO.md` — check what's in progress, claim your tasks
+2. Read `../../CHANGELOG.md` — see what other instances did recently
+3. `git pull` — get latest changes
+
+**Before ending your conversation:**
+1. Append to `../../CHANGELOG.md` what you did (date, directory, summary)
+2. Update `../../TODO.md` (mark done, add new tasks, note blockers)
+3. Commit and push your work so other instances can see it
+
+**If a task in TODO.md is marked `[~]` (in progress), do not work on it** — another instance is handling it.
+
+**Instance naming:** Owen assigns you a name (Dev1, Dev2, Dev3…). Use it in all CHANGELOG/TODO entries. If you don't have a name yet, ask Owen.
+
+---
+
 ## Overview
 
 This is an **interconnection queue analysis platform** for power grid project development. It aggregates data from all major US ISOs (PJM, MISO, SPP, ERCOT, CAISO, NYISO, ISO-NE) plus non-ISO regions (West, Southeast) and provides analytics for evaluating project viability, tracking developers, and monitoring market trends.
@@ -131,6 +151,8 @@ tools/
 | `developer_registry.py` | Developer name normalization |
 | `developer_matcher.py` | Match developers across sources |
 | `energy_community.py` | IRA bonus eligibility zones |
+| `tax_credits.py` | Full ITC/PTC eligibility engine with bonus adders |
+| `low_income_community.py` | Low-income community bonus credit checker (DOE 48e data) |
 | `eia_loader.py` | EIA 860 generator data |
 | `charts_altair.py` | Visualization components |
 
@@ -504,6 +526,10 @@ Report includes:
 |------|---------|
 | Check DB status | `python3 db_status.py` |
 | Refresh all data | `python3 refresh_data.py --all` |
+| Run enrichment only | `python3 refresh_data.py --enrich` |
+| Tax credit check | `python3 tax_credits.py --check Solar 200 TX Pecos 2027` |
+| Tax credit stats | `python3 tax_credits.py --stats` |
+| Low-income check | `python3 low_income_community.py --check WV McDowell` |
 | Refresh single source | `python3 refresh_data.py --source miso` |
 | Run dashboard | `streamlit run app.py` |
 | NYISO historical analysis | `python3 nyiso_historical_analysis.py --summary` |

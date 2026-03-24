@@ -18,17 +18,25 @@ Usage:
 """
 
 import pandas as pd
+import requests
+import io
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, Tuple
 import warnings
+import logging
 warnings.filterwarnings('ignore')
 
-CACHE_DIR = Path(__file__).parent / '.cache'
+logger = logging.getLogger(__name__)
 
-# URLs for manual download (automated download not available without API key)
+CACHE_DIR = Path(__file__).parent / '.cache'
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+# URLs
 PJM_QUEUE_URL = "https://www.pjm.com/planning/services-requests/interconnection-queues"
 PJM_DATAMINER_API = "https://api.pjm.com/api/v1/gen_queues"  # Requires API key
+PJM_QUEUE_EXPORT_URL = "https://services.pjm.com/PJMPlanningApi/api/Queue/ExportToXls"
+PJM_QUEUE_EXPORT_KEY = "E29477D0-70E0-4825-89B0-43F460BF9AB4"  # Public key used by pjm.com
 
 
 class PJMLoader:
@@ -70,6 +78,9 @@ class PJMLoader:
         'Deactivated': 'Withdrawn',
         'Partially in Service - Under Construction': 'Active',
         'Canceled': 'Withdrawn',
+        'Confirmed': 'Active',
+        'Retracted': 'Withdrawn',
+        'Annulled': 'Withdrawn',
     }
 
     # Fuel type normalization
@@ -92,6 +103,52 @@ class PJMLoader:
         self.queue_path = CACHE_DIR / self.QUEUE_FILE
         self.cycle_path = CACHE_DIR / self.CYCLE_FILE
 
+    def download_queue(self, force: bool = False) -> Path:
+        """Auto-download PJM queue Excel from the PJM Planning API.
+
+        Uses the same endpoint as the PJM website's "Export to Excel" button.
+        The file is cached for 7 days unless force=True.
+
+        Returns:
+            Path to downloaded file
+        """
+        # Check cache freshness
+        if not force and self.queue_path.exists():
+            age_days = (datetime.now().timestamp() - self.queue_path.stat().st_mtime) / 86400
+            if age_days < 7:
+                logger.info(f"Using cached PJM queue data ({age_days:.1f} days old)")
+                print(f"  Using cached PJM queue data ({age_days:.1f} days old)")
+                return self.queue_path
+
+        print("  Downloading PJM queue from PJM Planning API...")
+        logger.info("Downloading PJM queue from PJM Planning API")
+
+        headers = {
+            'api-subscription-key': PJM_QUEUE_EXPORT_KEY,
+            'Origin': 'https://www.pjm.com',
+            'Referer': 'https://www.pjm.com/',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ProspectorLabs/1.0',
+        }
+
+        resp = requests.post(PJM_QUEUE_EXPORT_URL, headers=headers, timeout=120)
+        resp.raise_for_status()
+
+        # Verify we got an Excel file (not an error page)
+        content_type = resp.headers.get('content-type', '')
+        if 'html' in content_type.lower():
+            raise ValueError(f"PJM returned HTML instead of Excel (may be rate-limited): {resp.text[:200]}")
+
+        if len(resp.content) < 10000:
+            raise ValueError(f"PJM response too small ({len(resp.content)} bytes) — likely an error")
+
+        with open(self.queue_path, 'wb') as f:
+            f.write(resp.content)
+
+        size_mb = len(resp.content) / (1024 * 1024)
+        print(f"  Downloaded {size_mb:.1f} MB PJM queue data")
+        logger.info(f"Downloaded PJM queue: {size_mb:.1f} MB")
+        return self.queue_path
+
     def check_files(self) -> Dict[str, bool]:
         """Check if required files exist."""
         return {
@@ -100,14 +157,20 @@ class PJMLoader:
         }
 
     def load_planning_queues(self) -> pd.DataFrame:
-        """Load the main PJM planning queues file."""
-        if not self.queue_path.exists():
-            raise FileNotFoundError(
-                f"PJM PlanningQueues.xlsx not found at {self.queue_path}\n"
-                f"Download from: {PJM_QUEUE_URL}"
-            )
+        """Load the main PJM planning queues file.
 
-        df = pd.read_excel(self.queue_path, sheet_name='Data')
+        Automatically downloads if not cached.
+        """
+        if not self.queue_path.exists():
+            try:
+                self.download_queue()
+            except Exception as e:
+                raise FileNotFoundError(
+                    f"PJM queue auto-download failed ({e}). "
+                    f"Manual download: {PJM_QUEUE_URL}"
+                )
+
+        df = pd.read_excel(self.queue_path, sheet_name='Data', engine='openpyxl')
         print(f"  Loaded {len(df):,} projects from PlanningQueues.xlsx")
         return df
 

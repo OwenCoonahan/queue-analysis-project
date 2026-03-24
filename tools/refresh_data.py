@@ -48,8 +48,8 @@ CACHE_DIR.mkdir(exist_ok=True)
 class DataRefresher:
     """Refresh data from all sources into SQLite."""
 
-    def __init__(self, strict_validation: bool = False):
-        self.db = DataStore()
+    def __init__(self, strict_validation: bool = False, db_path: Path = None):
+        self.db = DataStore(db_path=db_path) if db_path else DataStore()
         self.validator = DataValidator(strict_mode=strict_validation)
         self.validation_errors = []
 
@@ -449,27 +449,28 @@ class DataRefresher:
             return {'success': False, 'error': str(e)}
 
     def refresh_pjm(self, quiet: bool = False) -> dict:
-        """Refresh PJM queue data from downloaded Excel files.
+        """Refresh PJM queue data. Auto-downloads from PJM Planning API.
 
-        Requires manual download of:
-        - PlanningQueues.xlsx from https://www.pjm.com/planning/services-requests/interconnection-queues
-        - CycleProjects-All.xlsx from PJM Transition Cycle reports (optional, for developer data)
+        Falls back to cached Excel if download fails.
+        CycleProjects-All.xlsx is optional (for developer data enrichment).
         """
         if not quiet:
-            print("Refreshing PJM (from Excel files)...")
+            print("Refreshing PJM (auto-download)...")
         log_id = self.db.log_refresh_start('pjm_direct')
 
         try:
             from pjm_loader import PJMLoader, refresh_pjm as pjm_refresh
 
             loader = PJMLoader()
-            files = loader.check_files()
 
-            if not files['planning_queues']:
-                raise Exception(
-                    "PJM PlanningQueues.xlsx not found. "
-                    "Download from https://www.pjm.com/planning/services-requests/interconnection-queues"
-                )
+            # Auto-download queue data (cached for 7 days)
+            try:
+                loader.download_queue()
+            except Exception as e:
+                if not quiet:
+                    print(f"  Download failed ({e}), checking cache...")
+                if not loader.check_files()['planning_queues']:
+                    raise Exception(f"PJM auto-download failed and no cached file: {e}")
 
             # Use the pjm_loader refresh function
             result = pjm_refresh(quiet=quiet)

@@ -109,11 +109,37 @@ NY_DPS_SIR_STAGE_MAP = {
     'SIR Application Received': ('applied', 0.75),
 }
 
+# ── MA SMART raw_status → (dg_stage, confidence) ─────────────────────
+MA_SMART_STAGE_MAP = {
+    'Approved': ('operational', 0.95),
+    'Qualified': ('approved', 0.85),
+    'Under Review': ('applied', 0.80),
+    'Waitlist': ('applied', 0.70),
+}
+
+# ── IL Shines raw_status → (dg_stage, confidence) ────────────────────
+# IL Shines raw_status is a composite string like "Part I: Verified | ICC Approved | Part II: InProgress"
+# These are matched as substrings, so we handle the most specific patterns first.
+IL_SHINES_STAGE_MAP = {
+    'Energized': ('operational', 0.95),
+    'Part II: Verified': ('operational', 0.90),
+    'Part II: InProgress': ('construction', 0.80),
+    'Part II: Submitted': ('construction', 0.80),
+    'Part II: Need_Info': ('construction', 0.75),
+    'ICC Approved': ('approved', 0.85),
+    'Part I: Verified': ('approved', 0.75),
+    'Part I: Submitted': ('applied', 0.80),
+    'Part I: Need_Info': ('applied', 0.75),
+    'Part I: NI_Unresponsive_AV': ('applied', 0.70),
+}
+
 # ── Combined map keyed by source ────────────────────────────────────────
 SOURCE_STAGE_MAPS = {
     'nj_dg': NJ_STAGE_MAP,
     'ny_sun': NY_STAGE_MAP,
     'ny_dps_sir': NY_DPS_SIR_STAGE_MAP,
+    'ma_smart': MA_SMART_STAGE_MAP,
+    # il_shines uses substring matching (handled in classify_dg_stage)
 }
 
 # Fallback: classify from normalized status when no raw_status available
@@ -140,6 +166,12 @@ def classify_dg_stage(
         if raw_status in stage_map:
             stage, conf = stage_map[raw_status]
             return stage, conf, 'raw_status'
+
+    # IL Shines uses composite raw_status strings — match by substring
+    if raw_status and (source == 'il_shines' or source is None):
+        for pattern, (stage, conf) in IL_SHINES_STAGE_MAP.items():
+            if pattern in raw_status:
+                return stage, conf, 'raw_status'
 
     # Try raw_status across all maps (in case source is wrong/missing)
     if raw_status:

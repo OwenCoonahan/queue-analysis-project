@@ -133,12 +133,40 @@ IL_SHINES_STAGE_MAP = {
     'Part I: NI_Unresponsive_AV': ('applied', 0.70),
 }
 
+# ── Ameren IL raw_status → (dg_stage, confidence) ─────────────────────
+AMEREN_IL_STAGE_MAP = {
+    'Pending Review': ('applied', 0.80),
+    'Review': ('applied', 0.80),
+    'UNKNOWN': ('applied', 0.50),
+    'In Dispute': ('applied', 0.60),
+    'Review Complete Pending Construction': ('approved', 0.85),
+    'Construction': ('construction', 0.90),
+    'Post Construction': ('inspection', 0.85),
+    'Withdrawn': ('withdrawn', 1.0),
+}
+
+# ── FL PSC raw_status → (dg_stage, confidence) ────────────────────────
+FL_PSC_STAGE_MAP = {
+    'FL PSC 25-6.065 Net Metering': ('operational', 0.90),
+}
+
+# ── NC NCUC raw_status → (dg_stage, confidence) ───────────────────────
+NC_NCUC_STAGE_MAP = {
+    'New REF - All: Solar Photovoltaic': ('operational', 0.90),
+    'New REF - All: Solar Thermal': ('operational', 0.90),
+    'Rev|Can: Solar Photovoltaic': ('withdrawn', 0.95),
+    'Rev|Can: Solar Thermal': ('withdrawn', 0.95),
+}
+
 # ── Combined map keyed by source ────────────────────────────────────────
 SOURCE_STAGE_MAPS = {
     'nj_dg': NJ_STAGE_MAP,
     'ny_sun': NY_STAGE_MAP,
     'ny_dps_sir': NY_DPS_SIR_STAGE_MAP,
     'ma_smart': MA_SMART_STAGE_MAP,
+    'ameren_il': AMEREN_IL_STAGE_MAP,
+    'fl_psc': FL_PSC_STAGE_MAP,
+    'nc_ncuc': NC_NCUC_STAGE_MAP,
     # il_shines uses substring matching (handled in classify_dg_stage)
 }
 
@@ -338,9 +366,144 @@ def preview(db_path: Path = DG_DB_PATH, limit: int = 20):
     conn.close()
 
 
+def apply_time_adjustments(db_path: Path = DG_DB_PATH, save: bool = True) -> Dict:
+    """Apply time-based confidence adjustments to DG stage classifications.
+
+    For projects with application/queue dates but no progression:
+    - >3 years in applied/approved → flag as stalled, reduce confidence by 0.2
+    - >5 years in applied/approved → auto-classify as stalled (confidence 0.6)
+    - <6 months old → boost confidence by 0.1 (recently active)
+    - COD in past but not operational → flag as delayed
+
+    Adds columns: stalled (0/1), stage_age_days (integer)
+    """
+    from datetime import datetime, timedelta
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    # Ensure new columns exist
+    for col, col_type in [
+        ('stalled', 'INTEGER'),
+        ('stage_age_days', 'INTEGER'),
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE projects ADD COLUMN {col} {col_type}")
+            conn.commit()
+            logger.info(f"Added {col} column")
+        except sqlite3.OperationalError:
+            pass
+
+    today = datetime.now()
+    three_years_ago = today - timedelta(days=1095)
+    five_years_ago = today - timedelta(days=1825)
+    six_months_ago = today - timedelta(days=180)
+
+    stats = {
+        'total_checked': 0,
+        'stalled_3yr': 0,
+        'stalled_5yr': 0,
+        'boosted_recent': 0,
+        'delayed': 0,
+        'no_date': 0,
+    }
+
+    # Get projects with dates that are in pre-operational stages
+    cursor.execute("""
+        SELECT id, queue_date, cod, dg_stage, dg_stage_confidence, status
+        FROM projects
+        WHERE dg_stage IS NOT NULL
+    """)
+    rows = cursor.fetchall()
+    logger.info(f"Checking {len(rows):,} projects for time-based adjustments...")
+
+    batch = []
+    for row in rows:
+        stats['total_checked'] += 1
+        project_id = row['id']
+        dg_stage = row['dg_stage']
+        confidence = row['dg_stage_confidence'] or 0.5
+        queue_date_str = row['queue_date']
+        cod_str = row['cod']
+
+        stalled = 0
+        age_days = None
+        new_stage = dg_stage
+        new_conf = confidence
+
+        # Parse the application/queue date
+        app_date = None
+        if queue_date_str:
+            for fmt in ['%m/%d/%Y', '%Y-%m-%d', '%m/%d/%y', '%Y-%m-%dT%H:%M:%S']:
+                try:
+                    app_date = datetime.strptime(str(queue_date_str)[:19], fmt)
+                    break
+                except (ValueError, TypeError):
+                    continue
+
+        if app_date:
+            age_days = (today - app_date).days
+
+            # Projects stuck in applied/approved for >3 years
+            if dg_stage in ('applied', 'approved') and app_date < three_years_ago:
+                stalled = 1
+                new_conf = max(0.1, confidence * 0.8)  # Reduce by 20%
+                stats['stalled_3yr'] += 1
+
+                # >5 years → auto-classify as stalled
+                if app_date < five_years_ago:
+                    new_stage = 'stalled'
+                    new_conf = 0.6
+                    stats['stalled_5yr'] += 1
+
+            # Recently filed → boost confidence
+            elif dg_stage in ('applied', 'approved') and app_date > six_months_ago:
+                new_conf = min(1.0, confidence + 0.1)
+                stats['boosted_recent'] += 1
+        else:
+            stats['no_date'] += 1
+
+        # COD in the past but not operational → delayed
+        if cod_str and dg_stage not in ('operational', 'withdrawn', 'stalled'):
+            cod_date = None
+            for fmt in ['%m/%d/%Y', '%Y-%m-%d', '%m/%d/%y']:
+                try:
+                    cod_date = datetime.strptime(str(cod_str)[:10], fmt)
+                    break
+                except (ValueError, TypeError):
+                    continue
+            if cod_date and cod_date < today - timedelta(days=365):
+                # COD >1 year in the past but still not operational
+                stalled = 1
+                stats['delayed'] += 1
+
+        batch.append((stalled, age_days, new_stage, new_conf, project_id))
+
+    if save and batch:
+        logger.info("Saving time-based adjustments...")
+        cursor.executemany("""
+            UPDATE projects SET stalled = ?, stage_age_days = ?,
+                               dg_stage = ?, dg_stage_confidence = ?
+            WHERE id = ?
+        """, batch)
+        conn.commit()
+        logger.info(f"Updated {len(batch):,} records")
+
+    conn.close()
+
+    logger.info(f"Time adjustments: {stats['stalled_3yr']:,} stalled (3yr), "
+                f"{stats['stalled_5yr']:,} stalled (5yr), "
+                f"{stats['boosted_recent']:,} boosted (recent), "
+                f"{stats['delayed']:,} delayed, "
+                f"{stats['no_date']:,} no date")
+    return stats
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='DG Development Stage Classifier')
     parser.add_argument('--enrich', action='store_true', help='Classify all DG projects')
+    parser.add_argument('--time-adjust', action='store_true', help='Apply time-based confidence adjustments')
     parser.add_argument('--stats', action='store_true', help='Show stage distribution')
     parser.add_argument('--preview', action='store_true', help='Preview classifications')
     parser.add_argument('--db', type=str, help='Path to dg.db')
@@ -353,6 +516,10 @@ if __name__ == '__main__':
         print(f"\nClassified {stats['classified']:,}/{stats['total']:,} projects")
         print(f"By stage: {json.dumps(stats['by_stage'], indent=2)}")
         print(f"By method: {json.dumps(stats['by_method'], indent=2)}")
+    elif args.time_adjust:
+        stats = apply_time_adjustments(db, save=True)
+        print(f"\nTime adjustments applied:")
+        print(json.dumps(stats, indent=2))
     elif args.stats:
         show_stats(db)
     elif args.preview:

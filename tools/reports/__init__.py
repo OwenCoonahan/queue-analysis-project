@@ -26,5 +26,7 @@ Usage:
 
 from .deal_report import generate_deal_report
 from .cluster_report import generate_cluster_report
+from .deal_sheet import generate_deal_sheet_pdf, generate_deal_sheets
 
-__all__ = ['generate_deal_report', 'generate_cluster_report']
+__all__ = ['generate_deal_report', 'generate_cluster_report',
+           'generate_deal_sheet_pdf', 'generate_deal_sheets']

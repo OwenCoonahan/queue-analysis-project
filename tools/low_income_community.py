@@ -39,6 +39,7 @@ Usage:
     python3 low_income_community.py --check WV McDowell
 """
 
+import os
 import sqlite3
 from pathlib import Path
 from dataclasses import dataclass
@@ -50,11 +51,37 @@ try:
 except ImportError:
     openpyxl = None
 
-# Paths
+# Paths — cache dir is configurable for Railway (persistent volume)
 TOOLS_DIR = Path(__file__).parent
-CACHE_DIR = TOOLS_DIR / '.cache' / 'low_income_communities'
+_cache_base = Path(os.environ.get('REFERENCE_CACHE_DIR', str(TOOLS_DIR / '.cache')))
+CACHE_DIR = _cache_base / 'low_income_communities'
 DATA_FILE = CACHE_DIR / 'Low-Income-Communities_Excel.xlsx'
-DB_PATH = TOOLS_DIR / '.data' / 'master.db'
+DB_PATH = Path(os.environ.get('QUEUE_DB_PATH', str(TOOLS_DIR / '.data' / 'master.db')))
+
+# Download URL for auto-fetching reference data
+_DOWNLOAD_URL = 'https://data.nlr.gov/system/files/222/1726847898-Low-Income-Communities_Excel_20240919.xlsx'
+
+
+def _ensure_low_income_data():
+    """Download low-income community data if not present."""
+    if DATA_FILE.exists():
+        return True
+    print(f"Low-income data not found at {DATA_FILE} — downloading...")
+    try:
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        try:
+            import requests as _requests
+            resp = _requests.get(_DOWNLOAD_URL, timeout=120)
+            resp.raise_for_status()
+            DATA_FILE.write_bytes(resp.content)
+        except ImportError:
+            import urllib.request
+            urllib.request.urlretrieve(_DOWNLOAD_URL, str(DATA_FILE))
+        print(f"  Downloaded {DATA_FILE.stat().st_size / 1e6:.1f} MB")
+        return True
+    except Exception as e:
+        print(f"  Download failed: {e}")
+        return False
 
 # State FIPS to abbreviation
 FIPS_TO_STATE = {
@@ -120,6 +147,8 @@ class LowIncomeChecker:
 
     def load_data(self):
         """Load low-income community data from the DOE Excel file."""
+        if not DATA_FILE.exists():
+            _ensure_low_income_data()
         if not DATA_FILE.exists():
             print(f"Warning: Low-income data not found at {DATA_FILE}")
             print("Download from: https://data.nlr.gov/submissions/222")

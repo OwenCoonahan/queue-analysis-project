@@ -13,6 +13,7 @@ https://zenodo.org/records/14757122
 """
 
 import csv
+import os
 import sqlite3
 from pathlib import Path
 from dataclasses import dataclass
@@ -20,11 +21,58 @@ from typing import Optional
 from collections import defaultdict
 
 
-# Paths
-CACHE_DIR = Path(__file__).parent / '.cache' / 'energy_communities'
+# Paths — cache dir is configurable for Railway (persistent volume)
+TOOLS_DIR = Path(__file__).parent
+_cache_base = Path(os.environ.get('REFERENCE_CACHE_DIR', str(TOOLS_DIR / '.cache')))
+CACHE_DIR = _cache_base / 'energy_communities'
 COAL_CLOSURE_CSV = CACHE_DIR / 'Coal_Closures_EnergyComm_v2024_1' / 'IRA_EnergyComm_CTracts_CoalClosures_v2024_1.csv'
 MSA_FFE_CSV = CACHE_DIR / 'MSA_NMSA_EC_FFE_v2024_1' / 'MSA_NonMSA_EnergyCommunities_FossilFuelEmp_v2024_1.csv'
-V2_PATH = Path(__file__).parent / '.data' / 'master.db'
+V2_PATH = Path(os.environ.get('QUEUE_DB_PATH', str(TOOLS_DIR / '.data' / 'master.db')))
+
+# Zenodo download URLs (non-API pattern — /api/ returns JSON, not the file)
+_COAL_ZIP_URL = 'https://zenodo.org/records/14757122/files/doeiraec-coal-closures-2024.zip?download=1'
+_MSA_ZIP_URL = 'https://zenodo.org/records/14757122/files/doeiraec-msa-nonmsa-fossil-fuel-employment-status-2024.zip?download=1'
+
+
+def _ensure_energy_community_data():
+    """Download energy community reference data if not present."""
+    import zipfile
+    import io
+
+    try:
+        import requests as _requests
+    except ImportError:
+        import urllib.request
+        _requests = None
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _download_zip(url, label):
+        """Download and extract a zip file."""
+        if _requests:
+            resp = _requests.get(url, timeout=120)
+            resp.raise_for_status()
+            data = resp.content
+        else:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            data = urllib.request.urlopen(req, timeout=120).read()
+        with zipfile.ZipFile(io.BytesIO(data)) as zf:
+            zf.extractall(CACHE_DIR)
+        print(f"  Extracted {label}")
+
+    if not COAL_CLOSURE_CSV.exists():
+        print("Coal closure data not found — downloading from Zenodo...")
+        try:
+            _download_zip(_COAL_ZIP_URL, f"coal closure data ({COAL_CLOSURE_CSV.name})")
+        except Exception as e:
+            print(f"  Coal closure download failed: {e}")
+
+    if not MSA_FFE_CSV.exists():
+        print("MSA/FFE data not found — downloading from Zenodo...")
+        try:
+            _download_zip(_MSA_ZIP_URL, f"MSA/FFE data ({MSA_FFE_CSV.name})")
+        except Exception as e:
+            print(f"  MSA/FFE download failed: {e}")
 
 # State name to abbreviation mapping
 STATE_ABBREV = {
@@ -80,6 +128,10 @@ class EnergyCommunityChecker:
 
     def load_data(self):
         """Load energy community data from CSV files."""
+        # Auto-download if missing
+        if not COAL_CLOSURE_CSV.exists() or not MSA_FFE_CSV.exists():
+            _ensure_energy_community_data()
+
         print("Loading Energy Community data...")
 
         # Load coal closure data (census tract level)

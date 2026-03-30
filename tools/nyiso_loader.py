@@ -74,6 +74,7 @@ class NYISOLoader:
         'Last Update': 'last_updated',
         'Proposed COD': 'cod',
         'Proposed In-Service/Initial Backfeed Date': 'backfeed_date',
+        'IA Tender Date': 'ia_date',
         'Energy Storage Capability': 'storage_mwh',
         'Minimum_Duration Full Discharge': 'storage_duration_hrs',
     }
@@ -174,7 +175,7 @@ class NYISOLoader:
             )
 
         # Parse dates
-        for date_col in ['queue_date', 'last_updated', 'cod', 'backfeed_date']:
+        for date_col in ['queue_date', 'last_updated', 'cod', 'backfeed_date', 'ia_date']:
             if date_col in df.columns:
                 df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
 
@@ -230,7 +231,8 @@ class NYISOLoader:
             'queue_id', 'name', 'developer', 'capacity_mw', 'type', 'status',
             'county', 'state', 'zone', 'poi', 'queue_date', 'cod',
             'region', 'source', 'sheet_source', 'project_type',
-            'storage_mwh', 'storage_duration_hrs', 'last_updated'
+            'storage_mwh', 'storage_duration_hrs', 'last_updated',
+            'ia_date', 'backfeed_date',
         ]
         result = combined[[c for c in std_cols if c in combined.columns]]
 
@@ -288,11 +290,12 @@ def refresh_nyiso(file_path: Optional[str] = None, quiet: bool = False) -> Dict:
         # Prepare for database
         db_df = df[[c for c in [
             'queue_id', 'name', 'developer', 'capacity_mw', 'type',
-            'status', 'state', 'county', 'queue_date', 'cod', 'region', 'source'
+            'status', 'state', 'county', 'queue_date', 'cod', 'region', 'source',
+            'backfeed_date', 'ia_date',
         ] if c in df.columns]].copy()
 
         # Convert dates to strings
-        for col in ['queue_date', 'cod']:
+        for col in ['queue_date', 'cod', 'backfeed_date', 'ia_date']:
             if col in db_df.columns:
                 db_df[col] = pd.to_datetime(db_df[col], errors='coerce').dt.strftime('%Y-%m-%d')
 

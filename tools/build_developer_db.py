@@ -28,11 +28,13 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
-DATA_DIR = Path(__file__).parent / '.data'
-MASTER_DB = DATA_DIR / 'master.db'
-DG_DB = DATA_DIR / 'dg.db'
-DEV_DB = DATA_DIR / 'developer.db'
-CORPORATE_DB = Path(__file__).parent.parent.parent.parent / 'prospector-platform' / 'pipelines' / 'databases' / 'corporate.db'
+DATA_DIR = Path(os.environ.get('DATA_DIR', str(Path(__file__).parent / '.data')))
+MASTER_DB = Path(os.environ.get('QUEUE_DB_PATH', os.environ.get('MASTER_DB_PATH', str(DATA_DIR / 'master.db'))))
+DG_DB = Path(os.environ.get('DG_DB_PATH', str(DATA_DIR / 'dg.db')))
+DEV_DB = Path(os.environ.get('DEVELOPER_DB_PATH', str(DATA_DIR / 'developer.db')))
+CORPORATE_DB_DEFAULT = Path(__file__).parent.parent.parent.parent / 'prospector-platform' / 'pipelines' / 'databases' / 'corporate.db'
+CORPORATE_DB = Path(os.environ.get('CORPORATE_DB_PATH', str(CORPORATE_DB_DEFAULT)))
+# On Railway, DATA_DIR=/data/ and individual paths are set via env vars
 
 # ============================================================================
 # Schema

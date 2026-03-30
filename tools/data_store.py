@@ -213,7 +213,11 @@ class DataStore:
     def _compute_hash(self, row: Dict) -> str:
         """Compute hash of row for change detection."""
         # Include key fields that we want to track changes for
-        key_fields = ['name', 'developer', 'capacity_mw', 'type', 'status', 'cod']
+        key_fields = ['name', 'developer', 'capacity_mw', 'type', 'status', 'cod',
+                      'ia_date', 'actual_cod', 'study_phase', 'backfeed_date',
+                      'ia_status', 'study_cycle', 'study_group', 'test_energy_date',
+                      'feasibility_study_status', 'system_impact_study_status',
+                      'facilities_study_status', 'withdrawn_date']
         values = [str(row.get(f, '')) for f in key_fields]
         return hashlib.md5('|'.join(values).encode()).hexdigest()
 
@@ -246,6 +250,12 @@ class DataStore:
 
         for _, row in df.iterrows():
             row_dict = row.to_dict()
+            # Convert any Timestamp/datetime values to strings for SQLite
+            for k, v in row_dict.items():
+                if hasattr(v, 'isoformat'):
+                    row_dict[k] = str(v) if pd.notna(v) else ''
+                elif isinstance(v, float) and pd.isna(v):
+                    row_dict[k] = ''
             row_region = region or row_dict.get('region', 'Unknown')
             queue_id = str(row_dict.get('queue_id', ''))
 
@@ -288,7 +298,7 @@ class DataStore:
                                   'facilities_study_date', 'ia_status', 'study_cycle',
                                   'study_group', 'test_energy_date',
                                   'feasibility_study_status', 'system_impact_study_status',
-                                  'facilities_study_status']:
+                                  'facilities_study_status', 'withdrawn_date']:
                         new_val = row_dict.get(field)
                         if new_val and str(new_val).strip():
                             update_fields[field] = new_val
@@ -344,7 +354,7 @@ class DataStore:
                     'facilities_study_date', 'ia_status', 'study_cycle',
                     'study_group', 'test_energy_date',
                     'feasibility_study_status', 'system_impact_study_status',
-                    'facilities_study_status'
+                    'facilities_study_status', 'withdrawn_date'
                 ]
                 for mc in milestone_cols:
                     val = row_dict.get(mc)

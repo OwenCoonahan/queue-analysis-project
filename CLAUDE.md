@@ -24,40 +24,52 @@ You are one of multiple Claude Code instances working on this codebase.
 
 This is an **interconnection queue analysis platform** for power grid project development. It aggregates data from all major US ISOs (PJM, MISO, SPP, ERCOT, CAISO, NYISO, ISO-NE) plus non-ISO regions (West, Southeast) and provides analytics for evaluating project viability, tracking developers, and monitoring market trends.
 
-### Current Database Stats (2026-02-17)
+### Current Database Stats (2026-03-25)
 
 | Metric | Value |
 |--------|-------|
-| **Unique Projects** | **36,612** |
-| Total Records | 54,496 |
-| Total Capacity | 6,563 GW |
-| Developer Coverage | 94.7% |
-| Queue Date Coverage | 97.3% |
+| **Database** | **master.db** (golden record) |
+| **Unique Projects** | **47,594** |
+| Total Capacity | ~7,000+ GW |
+| Size | 238 MB |
+| Columns | 115 |
+| Enrichment | Tax credits 78%, developer canonical 79%, EIA match 39%, parent company 28% |
 
 Run `python3 db_status.py` for current stats anytime.
 
 ### Unique Projects by Region
 
-| Region | Projects | Capacity | Developer % | Queue Date % |
-|--------|----------|----------|-------------|--------------|
-| PJM | 8,350 | 904 GW | 99% | 100% |
-| West | 6,008 | 1,133 GW | 89% | 100% |
-| MISO | 5,445 | 1,009 GW | 98% | 91% |
-| ERCOT | 3,789 | 809 GW | 100% | 87% |
-| Southeast | 2,879 | 652 GW | 78% | 100% |
-| NYISO | 2,861 | 556 GW | 100% | 100% |
-| SPP | 2,842 | 581 GW | 97% | 100% |
-| CAISO | 2,837 | 710 GW | 99% | 100% |
-| ISO-NE | 1,601 | 209 GW | 80% | 100% |
+| Region | Projects | Primary Sources |
+|--------|----------|-----------------|
+| CAISO | 10,397 | caiso, interconnection_fyi, lbl, ca_dg_stats (>=1MW) |
+| PJM | 10,243 | pjm_direct, lbl, interconnection_fyi |
+| West | 6,628 | lbl, interconnection_fyi |
+| MISO | 5,514 | miso_api, lbl, interconnection_fyi |
+| ERCOT | 3,871 | ercot, lbl, interconnection_fyi |
+| Southeast | 3,178 | lbl, interconnection_fyi |
+| NYISO | 3,008 | nyiso_direct, lbl, interconnection_fyi |
+| SPP | 2,842 | spp, lbl |
+| ISO-NE | 1,912 | isone, interconnection_fyi, ma_doer (>=1MW) |
+
+### DG Database (dg.db)
+
+| Metric | Value |
+|--------|-------|
+| **Total projects** | **4,843,018** |
+| Size | 2.7 GB |
+| Sources | 10 state/utility DG programs |
+| DG stage enrichment | 247K classified (NJ + NY raw_status) |
+
+See `../../DATABASES.md` for full inventory and `../../DG_STAGE_STRATEGY.md` for DG stage classification plan.
 
 ---
 
 ## Workspace Context
 
-This project is part of the **World Domination** workspace. For cross-project work, start Claude Code from the parent directory:
+This project is part of the **End Suffering** workspace (Prospector Labs). For cross-project work, start Claude Code from the parent directory:
 
 ```bash
-cd "/Users/owencoonahan/Documents/World Domination"
+cd "/Users/owencoonahan/Documents/Grand Library/End Suffering"
 # Then open Claude Code
 ```
 
@@ -70,16 +82,26 @@ cd "/Users/owencoonahan/Documents/World Domination"
 
 ### Single Source of Truth
 
-All queue data is consolidated into **one database**: `queue.db`
+All utility-scale queue data is consolidated into **one database**: `master.db` (golden record). DG projects go to `dg.db`.
 
 ```
-.data/queue.db (74 MB)
-├── projects          # 54,496 records (36,612 unique)
-├── snapshots         # 167,996 historical snapshots
-├── changes           # 65,212 detected changes
+.data/master.db (238 MB, 115 columns)
+├── projects              # 47,594 unique projects
+├── project_sources       # Provenance tracking per source
+├── snapshots             # Historical snapshots
+├── changes               # Detected changes
 ├── qualified_developers  # 26 NYISO qualified devs
-├── refresh_log       # Refresh history
-└── [market tables]   # LMP, capacity, transmission, PPA, permits
+├── refresh_log           # Refresh history
+└── developer_registry    # 6,593 canonical developers
+
+.data/dg.db (2.7 GB)
+├── projects              # 4,843,018 DG projects (<1MW)
+└── [10 state/utility programs]
+
+.data/grid.db (48 MB)
+├── wind_turbines         # USWTDB
+├── substations           # HIFLD
+└── transmission_lines    # HIFLD
 ```
 
 ### Single Entry Point
@@ -144,15 +166,37 @@ tools/
 | `ppa_data.py` | PPA benchmark prices |
 | `permitting_data.py` | State permitting requirements |
 
+### Enrichment Tools (Category B — enrich existing rows, never create)
+
+| File | Purpose | Coverage |
+|------|---------|----------|
+| `tax_credits.py` | ITC/PTC eligibility engine with bonus adders | 78% |
+| `energy_community.py` | IRA energy community bonus zones | 73% |
+| `low_income_community.py` | Low-income community bonus credit (DOE 48e) | 73% |
+| `enrich_corporate.py` | Parent company from corporate.db | 28% |
+| `enrich_ferc_epa.py` | FERC capex + EPA emissions cross-ref | 7-9% |
+| `enrich_grid_context.py` | Wind turbine + substation context from grid.db | 42% |
+| `enrich_utility_intelligence.py` | Utility financial data via EIA→PUDL→FERC | 41% |
+| `eia_match_enhance.py` | EIA-860 plant ID matching | 39% |
+| `developer_registry.py` | Developer name normalization (6,593 canonical) | 79% |
+| `scoring.py` | Project viability scoring | All |
+| `itc_deal_finder.py` | ITC deal sourcing engine (98K deals) | All |
+| `validate_enrichments.py` | Cross-validation checks (8 checks) | — |
+
+### DG Tools
+
+| File | Purpose |
+|------|---------|
+| `nj_dg_scraper.py` | NJ Clean Energy 6-program scraper (247K projects, Playwright) |
+| `ny_sun_loader.py` | NY-SUN via Socrata API (189K projects) |
+| `dg_stage.py` | DG development stage classifier (applied→operational) |
+| `dg_loader.py` | Other state DG loaders (CA, MA, CT, IL) |
+
 ### Supporting Files
 
 | File | Purpose |
 |------|---------|
-| `developer_registry.py` | Developer name normalization |
 | `developer_matcher.py` | Match developers across sources |
-| `energy_community.py` | IRA bonus eligibility zones |
-| `tax_credits.py` | Full ITC/PTC eligibility engine with bonus adders |
-| `low_income_community.py` | Low-income community bonus credit checker (DOE 48e data) |
 | `eia_loader.py` | EIA 860 generator data |
 | `charts_altair.py` | Visualization components |
 
@@ -235,7 +279,7 @@ DATA SOURCES                          ENTRY POINT                    DATABASE
 MISO Public API ──────────┐
   (3,706 projects)        │
                           │
-NYISO Excel (7 sheets) ───┼──→ refresh_data.py ──→ data_store.py ──→ queue.db
+NYISO Excel (7 sheets) ───┼──→ refresh_data.py ──→ data_store.py ──→ master.db
   (2,020 projects)        │         │
                           │         ├── Normalizes columns
 PJM Excel (manual) ───────┤         ├── Validates schema
@@ -439,7 +483,7 @@ Report includes:
 |-------|--------|------------|
 | CAISO queue dates frozen at 2021 | Known CAISO issue | Using LBL dates |
 | ERCOT no queue dates | Policy decision | Backfill from LBL |
-| ISO-NE data 13+ months stale | gridstatus lag | None |
+| ISO-NE data was 13+ months stale | **Fixed** — IRTT scraper added | direct_fetcher.py scrapes IRTT directly |
 | MISO API has no queue dates | API limitation | Use LBL for historical |
 | PJM developer coverage low (18%) | Only in CycleProjects | LBL has 99% |
 
@@ -448,24 +492,29 @@ Report includes:
 ## Roadmap / Plan
 
 ### Completed
-- [x] Consolidated to single database (queue.db)
-- [x] MISO public API loader
-- [x] NYISO comprehensive loader (all 7 sheets)
+- [x] Consolidated to single golden record (master.db — 47,594 projects, 115 columns)
+- [x] All 7 ISO loaders live (MISO, NYISO, PJM, ERCOT, CAISO, SPP, ISO-NE)
+- [x] ISO-NE IRTT scraper (replaced stale gridstatus data)
 - [x] NYISO historical analysis (132 snapshots)
-- [x] NYISO planning document scrapers
-- [x] Qualified developers parsing and ingestion
-- [x] Database status reporting tool
+- [x] Developer entity resolution (6,593 canonical developers, 79% coverage)
+- [x] PJM auto-download via API key
+- [x] Full enrichment suite (tax credits, energy community, low-income, corporate, FERC/EPA, grid context, utility intel)
+- [x] DG database (dg.db — 4.8M projects, 10 state/utility programs)
+- [x] DG stage classifier (NJ + NY raw_status → 7 standardized stages)
+- [x] Railway deployment (10 DBs, 50+ API endpoints, APScheduler)
+- [x] ITC deal finder engine (98K deals)
+- [x] Validation framework (8 cross-checks)
 
 ### In Progress
-- [ ] Improve CAISO queue date freshness (awaiting API approval)
-- [ ] Automate PJM downloads
-- [ ] Developer entity resolution across sources
+- [ ] Investability tagging pipeline (construction stage + developer classification + composite score)
+- [ ] Lat/lon geocoding (from substations, county centroids, or external sources)
+- [ ] DG stage expansion (MA SMART, IL Shines, NY DPS SIR loaders)
 
 ### Future
 - [ ] Real-time change notifications
-- [ ] ML-based completion probability
-- [ ] Cost estimation models
-- [ ] Permit timeline predictions
+- [ ] Report generation API
+- [ ] Developer CRM/alerts
+- [ ] Marketplace
 
 ---
 
@@ -475,7 +524,7 @@ Report includes:
 - Use existing patterns in codebase
 - SQLite for storage via `data_store.py`
 - Streamlit for UI
-- Altair for charts
+- Plotly for charts (Altair legacy in some files)
 - Always validate data before ingestion
 
 ## Agent Coordination Rules

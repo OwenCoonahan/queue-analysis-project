@@ -334,6 +334,11 @@ class FLPSCLoader:
                 existing = cursor.fetchone()
 
                 if existing:
+                    # Always bump last_checked_at to prove we verified this row
+                    cursor.execute(
+                        'UPDATE projects SET last_checked_at = CURRENT_TIMESTAMP WHERE id = ?',
+                        (existing['id'],)
+                    )
                     if existing['row_hash'] != row_hash:
                         cursor.execute('''
                             UPDATE projects SET

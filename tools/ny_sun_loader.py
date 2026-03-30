@@ -227,6 +227,7 @@ class NYSunLoader:
                 'capacity_kw': capacity_kw,
                 'type': 'Solar',
                 'status': status,
+                'raw_status': raw_status if raw_status else None,
                 'state': 'NY',
                 'county': str(row.get('county', '')).strip() or None,
                 'city': str(row.get('city', '')).strip() or None,
@@ -271,6 +272,14 @@ class NYSunLoader:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
+        # Ensure raw_status column exists
+        try:
+            cursor.execute("ALTER TABLE projects ADD COLUMN raw_status TEXT")
+            conn.commit()
+            logger.info("  Added raw_status column to projects table")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+
         stats = {'added': 0, 'updated': 0, 'unchanged': 0, 'errors': 0}
 
         for _, row in df.iterrows():
@@ -287,10 +296,16 @@ class NYSunLoader:
                 existing = cursor.fetchone()
 
                 if existing:
+                    # Always bump last_checked_at to prove we verified this row
+                    cursor.execute(
+                        'UPDATE projects SET last_checked_at = CURRENT_TIMESTAMP WHERE id = ?',
+                        (existing['id'],)
+                    )
                     if existing['row_hash'] != row_hash:
                         cursor.execute('''
                             UPDATE projects SET
                                 capacity_mw = ?, capacity_kw = ?, type = ?, status = ?,
+                                raw_status = ?,
                                 state = ?, county = ?, city = ?, utility = ?,
                                 queue_date = ?, cod = ?, customer_sector = ?,
                                 system_size_dc_kw = ?, total_system_cost = ?,
@@ -300,6 +315,7 @@ class NYSunLoader:
                         ''', (
                             row_dict.get('capacity_mw'), row_dict.get('capacity_kw'),
                             'Solar', row_dict.get('status'),
+                            row_dict.get('raw_status'),
                             'NY', row_dict.get('county'), row_dict.get('city'),
                             row_dict.get('utility'),
                             row_dict.get('queue_date'), row_dict.get('cod'),
@@ -316,15 +332,16 @@ class NYSunLoader:
                     cursor.execute('''
                         INSERT INTO projects (
                             queue_id, region, name, developer, capacity_mw, capacity_kw,
-                            type, status, state, county, city, utility,
+                            type, status, raw_status, state, county, city, utility,
                             queue_date, cod, source, primary_source, sources,
                             customer_sector, system_size_dc_kw, total_system_cost,
                             interconnection_program, row_hash
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ''', (
                         queue_id, REGION, row_dict.get('name'), row_dict.get('developer', ''),
                         row_dict.get('capacity_mw'), row_dict.get('capacity_kw'),
                         'Solar', row_dict.get('status'),
+                        row_dict.get('raw_status'),
                         'NY', row_dict.get('county'), row_dict.get('city'),
                         row_dict.get('utility'),
                         row_dict.get('queue_date'), row_dict.get('cod'),

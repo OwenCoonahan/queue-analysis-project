@@ -39,6 +39,7 @@ Usage:
     python3 tax_credits.py --check Solar 200 TX Pecos 2027
 """
 
+import os
 import sqlite3
 import json
 from pathlib import Path
@@ -50,7 +51,7 @@ from datetime import datetime
 TOOLS_DIR = Path(__file__).parent
 DATA_DIR = TOOLS_DIR / '.data'
 CACHE_DIR = TOOLS_DIR / '.cache'
-DB_PATH = DATA_DIR / 'master.db'
+DB_PATH = Path(os.environ.get('QUEUE_DB_PATH', str(DATA_DIR / 'master.db')))
 
 
 # =============================================================================

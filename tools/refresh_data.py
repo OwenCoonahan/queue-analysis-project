@@ -744,6 +744,13 @@ class DataRefresher:
             self.db.log_refresh_complete(log_id, {}, str(e))
             return {'success': False, 'error': str(e)}
 
+    @staticmethod
+    def _safe_str_col(series):
+        """Convert a pandas Series to string, replacing NaT/nan with empty string."""
+        if hasattr(series, 'astype'):
+            return series.astype(str).replace({'NaT': '', 'nan': '', 'None': '', 'nat': ''})
+        return series
+
     def _normalize_nyiso(self, df: pd.DataFrame) -> pd.DataFrame:
         """Normalize NYISO column names."""
         # NYISO uses different column names than expected
@@ -766,6 +773,9 @@ class DataRefresher:
             'queue_date': df.get('Date of IR', df.get('Queue Date', '')),
             'cod': df.get('Proposed COD', df.get('Projected COD', '')),
             'region': 'NYISO',
+            # Milestone fields
+            'ia_date': self._safe_str_col(df.get('IA Tender Date', df.get('IA Date', ''))),
+            'backfeed_date': self._safe_str_col(df.get('Backfeed Date', '')),
         })
 
     def _normalize_ercot(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -783,6 +793,10 @@ class DataRefresher:
             'queue_date': '',
             'cod': df.get('Proposed COD', df.get('Projected COD', '')),
             'region': 'ERCOT',
+            # Milestone fields
+            'ia_date': self._safe_str_col(df.get('IA Signed', '')),
+            'backfeed_date': self._safe_str_col(df.get('Approved for Energization', '')),
+            'test_energy_date': self._safe_str_col(df.get('Approved for Synchronization', '')),
         })
 
     def _normalize_lbl(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -800,6 +814,11 @@ class DataRefresher:
             'queue_date': df.get('q_date', ''),
             'cod': df.get('prop_date', ''),
             'region': df.get('region', 'Unknown'),
+            # Milestone fields
+            'ia_date': self._safe_str_col(df.get('ia_date', '')),
+            'actual_cod': self._safe_str_col(df.get('on_date', '')),
+            'withdrawn_date': self._safe_str_col(df.get('wd_date', '')),
+            'ia_status': df.get('IA_status_clean', ''),
         })
 
     def _normalize_miso(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -825,6 +844,10 @@ class DataRefresher:
                 'queue_date': '',  # MISO API doesn't provide queue dates
                 'cod': df.get('cod', '').astype(str) if 'cod' in df.columns else '',
                 'region': 'MISO',
+                # Milestone fields
+                'study_phase': df.get('study_phase', df.get('Study Phase', '')),
+                'study_cycle': df.get('study_cycle', df.get('Study Cycle', '')),
+                'study_group': df.get('study_group', df.get('Study Group', '')),
             })
 
         # Raw API data - map to normalized schema
@@ -841,6 +864,10 @@ class DataRefresher:
             'queue_date': df.get('Queue Date', df.get('queueDate', '')),
             'cod': df.get('Proposed COD', df.get('inService', '')),
             'region': 'MISO',
+            # Milestone fields
+            'study_phase': df.get('Study Phase', df.get('studyPhase', '')),
+            'study_cycle': df.get('Study Cycle', df.get('studyCycle', '')),
+            'study_group': df.get('Study Group', df.get('studyGroup', '')),
         })
 
     def _normalize_caiso(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -864,6 +891,12 @@ class DataRefresher:
             'queue_date': df.get('Queue Date', df.get('Interconnection Request Receive Date', '')),
             'cod': df.get('Actual or Expected On-line Date', ''),
             'region': 'CAISO',
+            # Milestone fields
+            'study_phase': self._safe_str_col(df.get('Study Process', '')),
+            'feasibility_study_status': self._safe_str_col(df.get('Feasibility Study or Supplemental Review', '')),
+            'system_impact_study_status': self._safe_str_col(df.get('System Impact Study or Phase I Cluster Study', '')),
+            'facilities_study_status': self._safe_str_col(df.get('Facilities Study (FAS) or Phase II Cluster Study', '')),
+            'ia_status': self._safe_str_col(df.get('Interconnection Agreement Status', '')),
         })
 
     def _normalize_spp(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -919,6 +952,8 @@ class DataRefresher:
             'queue_date': df.get('Queue Date', ''),
             'cod': df.get('Proposed Completion Date', df.get('Proposed COD', df.get('Op Date', ''))),
             'region': 'ISO-NE',
+            # Milestone fields
+            'withdrawn_date': self._safe_str_col(df.get('Withdrawn Date', df.get('W/D Date', ''))),
         })
 
     def _merge_miso_developers(self) -> int:

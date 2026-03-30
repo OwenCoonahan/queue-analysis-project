@@ -81,6 +81,7 @@ class DataStore:
                 primary_source TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                last_checked_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(queue_id, region)
             )
         ''')
@@ -261,6 +262,12 @@ class DataStore:
             existing = cursor.fetchone()
 
             if existing:
+                # Always bump last_checked_at — proves we verified this row
+                cursor.execute(
+                    'UPDATE projects SET last_checked_at = CURRENT_TIMESTAMP WHERE id = ?',
+                    (existing['id'],)
+                )
+
                 if existing['row_hash'] != row_hash:
                     # Record change if status changed
                     if existing['status'] != row_dict.get('status') and row_dict.get('status'):
@@ -274,7 +281,14 @@ class DataStore:
                     # Update fields — only overwrite with non-null values
                     update_fields = {}
                     for field in ['name', 'developer', 'capacity_mw', 'type', 'status',
-                                  'state', 'county', 'poi', 'queue_date', 'cod']:
+                                  'state', 'county', 'poi', 'queue_date', 'cod',
+                                  # Milestone columns (Round 12)
+                                  'ia_date', 'actual_cod', 'study_phase', 'backfeed_date',
+                                  'feasibility_study_date', 'system_impact_study_date',
+                                  'facilities_study_date', 'ia_status', 'study_cycle',
+                                  'study_group', 'test_energy_date',
+                                  'feasibility_study_status', 'system_impact_study_status',
+                                  'facilities_study_status']:
                         new_val = row_dict.get(field)
                         if new_val and str(new_val).strip():
                             update_fields[field] = new_val
@@ -308,12 +322,12 @@ class DataStore:
             else:
                 # Insert new golden record
                 sources_json = json.dumps([source])
-                cursor.execute('''
-                    INSERT INTO projects (queue_id, region, name, developer, capacity_mw,
-                                        type, status, state, county, poi, queue_date, cod,
-                                        source, primary_source, sources, raw_data, row_hash)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
+
+                # Build insert with milestone columns if present
+                insert_cols = ['queue_id', 'region', 'name', 'developer', 'capacity_mw',
+                              'type', 'status', 'state', 'county', 'poi', 'queue_date', 'cod',
+                              'source', 'primary_source', 'sources', 'raw_data', 'row_hash']
+                insert_vals = [
                     queue_id, row_region, row_dict.get('name'), row_dict.get('developer'),
                     row_dict.get('capacity_mw'), row_dict.get('type'),
                     row_dict.get('status'), row_dict.get('state'),
@@ -321,7 +335,29 @@ class DataStore:
                     str(row_dict.get('queue_date', '')), str(row_dict.get('cod', '')),
                     source, source, sources_json,
                     json.dumps(row_dict, default=str), row_hash
-                ))
+                ]
+
+                # Add milestone columns if present in the row
+                milestone_cols = [
+                    'ia_date', 'actual_cod', 'study_phase', 'backfeed_date',
+                    'feasibility_study_date', 'system_impact_study_date',
+                    'facilities_study_date', 'ia_status', 'study_cycle',
+                    'study_group', 'test_energy_date',
+                    'feasibility_study_status', 'system_impact_study_status',
+                    'facilities_study_status'
+                ]
+                for mc in milestone_cols:
+                    val = row_dict.get(mc)
+                    if val and str(val).strip() and str(val) != 'NaT':
+                        insert_cols.append(mc)
+                        insert_vals.append(val)
+
+                placeholders = ', '.join(['?'] * len(insert_cols))
+                col_names = ', '.join(insert_cols)
+                cursor.execute(f'''
+                    INSERT INTO projects ({col_names})
+                    VALUES ({placeholders})
+                ''', insert_vals)
 
                 # Record as new project
                 cursor.execute('''

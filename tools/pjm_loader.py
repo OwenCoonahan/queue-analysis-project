@@ -64,6 +64,14 @@ class PJMLoader:
         'Actual In Service Date': 'actual_cod',
         'Withdrawal Date': 'withdrawal_date',
         'Developer': 'developer',
+        # Milestone columns (Round 12)
+        'Backfeed Date': 'backfeed_date',
+        'Test Energy Date': 'test_energy_date',
+        'Commercial Operation Milestone': 'commercial_operation_milestone',
+        'Feasibility Study Status': 'feasibility_study_status',
+        'System Impact Study Status': 'system_impact_study_status',
+        'Facilities Study Status': 'facilities_study_status',
+        'Interim/Interconnection Service/Generation Interconnection Agreement Status': 'ia_status',
     }
 
     # Status normalization
@@ -227,6 +235,48 @@ class PJMLoader:
 
         return queues
 
+    # Map IA status values to standardized ia_status
+    IA_STATUS_MAP = {
+        'Document Posted': 'IA Executed',
+        'Wholesale Market Participation Agreement': 'IA Executed',
+        'Withdrawn': 'Withdrawn',
+        'Not Required': None,
+        'Interim Study': 'In Progress',
+    }
+
+    def _derive_study_phase(self, row) -> Optional[str]:
+        """Derive study_phase from PJM study status columns.
+
+        Returns the highest study milestone reached:
+        - 'IA Executed' if IA agreement posted
+        - 'Facilities Study' if facilities study done
+        - 'System Impact Study' if SIS done
+        - 'Feasibility Study' if feasibility done
+        - 'Initial' if only initial study
+        - None if no study info
+        """
+        ia = row.get('ia_status')
+        fac = row.get('facilities_study_status')
+        sis = row.get('system_impact_study_status')
+        fea = row.get('feasibility_study_status')
+
+        # Check from highest to lowest milestone
+        if ia in ('Document Posted', 'Wholesale Market Participation Agreement'):
+            return 'IA Executed'
+        if fac == 'Document Posted':
+            return 'Facilities Study'
+        if fac == 'In Progress':
+            return 'Facilities Study (In Progress)'
+        if sis == 'Document Posted' or sis == 'Executed Agreement and/or Study':
+            return 'System Impact Study'
+        if sis == 'In Progress':
+            return 'System Impact Study (In Progress)'
+        if fea == 'Document Posted' or fea == 'Issued':
+            return 'Feasibility Study'
+        if fea == 'In Progress':
+            return 'Feasibility Study (In Progress)'
+        return None
+
     def normalize(self, df: pd.DataFrame) -> pd.DataFrame:
         """Normalize PJM data to standard schema."""
         # Select and rename columns
@@ -252,10 +302,24 @@ class PJMLoader:
                 lambda x: self.FUEL_MAP.get(x, x) if pd.notna(x) else None
             )
 
-        # Parse dates
-        for date_col in ['queue_date', 'cod', 'actual_cod', 'withdrawal_date']:
+        # Parse dates (including new milestone dates)
+        for date_col in ['queue_date', 'cod', 'actual_cod', 'withdrawal_date',
+                         'backfeed_date', 'test_energy_date', 'commercial_operation_milestone']:
             if date_col in result.columns:
                 result[date_col] = pd.to_datetime(result[date_col], errors='coerce')
+
+        # Derive study_phase from study statuses
+        result['study_phase'] = result.apply(self._derive_study_phase, axis=1)
+
+        # Normalize IA status to standardized values
+        if 'ia_status' in result.columns:
+            result['ia_status'] = result['ia_status'].map(
+                lambda x: self.IA_STATUS_MAP.get(x, x) if pd.notna(x) else None
+            )
+
+        # Derive ia_date from IA status — if IA executed but no explicit date,
+        # use commercial_operation_milestone or actual_cod as proxy
+        # (PJM doesn't publish a separate IA execution date)
 
         # Use MW Capacity as primary, fall back to MW Energy
         if 'mw_energy' in result.columns and 'capacity_mw' in result.columns:
@@ -342,28 +406,23 @@ def refresh_pjm(quiet: bool = False) -> Dict:
         if df.empty:
             return {'success': False, 'error': 'No data loaded'}
 
-        # Prepare for database
-        db_df = df.rename(columns={
-            'queue_id': 'queue_id',
-            'name': 'name',
-            'developer': 'developer',
-            'capacity_mw': 'capacity_mw',
-            'type': 'type',
-            'status': 'status',
-            'state': 'state',
-            'county': 'county',
-            'queue_date': 'queue_date',
-            'cod': 'cod',
-        })
+        # Prepare for database — columns already named correctly from normalize()
+        db_df = df.copy()
 
-        # Keep only standard columns
+        # Keep standard + milestone columns
         std_cols = ['queue_id', 'name', 'developer', 'capacity_mw', 'type',
-                    'status', 'state', 'county', 'queue_date', 'cod', 'region', 'source']
+                    'status', 'state', 'county', 'queue_date', 'cod', 'region', 'source',
+                    # Milestone columns
+                    'actual_cod', 'backfeed_date', 'test_energy_date',
+                    'study_phase', 'ia_status',
+                    'feasibility_study_status', 'system_impact_study_status',
+                    'facilities_study_status']
         db_df = db_df[[c for c in std_cols if c in db_df.columns]]
 
         # Convert dates to strings for database
-        for col in ['queue_date', 'cod']:
-            if col in db_df.columns:
+        date_cols = ['queue_date', 'cod', 'actual_cod', 'backfeed_date', 'test_energy_date']
+        for col in date_cols:
+            if col in db_df.columns and hasattr(db_df[col], 'dt'):
                 db_df[col] = db_df[col].dt.strftime('%Y-%m-%d')
 
         # Upsert to database

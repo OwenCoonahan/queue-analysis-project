@@ -52,7 +52,10 @@ def load_project(queue_id: str, db_path: Path = MASTER_DB) -> Optional[Dict]:
             queue_date_std, queue_date, cod_std, cod,
             developer, developer_canonical, developer_tier,
             developer_tier_confidence, developer_needs_capital,
-            construction_stage, construction_stage_confidence,
+            construction_stage, construction_stage_confidence, construction_stage_method,
+            ia_date, actual_cod, study_phase, backfeed_date, ia_status,
+            feasibility_study_status, system_impact_study_status,
+            facilities_study_status, test_energy_date, withdrawn_date,
             tax_credit_type, recommended_credit, base_credit_rate,
             effective_credit_rate, estimated_credit_value,
             energy_community_eligible, energy_community_bonus,
@@ -384,6 +387,54 @@ def render_deal_sheet(project: Dict, developer: Optional[Dict] = None) -> str:
     ))
     signals_html = '<br>'.join(signals)
 
+    # Development milestones — show non-null milestone data as rows
+    milestone_items = []
+    study_phase_val = project.get('study_phase')
+    ia_status_val = project.get('ia_status')
+    ia_date_val = project.get('ia_date')
+    backfeed_val = project.get('backfeed_date')
+    test_energy_val = project.get('test_energy_date')
+    actual_cod_val = project.get('actual_cod')
+    feas_status = project.get('feasibility_study_status')
+    sis_status = project.get('system_impact_study_status')
+    fac_status = project.get('facilities_study_status')
+    stage_method = project.get('construction_stage_method', '')
+
+    if study_phase_val:
+        milestone_items.append(('Study Phase', _fmt(study_phase_val)))
+    if ia_status_val:
+        milestone_items.append(('IA Status', _fmt(ia_status_val)))
+    if ia_date_val:
+        milestone_items.append(('IA Date', _fmt(ia_date_val)))
+
+    # Study progression: show statuses if available
+    study_steps = []
+    if feas_status:
+        study_steps.append(f"Feas: {feas_status}")
+    if sis_status:
+        study_steps.append(f"SIS: {sis_status}")
+    if fac_status:
+        study_steps.append(f"Fac: {fac_status}")
+    if study_steps:
+        milestone_items.append(('Study Progress', ' → '.join(study_steps)))
+
+    if backfeed_val:
+        milestone_items.append(('Backfeed Date', _fmt(backfeed_val)))
+    if test_energy_val:
+        milestone_items.append(('Test Energy Date', _fmt(test_energy_val)))
+    if actual_cod_val:
+        milestone_items.append(('Actual COD', _fmt(actual_cod_val)))
+    if stage_method:
+        milestone_items.append(('Classification', stage_method.replace('_', ' ').title()))
+
+    if not milestone_items:
+        milestone_rows_html = '<div class="data-row"><span class="data-label">No milestone data available</span><span class="data-value">--</span></div>'
+    else:
+        milestone_rows_html = '\n'.join(
+            f'<div class="data-row"><span class="data-label">{label}</span><span class="data-value">{val}</span></div>'
+            for label, val in milestone_items
+        )
+
     # Location line
     loc_parts = [p for p in [region, f"{state}, {county}" if county and county != '--' else state] if p != '--']
     location_line = ' &bull; '.join(loc_parts)
@@ -660,6 +711,10 @@ body {{
         <div class="data-row"><span class="data-label">Point of Interconnection</span><span class="data-value">{poi}</span></div>
         <div class="data-row"><span class="data-label">Construction Stage</span><span class="data-value">{_stage_label(stage)}</span></div>
         <div class="data-row"><span class="data-label">Stage Confidence</span><span class="data-value">{_fmt_pct(stage_conf) if stage_conf else '--'}</span></div>
+
+        <!-- DEVELOPMENT MILESTONES -->
+        <div class="section-title">Development Milestones</div>
+        {milestone_rows_html}
 
         <!-- DEVELOPER -->
         <div class="section-title">Developer</div>
